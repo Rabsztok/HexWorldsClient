@@ -7,7 +7,7 @@ import {ceilAndFloor} from 'utils/math'
 class PlayerStore {
   @observable loading = false
   @observable tiles = []
-  @observable range = 3
+  @observable range = 5
   tileMatrix = {}
 
   constructor() {

@@ -1,28 +1,28 @@
-import React, {Component} from 'react';
-import * as THREE from 'three';
+import React, {Component} from 'react'
+import * as THREE from 'three'
 
 export default class TileGeometry extends Component {
   vertices() {
-    let height = 1;
-    let point = 0;
-    let size = 1;
-    let x = null;
-    let z = null;
-    let angle = null;
-    let vertices = [];
+    let height = 1
+    let point = 0
+    let size = 1
+    let x = null
+    let z = null
+    let angle = null
+    let vertices = []
 
     while (point < 6) {
-      angle = 2 * Math.PI / 6 * (point + 0.5);
-      x = size * Math.cos(angle);
-      z = size * Math.sin(angle);
+      angle = 2 * Math.PI / 6 * (point + 0.5)
+      x = size * Math.cos(angle)
+      z = size * Math.sin(angle)
 
-      vertices.push(new THREE.Vector3(x, 0, z));
-      vertices.push(new THREE.Vector3(x, height, z));
+      vertices.push(new THREE.Vector3(x, 0, z))
+      vertices.push(new THREE.Vector3(x, height, z))
 
-      point = point + 1;
+      point = point + 1
     }
 
-    return vertices;
+    return vertices
   }
 
   faces() {
@@ -56,14 +56,14 @@ export default class TileGeometry extends Component {
 
         new THREE.Face3( 0, 10, 11 ),
         new THREE.Face3( 11, 1, 0 ),
-    ];
+    ]
   }
 
   render() {
-    let vertices = this.vertices();
-    let faces = this.faces();
+    let vertices = this.vertices()
+    let faces = this.faces()
     return (
-        <geometry resourceId="tileGeometry" vertices={vertices} faces={faces}/>
+        <geometry resourceId='tileGeometry' vertices={vertices} faces={faces}/>
     )
   }
 }

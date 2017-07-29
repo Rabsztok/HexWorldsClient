@@ -9,6 +9,8 @@ class GridStore {
   @observable grid
 
   draw() {
+    this.grid.children.map((mesh) => this.grid.remove(mesh))
+
     each(this.terrains, (color, terrain) => {
       const mesh = new THREE.Mesh(
           new GridGeometry().fromTerrain(playerStore.tiles, terrain),

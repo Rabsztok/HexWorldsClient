@@ -4,12 +4,12 @@ import { observer } from 'mobx-react'
 
 import WorldPage from 'pages/WorldPage'
 import WorldIndex from 'pages/WorldIndex'
-import Navigation from 'components/Navigation';
+import Navigation from 'components/Navigation'
 
 const NotFound = () => (
-    <div className="jumbotron text-center">
+    <div className='jumbotron text-center'>
       <h2>Uh oh!</h2>
-      <p>We couldn't find what you were looking for!</p>
+      <p>We could not find what you were looking for!</p>
     </div>
 )
 
@@ -21,10 +21,10 @@ class App extends React.Component {
           <div>
             <Navigation/>
 
-            <div className="container">
+            <div className='container'>
               <Switch>
-                <Route exact path="/" component={WorldIndex}/>
-                <Route path={`/world/:topicId`} component={WorldPage}/>
+                <Route exact path='/' component={WorldIndex}/>
+                <Route path="/world/:topicId" component={WorldPage}/>
                 <Route component={NotFound}/>
               </Switch>
             </div>

@@ -1,47 +1,47 @@
-import React, {Component} from 'react';
-import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
-import React3 from 'react-three-renderer';
-import * as THREE from 'three';
-import _bindAll from 'lodash/bindAll';
-import Grid from 'components/Grid';
-import TileResources from 'components/resources/TileResources';
-import canvasStore from 'stores/canvasStore';
-import gridStore from 'stores/gridStore';
-import playerStore from 'stores/playerStore';
+import React, {Component} from 'react'
+import {action, observable} from 'mobx'
+import {observer} from 'mobx-react'
+import React3 from 'react-three-renderer'
+import * as THREE from 'three'
+import _bindAll from 'lodash/bindAll'
+import Grid from 'components/Grid'
+import TileResources from 'components/resources/TileResources'
+import canvasStore from 'stores/canvasStore'
+import gridStore from 'stores/gridStore'
+import playerStore from 'stores/playerStore'
 import { worldToCube, cubeToWorld } from 'utils/coordinates'
 
-let OrbitControls = require('three-orbit-controls')(THREE);
+let OrbitControls = require('three-orbit-controls')(THREE)
 
 @observer
 export default class Canvas extends Component {
   @observable axisPosition = new THREE.Vector3(0,1,0)
 
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
 
 
     _bindAll(this, 'handleTouchMove')
   }
 
   componentDidMount() {
-    const controls = new OrbitControls(this.camera);
+    const controls = new OrbitControls(this.camera)
 
-    controls.maxPolarAngle = 2 * Math.PI / 5;
-    controls.minPolarAngle = Math.PI / 8;
-    this.controls = controls;
-    this.raycaster = new THREE.Raycaster();
+    controls.maxPolarAngle = 2 * Math.PI / 5
+    controls.minPolarAngle = Math.PI / 8
+    this.controls = controls
+    this.raycaster = new THREE.Raycaster()
 
-    $('canvas').click(this.handleTouchMove);
+    $('canvas').click(this.handleTouchMove)
   }
 
   handleTouchMove(e) {
-    let mouse = new THREE.Vector2();
-    mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = -( e.clientY / window.innerHeight ) * 2 + 1;
+    let mouse = new THREE.Vector2()
+    mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1
+    mouse.y = -( e.clientY / window.innerHeight ) * 2 + 1
 
-    this.raycaster.setFromCamera( mouse, this.camera );
-    const intersect = this.raycaster.intersectObjects(gridStore.grid.children)[0];
+    this.raycaster.setFromCamera( mouse, this.camera )
+    const intersect = this.raycaster.intersectObjects(gridStore.grid.children)[0]
 
     if (intersect) {
       let cube = worldToCube(intersect.point)
@@ -57,22 +57,22 @@ export default class Canvas extends Component {
   }
 
   componentWillUnmount() {
-    this.controls.dispose();
-    delete this.controls;
+    this.controls.dispose()
+    delete this.controls
   }
 
   render() {
-    let {width, height} = this.props;
+    let {width, height} = this.props
 
-    debugger
+    console.log(canvasStore.cameraPosition)
     return (
-        <React3 mainCamera="camera" width={width} height={height} clearColor={0xaaeeff}
+        <React3 mainCamera='camera' width={width} height={height} clearColor={0xaaeeff}
                 antialias gammaInput gammaOutput>
 
           <TileResources/>
 
           <scene>
-            <perspectiveCamera ref={(c) => this.camera = c} name="camera" fov={75}
+            <perspectiveCamera ref={(c) => this.camera = c} name='camera' fov={75}
                                aspect={width / height} near={0.1} far={2000}
                                position={canvasStore.cameraPosition} lookAt={canvasStore.cameraTarget}/>
 

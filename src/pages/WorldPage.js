@@ -1,11 +1,11 @@
-require('styles/world.scss');
+require('styles/world.scss')
 
-import React, {Component} from 'react';
-import {observer} from 'mobx-react';
+import React, {Component} from 'react'
+import {observer} from 'mobx-react'
 import playerStore from 'stores/playerStore'
-import worldStore from 'stores/worldStore';
-import canvasStore from 'stores/canvasStore';
-import Canvas from 'components/Canvas';
+import worldStore from 'stores/worldStore'
+import canvasStore from 'stores/canvasStore'
+import Canvas from 'components/Canvas'
 
 @observer
 export default class WorldPage extends Component {
@@ -18,18 +18,18 @@ export default class WorldPage extends Component {
   }
 
   render() {
-    let id = this.props.match.params.topicId;
-    let world = worldStore.world(id);
+    let id = this.props.match.params.topicId
+    let world = worldStore.world(id)
 
     if (world)
       return (
           <div>
-            { playerStore.loading && <div className="loading"><i className="fa fa-circle-o-notch fa-spin"/></div> }
-            <div className="canvas-container" id="canvas-container">
+            { playerStore.loading && <div className='loading'><i className='fa fa-circle-o-notch fa-spin'/></div> }
+            <div className='canvas-container' id='canvas-container'>
               <Canvas width={canvasStore.canvasWidth} height={canvasStore.canvasHeight} />
             </div>
           </div>
-      );
+      )
     else
       return null
   }

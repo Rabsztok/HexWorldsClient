@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar } from 'react-bootstrap';
+import React, {Component} from 'react'
+import { Link } from 'react-router-dom'
+import { Navbar } from 'react-bootstrap'
 
 export default class Navigation extends Component {
   render() {
