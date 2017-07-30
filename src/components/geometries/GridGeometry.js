@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import playerStore from 'stores/playerStore'
+import tileStore from 'stores/tileStore'
 
 export default class GridGeometry extends THREE.BufferGeometry {
   fromTerrain(tiles, terrain) {
@@ -86,7 +86,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
 
   getHeight(x, y, z) {
     try {
-      return playerStore.find(x, y, z).height
+      return tileStore.find(x, y, z).height
     } catch(_err) {
       return 0
     }

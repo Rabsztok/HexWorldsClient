@@ -1,0 +1,11 @@
+:local {
+  .context-menu {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    background: white;
+    border: 1px solid #666;
+  }
+}

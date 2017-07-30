@@ -1,6 +1,6 @@
 import {observable, observe, action} from 'mobx'
 import {each} from 'lodash'
-import playerStore from 'stores/playerStore'
+import tileStore from 'stores/tileStore'
 import GridGeometry from 'components/geometries/GridGeometry'
 import * as  THREE from 'three'
 
@@ -13,7 +13,7 @@ class GridStore {
 
     each(this.terrains, (color, terrain) => {
       const mesh = new THREE.Mesh(
-          new GridGeometry().fromTerrain(playerStore.tiles, terrain),
+          new GridGeometry().fromTerrain(tileStore.tiles, terrain),
           new THREE.MeshLambertMaterial( { color: color, shading: THREE.FlatShading } )
       )
       this.grid.add(mesh)
@@ -22,7 +22,7 @@ class GridStore {
 
   @action setGrid(grid) {
     this.grid = grid
-    observe(playerStore, 'tiles', this.draw.bind(this))
+    observe(tileStore, 'tiles', this.draw.bind(this))
   }
 }
 

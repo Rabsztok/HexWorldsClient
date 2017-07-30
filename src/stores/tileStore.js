@@ -1,10 +1,10 @@
-import {observable, observe, action, computed} from 'mobx'
+import {observable, observe, action} from 'mobx'
 import {differenceBy} from 'lodash'
-import PlayerChannel from 'channels/PlayerChannel'
+import TileChannel from 'channels/TileChannel'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 
-class PlayerStore {
+class TileStore {
   @observable loading = false
   @observable tiles = []
   @observable range = 5
@@ -12,14 +12,13 @@ class PlayerStore {
 
   constructor() {
     observe(this, 'tiles', this.computeTileMatrix.bind(this))
-    observe(this, 'tiles', this.computeTileMatrix.bind(this))
 
     this.connect()
   }
 
   connect() {
     this.startLoading()
-    this.channel = new PlayerChannel('player:lobby')
+    this.channel = new TileChannel('player:lobby')
 
     this.channel.connect(this.onTilesLoaded.bind(this))
     this.channel.socket.on('move', this.onTilesLoaded.bind(this))
@@ -51,9 +50,10 @@ class PlayerStore {
   }
 
   @action pushTiles(tiles) {
-    const uniqueTiles  = differenceBy(tiles, this.tiles.peek(), 'id')
+    const newTiles  = differenceBy(tiles, this.tiles.peek(), 'id')
 
-    this.tiles = this.tiles.concat(uniqueTiles)
+    if (newTiles.length)
+      this.tiles = this.tiles.concat(newTiles)
   }
 
   find(x,y,z) {
@@ -63,6 +63,7 @@ class PlayerStore {
   nearest(vector) {
     let nearest = null
 
+    // TODO: optimize
     ceilAndFloor(vector.x).map(x =>
       ceilAndFloor(vector.y).map(y =>
         ceilAndFloor(vector.z).map(z => {
@@ -80,7 +81,6 @@ class PlayerStore {
       )
     )
 
-    console.log(vector, nearest)
     return nearest.tile
   }
 
@@ -90,8 +90,8 @@ class PlayerStore {
   }
 }
 
-const playerStore = new PlayerStore()
+const tileStore = new TileStore()
 
-window.PlayerStore = playerStore
+window.TileStore = tileStore
 
-export default playerStore
+export default tileStore

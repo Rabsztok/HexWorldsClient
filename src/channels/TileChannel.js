@@ -1,6 +1,6 @@
 import socket from 'utils/socket'
 
-export default class PlayerChannel {
+export default class TileChannel {
   constructor(channelName) {
     this.channelName = channelName
   }

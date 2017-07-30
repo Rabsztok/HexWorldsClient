@@ -9,6 +9,7 @@ class CanvasStore {
   @observable cameraPosition = new THREE.Vector3(-30, 30, 0)
   @observable cameraTarget = new THREE.Vector3(0, 0, 0)
   @observable lightPosition = new THREE.Vector3(0, 20, 20)
+  @observable camera
 
   @action setCanvasSize(width, height = width*4/7) {
     this.canvasWidth = width

@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
+    "autobind-decorator": "^2.1.0",
     "axios": "^0.16.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "bootstrap-sass": "^3.3.7",
