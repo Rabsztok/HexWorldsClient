@@ -16,9 +16,8 @@ class TileSelection extends Component {
 
     if (tile) {
       const coordinates = cubeToWorld(tile)
-      const position = new THREE.Vector3(coordinates.x, tile.height + 0.001, coordinates.z)
+      const position = new THREE.Vector3(coordinates.x, tile.height/2 + 0.001, coordinates.z)
 
-      console.log(position)
       return (
           <group>
             <mesh scale={this.scale} rotation={this.rotation} position={position}>

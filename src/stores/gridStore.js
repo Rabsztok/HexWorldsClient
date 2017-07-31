@@ -2,6 +2,7 @@ import {observable, observe, action} from 'mobx'
 import {each} from 'lodash'
 import tileStore from 'stores/tileStore'
 import GridGeometry from 'components/geometries/GridGeometry'
+import ForestGeometry from 'components/geometries/ForestGeometry'
 import * as  THREE from 'three'
 
 class GridStore {
@@ -18,6 +19,12 @@ class GridStore {
       )
       this.grid.add(mesh)
     })
+
+    const mesh = new THREE.Mesh(
+        new ForestGeometry().fromTerrain(tileStore.tiles),
+        new THREE.MeshLambertMaterial( { color: 0x003000, shading: THREE.FlatShading } )
+    )
+    this.grid.add(mesh)
   }
 
   @action setGrid(grid) {

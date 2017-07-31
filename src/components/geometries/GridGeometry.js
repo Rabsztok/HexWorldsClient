@@ -69,7 +69,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
 
     matrix.makeTranslation(
         ( 2 * tile.x + tile.z) * Math.sqrt(3) / 2,
-        tile.height || 1,
+        tile.height / 2 || 1,
         tile.z * 3 / 2
     )
 
@@ -79,7 +79,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
 
     if (height >= 1) {
       let geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry)
-      geometry.scale(0.99999, height, 0.99999)
+      geometry.scale(0.99, height / 2, 0.99)
       tmpGeometry.merge(geometry, matrix)
     }
   }
@@ -87,7 +87,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
   getHeight(x, y, z) {
     try {
       return tileStore.find(x, y, z).height
-    } catch(_err) {
+    } catch (_err) {
       return 0
     }
   }

@@ -1,26 +1,40 @@
 import { action, observable } from 'mobx'
-import _bindAll from 'lodash/bindAll'
 import _find from 'lodash/find'
 import WorldChannel from 'channels/WorldChannel'
+import tileStore from 'stores/tileStore'
+import autobind from 'autobind-decorator'
 
 class WorldStore {
+  @observable ready = false
   @observable worlds = []
+  @observable currentWorld
 
-  constructor () {
-    _bindAll(this, 'handleConnectionSuccess')
-
-    this.channel = new WorldChannel('worlds:lobby').connect(this.handleConnectionSuccess)
-  }
-
-  @action handleConnectionSuccess (response) {
+  @autobind
+  @action setWorlds(response) {
     this.worlds = response.worlds
+    this.ready = true
   }
 
-  world(id) {
+  connect() {
+    if (this.channel) return
+
+    this.channel = new WorldChannel('worlds:lobby')
+    this.channel.connect(this.setWorlds)
+  }
+
+
+  @action selectWorld(world) {
+    this.currentWorld = world
+    tileStore.connect(world)
+  }
+
+  find(id) {
     return _find(this.worlds, { id: parseInt(id) })
   }
 }
 
 const worldStore = new WorldStore()
+
+window.WorldStore = worldStore
 
 export default worldStore

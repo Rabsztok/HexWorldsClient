@@ -10,7 +10,9 @@ require('styles/world.scss')
 
 @observer
 export default class WorldPage extends Component {
-  componentDidMount() {
+  componentWillMount() {
+    const world = worldStore.find(this.props.match.params.topicId)
+    worldStore.selectWorld(world)
     canvasStore.setCanvasSize(window.innerWidth, window.innerHeight)
   }
 
@@ -19,20 +21,17 @@ export default class WorldPage extends Component {
   }
 
   render() {
-    let id = this.props.match.params.topicId
-    let world = worldStore.world(id)
-
-    if (world)
+    if (worldStore.currentWorld) {
       return (
           <div>
-            { tileStore.loading && <div className='loading'><i className='fa fa-circle-o-notch fa-spin'/></div> }
+            {tileStore.loading && <div className='loading'><i className='fa fa-circle-o-notch fa-spin'/></div>}
             <div className='canvas-container' id='canvas-container'>
-              <Canvas width={canvasStore.canvasWidth} height={canvasStore.canvasHeight} />
-              { interfaceStore.contextMenu && <ContextMenu/> }
+              <Canvas width={canvasStore.canvasWidth} height={canvasStore.canvasHeight}/>
+              {interfaceStore.contextMenu && <ContextMenu/>}
             </div>
           </div>
       )
-    else
-      return null
+    }
+    else return null
   }
 }

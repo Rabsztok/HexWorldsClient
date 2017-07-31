@@ -5,11 +5,12 @@ export default class TileChannel {
     this.channelName = channelName
   }
 
-  async connect (onConnectionSuccess) {
-    this.socket = socket.channel(this.channelName, {})
+  connect (world, onConnectionSuccess) {
+    this.socket = socket.channel(this.channelName, { world_id: world.id })
+    console.log('TileChannel connect')
 
-    return await this.socket.join()
-                     .receive('ok', onConnectionSuccess)
-                     .receive('error', () => console.error('Connection error'))
+    this.socket.join()
+               .receive('ok', onConnectionSuccess)
+               .receive('error', () => console.error('Connection error'))
   }
 }

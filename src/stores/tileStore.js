@@ -12,15 +12,13 @@ class TileStore {
 
   constructor() {
     observe(this, 'tiles', this.computeTileMatrix.bind(this))
-
-    this.connect()
   }
 
-  connect() {
+  connect(world) {
     this.startLoading()
-    this.channel = new TileChannel('player:lobby')
+    this.channel = new TileChannel('tiles:lobby')
 
-    this.channel.connect(this.onTilesLoaded.bind(this))
+    this.channel.connect(world, this.onTilesLoaded.bind(this))
     this.channel.socket.on('move', this.onTilesLoaded.bind(this))
   }
 

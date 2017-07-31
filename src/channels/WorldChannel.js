@@ -5,11 +5,11 @@ export default class WorldChannel {
     this.channelName = channelName
   }
 
-  async connect (onConnectionSuccess) {
+  connect (onConnectionSuccess) {
     this.socket = socket.channel(this.channelName, {})
 
-    return await this.socket.join()
-                     .receive('ok', onConnectionSuccess)
-                     .receive('error', () => console.error('Connection error'))
+    this.socket.join()
+               .receive('ok', onConnectionSuccess)
+               .receive('error', () => console.error('Connection error'))
   }
 }
