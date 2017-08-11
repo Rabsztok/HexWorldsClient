@@ -48,7 +48,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
     xyGeometry.rotateY(-Math.PI / 2)
 
     tiles.map((tile) => {
-      if (tile.terrain_type === terrain) {
+      if (tile.terrain.type === terrain) {
         this.mergeGeometry(tmpGeometry, topGeometry, tile)
         this.mergeGeometry(tmpGeometry, xzGeometry, tile, {x: -1, y: 0, z: 1})
         this.mergeGeometry(tmpGeometry, yzGeometry, tile, {x: 0, y: -1, z: 1})
@@ -79,7 +79,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
 
     if (height >= 1) {
       let geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry)
-      geometry.scale(0.99, height / 2, 0.99)
+      geometry.scale(1, height / 2, 1)
       tmpGeometry.merge(geometry, matrix)
     }
   }

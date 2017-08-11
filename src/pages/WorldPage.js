@@ -13,11 +13,11 @@ export default class WorldPage extends Component {
   componentWillMount() {
     const world = worldStore.find(this.props.match.params.topicId)
     worldStore.selectWorld(world)
-    canvasStore.setCanvasSize(window.innerWidth, window.innerHeight)
+    canvasStore.setCanvasSize(window.innerWidth, window.innerHeight - 64)
   }
 
   componentDidUpdate() {
-    canvasStore.setCanvasSize(window.innerWidth, window.innerHeight)
+    canvasStore.setCanvasSize(window.innerWidth, window.innerHeight - 64)
   }
 
   render() {

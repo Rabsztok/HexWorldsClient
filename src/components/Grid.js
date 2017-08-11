@@ -6,7 +6,6 @@ import gridStore from 'stores/gridStore'
 class Grid extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress)
-    gridStore.draw()
   }
 
   render() {

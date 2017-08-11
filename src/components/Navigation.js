@@ -5,7 +5,7 @@ import { Navbar } from 'react-bootstrap'
 export default class Navigation extends Component {
   render() {
     return (
-        <Navbar>
+        <Navbar fluid>
           <Navbar.Header>
             <Navbar.Brand>
               <Link to='/'>Hex Worlds</Link>

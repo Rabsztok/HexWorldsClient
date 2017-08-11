@@ -32,13 +32,11 @@ class App extends React.Component {
             <div>
               <Navigation/>
 
-              <div className='container'>
-                <Switch>
-                  <Route exact path='/' component={WorldIndex}/>
-                  <Route path="/world/:topicId" component={WorldPage}/>
-                  <Route component={NotFound}/>
-                </Switch>
-              </div>
+              <Switch>
+                <Route exact path='/' component={WorldIndex}/>
+                <Route path="/world/:topicId" component={WorldPage}/>
+                <Route component={NotFound}/>
+              </Switch>
             </div>
           </Router>
       )

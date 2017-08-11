@@ -6,8 +6,8 @@ export default class Controls {
   constructor(canvas) {
     this.canvas = canvas
 
-    this.canvas.on('mousedown', this.mouseDown)
-    this.canvas.on('mouseup', this.mouseUp)
+    this.canvas.addEventListener('mousedown', this.mouseDown)
+    this.canvas.addEventListener('mouseup', this.mouseUp)
   }
 
   @autobind
@@ -30,13 +30,13 @@ export default class Controls {
   }
 
   tap(e) {
-    const tile = clickedTile(e)
+    const tile = clickedTile(e, this.canvas)
 
     if (tile)
       if (e.button === 0)
         interfaceStore.selectTile(tile)
       else if (e.button === 2)
-        interfaceStore.openContextMenu(e, tile)
+        interfaceStore.openContextMenu(tile)
   }
 
   // helpers

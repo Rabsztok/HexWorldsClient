@@ -13,13 +13,13 @@ let OrbitControls = require('three-orbit-controls')(THREE)
 @observer
 export default class Canvas extends Component {
   componentDidMount() {
-    const controls = new OrbitControls(canvasStore.camera)
+    const canvas = document.querySelectorAll('canvas')[0]
+    const controls = new OrbitControls(canvasStore.camera, canvas)
 
     controls.maxPolarAngle = 2 * Math.PI / 5
     controls.minPolarAngle = Math.PI / 8
-    this.controls = controls
 
-    this.controls = new Controls($('canvas'))
+    this.controls = new Controls(canvas)
   }
 
   componentWillUnmount() {
@@ -42,6 +42,7 @@ export default class Canvas extends Component {
                                position={canvasStore.cameraPosition} lookAt={canvasStore.cameraTarget}/>
 
             <Grid/>
+            {/*<StaticObjects/>*/}
             <Interface/>
 
             <ambientLight color={0xFFFFFF}/>

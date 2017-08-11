@@ -29,7 +29,7 @@ class WorldStore {
   }
 
   find(id) {
-    return _find(this.worlds, { id: parseInt(id) })
+    return _find(this.worlds, { id: id })
   }
 }
 

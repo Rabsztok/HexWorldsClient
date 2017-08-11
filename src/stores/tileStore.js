@@ -3,6 +3,7 @@ import {differenceBy} from 'lodash'
 import TileChannel from 'channels/TileChannel'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
+import Tile from 'records/tile'
 
 class TileStore {
   @observable loading = false
@@ -48,7 +49,7 @@ class TileStore {
   }
 
   @action pushTiles(tiles) {
-    const newTiles  = differenceBy(tiles, this.tiles.peek(), 'id')
+    const newTiles  = differenceBy(tiles, this.tiles.peek(), 'id').map((tile) => new Tile(tile))
 
     if (newTiles.length)
       this.tiles = this.tiles.concat(newTiles)

@@ -6,8 +6,8 @@ import {worldToCube} from 'utils/coordinates'
 
 export function clickedTile(e) {
   let mouse = new THREE.Vector2()
-  mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1
-  mouse.y = -( e.clientY / window.innerHeight ) * 2 + 1
+  mouse.x = ( (e.clientX) / e.target.width ) * 2 - 1
+  mouse.y = -( (e.clientY - 64) / e.target.height ) * 2 + 1
 
   const raycaster = new THREE.Raycaster()
   raycaster.setFromCamera( mouse, canvasStore.camera )

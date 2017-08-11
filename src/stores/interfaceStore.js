@@ -8,12 +8,16 @@ class InterfaceStore {
     this.currentTile = tile
   }
 
-  @action openContextMenu(event, tile) {
-    this.contextMenu = { tile: tile, position: { x: event.clientX, y: event.clientY } }
+  @action openContextMenu(tile) {
+    this.contextMenu = { tile: tile }
   }
 
   @action closeContextMenu() {
     this.contextMenu = null
+  }
+
+  @action build(type) {
+    this.currentTile.setObject({ type: type })
   }
 }
 
