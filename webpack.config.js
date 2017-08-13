@@ -7,7 +7,7 @@ module.exports = {
     'react-hot-loader/patch',
     'babel-polyfill',
     'whatwg-fetch',
-    'webpack-dev-server/client?http://10.0.1.75:3000',
+    'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
     './src/index'
   ],

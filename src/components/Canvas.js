@@ -12,12 +12,18 @@ let OrbitControls = require('three-orbit-controls')(THREE)
 
 @observer
 export default class Canvas extends Component {
+  componentWillMount() {
+    canvasStore.setCanvasSize()
+    window.onresize = canvasStore.setCanvasSize
+  }
+
   componentDidMount() {
     const canvas = document.querySelectorAll('canvas')[0]
     const controls = new OrbitControls(canvasStore.camera, canvas)
 
     controls.maxPolarAngle = 2 * Math.PI / 5
     controls.minPolarAngle = Math.PI / 8
+    controls.target = canvasStore.cameraTarget
 
     this.controls = new Controls(canvas)
   }
@@ -28,17 +34,15 @@ export default class Canvas extends Component {
   }
 
   render() {
-    let {width, height} = this.props
-
     return (
-        <React3 mainCamera='camera' width={width} height={height} clearColor={0xaaeeff}
+        <React3 mainCamera='camera' width={canvasStore.width} height={canvasStore.height} clearColor={0xaaeeff}
                 antialias gammaInput gammaOutput>
 
           <TileResources/>
 
           <scene>
             <perspectiveCamera ref={(c) => canvasStore.camera = c} name='camera' fov={75}
-                               aspect={width / height} near={0.1} far={2000}
+                               aspect={canvasStore.width / canvasStore.height} near={0.1} far={2000}
                                position={canvasStore.cameraPosition} lookAt={canvasStore.cameraTarget}/>
 
             <Grid/>

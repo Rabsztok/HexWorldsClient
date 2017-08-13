@@ -25,8 +25,8 @@ export default class Controls {
       this.tap(e)
   }
 
-  drag(e) {
-    console.log('drag')
+  drag() {
+    // console.log('drag')
   }
 
   tap(e) {
