@@ -1,13 +1,22 @@
 {
   "presets": [
-    "es2015",
+    "babel-preset-env",
     "react",
-    "stage-1"
+    "stage-1-without-async"
   ],
   "plugins": [
-    'transform-runtime',
-    "transform-async-to-generator",
+    "transform-runtime",
     "transform-decorators-legacy",
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    [ "transform-imports", {
+      "react-bootstrap": {
+        "transform": "react-bootstrap/lib/${member}",
+        "preventFullImport": true
+      },
+      "lodash": {
+        "transform": "lodash/${member}",
+        "preventFullImport": true
+      }
+    }]
   ]
 }

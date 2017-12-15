@@ -4,8 +4,8 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 
 import worldStore from 'stores/worldStore'
-import WorldPage from 'pages/WorldPage'
-import WorldIndex from 'pages/WorldIndex'
+import * as Pages from "pages/index"
+import routes from 'utils/routes'
 import Navigation from 'components/Navigation'
 
 const NotFound = () => (
@@ -33,8 +33,8 @@ class App extends React.Component {
               <Navigation/>
 
               <Switch>
-                <Route exact path='/' component={WorldIndex}/>
-                <Route path="/world/:topicId" component={WorldPage}/>
+                <Route exact path='/' component={Pages.WorldIndex}/>
+                <Route path="/world/:topicId" component={Pages.World}/>
                 <Route component={NotFound}/>
               </Switch>
             </div>
