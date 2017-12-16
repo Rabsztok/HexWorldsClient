@@ -57,6 +57,8 @@ export default class GridGeometry extends THREE.BufferGeometry {
         this.mergeGeometry(tmpGeometry, zyGeometry, tile, {x: 1, y: 0, z: -1})
         this.mergeGeometry(tmpGeometry, xyGeometry, tile, {x: -1, y: 1, z: 0})
       }
+
+      return tile
     })
 
     this.fromGeometry(tmpGeometry)

@@ -6,32 +6,27 @@ import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
 import worldStore from 'stores/world_store'
 import styles from './worlds.scss'
-import Navigation from 'components/navigation'
 
 @observer
 class WorldList extends Component {
   render() {
     return (
-        <div>
-          <Navigation/>
-
-          <div className={styles['worlds']}>
-            <Grid container justify="center">
-              {worldStore.worlds.map((world) =>
-                  <Grid key={world.id} item xs={12} sm={8} md={6}>
-                    <Card>
-                      <CardContent>
-                        <Typography type="title">
-                          <Link to={`/world/${world.id}`}>
-                            {world.name}
-                          </Link>
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-              )}
-            </Grid>
-          </div>
+        <div className={styles.list}>
+          <Grid container justify="center">
+            {worldStore.worlds.map((world) =>
+                <Grid key={world.id} item xs={12} sm={8}>
+                  <Card>
+                    <CardContent>
+                      <Typography type="title">
+                        <Link to={`/world/${world.id}`} className={styles.link}>
+                          {world.name}
+                        </Link>
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+            )}
+          </Grid>
         </div>
     )
   }

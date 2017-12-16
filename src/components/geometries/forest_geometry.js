@@ -30,9 +30,11 @@ export default class ForestGeometry extends THREE.BufferGeometry {
       const rotation = Math.random() // TODO: from UUID
       const density = tile.terrain.density
 
-      times(density, (i) => {
+      times(density, (i) =>
         this.mergeGeometry(tmpGeometry, this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation), tile)
-      })
+      )
+
+      return tile
     })
 
     this.fromGeometry(tmpGeometry)

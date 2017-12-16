@@ -30,6 +30,8 @@ class TileStore {
       if (!tileMatrix[tile.x]) tileMatrix[tile.x] = {}
       if (!tileMatrix[tile.x][tile.y]) tileMatrix[tile.x][tile.y] = {}
       tileMatrix[tile.x][tile.y][tile.z] = tile
+
+      return tile
     })
 
     this.tileMatrix = tileMatrix
@@ -68,14 +70,17 @@ class TileStore {
         ceilAndFloor(vector.z).map(z => {
           const tile = this.find(x,y,z)
 
-          if (tile)
+          if (tile) {
             if (nearest === null)
-              nearest = { distance: distance(vector, tile), tile: tile }
+              nearest = {distance: distance(vector, tile), tile: tile}
             else {
               const currentDistance = distance(vector, tile)
               if (currentDistance < nearest.distance)
-                nearest = { distance: currentDistance, tile: tile }
+                nearest = {distance: currentDistance, tile: tile}
             }
+          }
+
+          return tile
         })
       )
     )

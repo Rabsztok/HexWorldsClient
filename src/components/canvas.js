@@ -10,6 +10,7 @@ let OrbitControls = require('three-orbit-controls')(THREE)
 @observer
 export default class Canvas extends Component {
   scene = new THREE.Scene()
+
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
   renderer = new THREE.WebGLRenderer()
 

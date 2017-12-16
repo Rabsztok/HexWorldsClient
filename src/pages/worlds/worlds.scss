@@ -1,5 +1,9 @@
-:local {
-  .worlds {
-    margin: 30px
-  }
+.list {
+  flex-grow: 1;
+  margin-top: 30px;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
 }
