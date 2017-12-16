@@ -1,5 +1,5 @@
 import {clickedTile} from 'utils/canvas_helper'
-import interfaceStore from 'stores/interfaceStore'
+import interfaceStore from 'stores/interface_store'
 import autobind from 'autobind-decorator'
 
 export default class Controls {

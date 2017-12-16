@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {observer} from 'mobx-react'
 import * as THREE from 'three'
-import canvasStore from 'stores/canvasStore'
-import gridStore from 'stores/gridStore'
+import canvasStore from 'stores/canvas_store'
+import gridStore from 'stores/grid_store'
 import autobind from 'autobind-decorator'
 
 let OrbitControls = require('three-orbit-controls')(THREE)

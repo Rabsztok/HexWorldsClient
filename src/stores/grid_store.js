@@ -1,8 +1,8 @@
 import {observable, autorun, action} from 'mobx'
 import {each} from 'lodash'
-import tileStore from 'stores/tileStore'
-import GridGeometry from 'components/geometries/GridGeometry'
-import ForestGeometry from 'components/geometries/ForestGeometry'
+import tileStore from 'stores/tile_store'
+import GridGeometry from 'components/geometries/grid_geometry'
+import ForestGeometry from 'components/geometries/forest_geometry'
 import autobind from 'autobind-decorator'
 import * as  THREE from 'three'
 

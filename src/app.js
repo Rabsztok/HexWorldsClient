@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 
-import worldStore from 'stores/worldStore'
+import worldStore from 'stores/world_store'
 import * as Pages from "pages/index"
 import routes from 'utils/routes'
 
 const NotFound = () => (
-    <div className='jumbotron text-center'>
+    <div>
       <h2>Uh oh!</h2>
       <p>We could not find what you were looking for!</p>
     </div>

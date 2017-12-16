@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import gridStore from 'stores/gridStore'
-import tileStore from 'stores/tileStore'
-import canvasStore from 'stores/canvasStore'
+import gridStore from 'stores/grid_store'
+import tileStore from 'stores/tile_store'
+import canvasStore from 'stores/canvas_store'
 import {worldToCube} from 'utils/coordinates'
 
 export function clickedTile(e) {

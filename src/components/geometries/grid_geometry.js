@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import tileStore from 'stores/tileStore'
+import tileStore from 'stores/tile_store'
 
 export default class GridGeometry extends THREE.BufferGeometry {
   fromTerrain(tiles, terrain) {

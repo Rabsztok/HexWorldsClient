@@ -1,6 +1,6 @@
 import {observable, observe, action} from 'mobx'
 import {differenceBy} from 'lodash'
-import TileChannel from 'channels/TileChannel'
+import TileChannel from 'channels/tile_channel'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'

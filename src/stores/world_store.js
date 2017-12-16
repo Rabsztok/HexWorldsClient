@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx'
 import _find from 'lodash/find'
-import WorldChannel from 'channels/WorldChannel'
-import tileStore from 'stores/tileStore'
+import WorldChannel from 'channels/world_channel'
+import tileStore from 'stores/tile_store'
 import autobind from 'autobind-decorator'
 
 class WorldStore {

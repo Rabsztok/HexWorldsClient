@@ -4,9 +4,9 @@ import {observer} from 'mobx-react'
 import Card, {CardContent} from 'material-ui/Card'
 import Grid from 'material-ui/Grid'
 import Typography from 'material-ui/Typography'
-import worldStore from 'stores/worldStore'
+import worldStore from 'stores/world_store'
 import styles from './worlds.scss'
-import Navigation from 'components/Navigation'
+import Navigation from 'components/navigation'
 
 @observer
 class WorldList extends Component {

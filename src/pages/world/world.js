@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {observer} from 'mobx-react'
-import tileStore from 'stores/tileStore'
-import worldStore from 'stores/worldStore'
-import Canvas from 'components/Canvas'
+import tileStore from 'stores/tile_store'
+import worldStore from 'stores/world_store'
+import Canvas from 'components/canvas'
 require('styles/world.scss')
 
 @observer

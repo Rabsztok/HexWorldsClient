@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import {times, filter} from 'lodash'
-import tileStore from 'stores/tileStore'
+import tileStore from 'stores/tile_store'
 import {randomInt} from 'utils/random'
 
 export default class ForestGeometry extends THREE.BufferGeometry {
