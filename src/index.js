@@ -1,28 +1,8 @@
-require('styles/application.scss')
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './app';
+import registerServiceWorker from './registerServiceWorker';
 
-import React from 'react'
-import { render } from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-import App from 'App'
-import { useStrict } from 'mobx'
-useStrict(true)
-
-render(
-    <AppContainer>
-      <App/>
-    </AppContainer>,
-    document.getElementById('root')
-)
-
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    const NextApp = require('./App').default
-
-    render(
-        <AppContainer>
-          <NextApp/>
-        </AppContainer>,
-        document.getElementById('root')
-    )
-  })
-}
+ReactDOM.render(<App />, document.getElementById('root'));
+registerServiceWorker();

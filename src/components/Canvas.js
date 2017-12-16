@@ -1,59 +1,73 @@
 import React, {Component} from 'react'
 import {observer} from 'mobx-react'
-import React3 from 'react-three-renderer'
 import * as THREE from 'three'
-import Grid from 'components/Grid'
-import Interface from 'components/Interface'
-import TileResources from 'components/resources/TileResources'
 import canvasStore from 'stores/canvasStore'
-import Controls from 'utils/controls'
+import gridStore from 'stores/gridStore'
+import autobind from 'autobind-decorator'
 
 let OrbitControls = require('three-orbit-controls')(THREE)
 
 @observer
 export default class Canvas extends Component {
+  scene = new THREE.Scene()
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
+  renderer = new THREE.WebGLRenderer()
+
   componentWillMount() {
     canvasStore.setCanvasSize()
     window.onresize = canvasStore.setCanvasSize
   }
 
   componentDidMount() {
-    const canvas = document.querySelectorAll('canvas')[0]
-    const controls = new OrbitControls(canvasStore.camera, canvas)
+    this.camera.position.set(-30, 30, 0)
 
-    controls.maxPolarAngle = 2 * Math.PI / 5
-    controls.minPolarAngle = Math.PI / 8
-    controls.target = canvasStore.cameraTarget
+    this.addControls()
+    this.addLight()
+    this.addGrid()
 
-    this.controls = new Controls(canvas)
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setClearColor(0xaaeeff)
+
+    this.root.appendChild(this.renderer.domElement)
+
+    this.animate()
+  }
+
+  addControls() {
+    this.controls = new OrbitControls(this.camera, this.root)
+    this.controls.maxPolarAngle = 2 * Math.PI / 5
+    this.controls.minPolarAngle = Math.PI / 8
+    this.controls.target.set(0, 0, 0)
+  }
+
+  addLight() {
+    const ambientLight = new THREE.AmbientLight(0x000000)
+    const pointLight = new THREE.PointLight(0xffffff, 1)
+    pointLight.position.set(50, 100, 50)
+
+    this.scene.add(ambientLight)
+    this.scene.add(pointLight)
+  }
+
+  addGrid() {
+    const grid = gridStore.setGrid()
+    this.scene.add(grid)
   }
 
   componentWillUnmount() {
     this.controls.dispose()
-    delete this.controls
+  }
+
+  @autobind
+  animate() {
+    window.requestAnimationFrame(this.animate)
+    this.renderer.render(this.scene, this.camera)
   }
 
   render() {
     return (
-        <React3 mainCamera='camera' width={canvasStore.width} height={canvasStore.height} clearColor={0xaaeeff}
-                antialias gammaInput gammaOutput>
-
-          <TileResources/>
-
-          <scene>
-            <perspectiveCamera ref={(c) => canvasStore.camera = c} name='camera' fov={75}
-                               aspect={canvasStore.width / canvasStore.height} near={0.1} far={2000}
-                               position={canvasStore.cameraPosition} lookAt={canvasStore.cameraTarget}/>
-
-            <Grid/>
-            {/*<StaticObjects/>*/}
-            <Interface/>
-
-            <ambientLight color={0xFFFFFF}/>
-            <pointLight color={0xFFFFFF} intensity={1} position={canvasStore.lightPosition}/>
-          </scene>
-
-        </React3>
+        <div ref={(e) => this.root = e}/>
     )
   }
 }

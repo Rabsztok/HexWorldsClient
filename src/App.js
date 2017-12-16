@@ -6,7 +6,6 @@ import { observer } from 'mobx-react'
 import worldStore from 'stores/worldStore'
 import * as Pages from "pages/index"
 import routes from 'utils/routes'
-import Navigation from 'components/Navigation'
 
 const NotFound = () => (
     <div className='jumbotron text-center'>

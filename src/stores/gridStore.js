@@ -17,7 +17,7 @@ class GridStore {
     each(this.terrains, (color, terrain) => {
       const mesh = new THREE.Mesh(
           new GridGeometry().fromTerrain(tileStore.tiles, terrain),
-          new THREE.MeshLambertMaterial({color: color, shading: THREE.FlatShading})
+          new THREE.MeshLambertMaterial({color: color, flatShading: true})
       )
       this.grid.add(mesh)
     })
@@ -25,16 +25,18 @@ class GridStore {
     // draw forest
     const mesh = new THREE.Mesh(
         new ForestGeometry().build(tileStore.tiles),
-        new THREE.MeshLambertMaterial( { color: 0x002B0C, shading: THREE.FlatShading } )
+        new THREE.MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
     )
     this.grid.add(mesh)
   }
 
   @action
-  setGrid(grid) {
-    this.grid = grid
+  setGrid() {
+    this.grid = new THREE.Group()
 
     autorun(this.draw)
+
+    return this.grid
   }
 }
 
