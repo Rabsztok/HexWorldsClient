@@ -13,7 +13,7 @@ class CanvasStore {
   @autobind @action
   setCanvasSize() {
     this.width = window.innerWidth
-    this.height = window.innerHeight - 64
+    this.height = window.innerHeight
   }
 
   @action

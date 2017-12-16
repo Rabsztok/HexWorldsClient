@@ -1,4 +1,5 @@
 const routes = {
+  root: () => "/",
   worlds: () => "/",
   world: id => `/world/${id}`,
 }

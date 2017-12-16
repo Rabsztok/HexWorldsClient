@@ -30,11 +30,9 @@ class App extends React.Component {
       return (
           <Router>
             <div>
-              <Navigation/>
-
               <Switch>
-                <Route exact path='/' component={Pages.WorldIndex}/>
-                <Route path="/world/:topicId" component={Pages.World}/>
+                <Route exact path={routes.worlds()} component={Pages.Worlds}/>
+                <Route path={routes.world(":id")} component={Pages.World}/>
                 <Route component={NotFound}/>
               </Switch>
             </div>

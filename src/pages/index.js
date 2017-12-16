@@ -1,7 +1,7 @@
-import WorldIndex from './worlds/index'
-import World from './worlds/show'
+import Worlds from './worlds/worlds'
+import World from './world/world'
 
 export {
-  WorldIndex,
+  Worlds,
   World
 }

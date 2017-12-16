@@ -1,8 +1,4 @@
-const $ = require('jquery')
-window.$ = window.jQuery = $
-
-require('styles/index.scss')
-require('bootstrap-sass/assets/javascripts/bootstrap.js')
+require('styles/application.scss')
 
 import React from 'react'
 import { render } from 'react-dom'

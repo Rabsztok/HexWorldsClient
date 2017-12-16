@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {observer} from 'mobx-react'
-import styles from 'styles/components/interface/ContextMenu.scss'
 import interfaceStore from 'stores/interfaceStore'
 import autobind from 'autobind-decorator'
 
@@ -15,7 +14,7 @@ class ContextMenu extends Component {
     const { tile } = interfaceStore.contextMenu
 
     return (
-        <div className={styles['context-menu']}>
+        <div>
           <p>Coordinates: { tile.x } { tile.y } { tile.z }</p>
           <p>Terrain type: { tile.terrain.type }</p>
           <p>Object type: { tile.object && tile.object.type }</p>
