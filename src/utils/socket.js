@@ -1,6 +1,7 @@
 import {Socket} from 'phoenix-socket'
 
-let socket = new Socket('ws://localhost:4000/socket', { params: { token: window.userToken } })
+const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
+const socket = new Socket(apiUrl, { params: { token: window.userToken } })
 
 // When you connect, you'll often need to authenticate the client.
 // For example, imagine you have an authentication plug, `MyAuth`,
