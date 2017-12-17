@@ -39,6 +39,7 @@ class TileStore {
 
   onTilesLoaded(response) {
     this.pushTiles(response.tiles)
+    this.calculateHeightMap()
     this.stopLoading()
   }
 
@@ -59,6 +60,12 @@ class TileStore {
 
   find(x,y,z) {
     return this.tileMatrix && this.tileMatrix[x] && this.tileMatrix[x][y] && this.tileMatrix[x][y][z]
+  }
+
+  getHeightDifference(tile, x, y, z) {
+    const neighbor = this.find(tile.x + x, tile.y + y, tile.z + z)
+
+    return neighbor ? tile.height - neighbor.height : 1
   }
 
   nearest(vector) {
@@ -86,6 +93,19 @@ class TileStore {
     )
 
     return nearest.tile
+  }
+
+  calculateHeightMap() {
+    this.tiles.map((tile) =>
+      tile.heightMap = tile.heightMap || {
+        xz: this.getHeightDifference(tile, -1, 0, 1),
+        yz: this.getHeightDifference(tile, 0, -1, 1),
+        yx: this.getHeightDifference(tile, 1, -1, 0),
+        zx: this.getHeightDifference(tile, 0, 1, -1),
+        zy: this.getHeightDifference(tile, 1, 0, -1),
+        xy: this.getHeightDifference(tile, -1, 1, 0)
+      }
+    )
   }
 
   move(coordinates) {

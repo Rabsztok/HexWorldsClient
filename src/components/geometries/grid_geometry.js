@@ -25,7 +25,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
     )
 
     const tileGeometry = new TileGeometry(tile)
-    let geometry = new THREE.Geometry().fromBufferGeometry(tileGeometry)
+    const geometry = new THREE.Geometry().fromBufferGeometry(tileGeometry)
     tmpGeometry.merge(geometry, matrix)
   }
 }

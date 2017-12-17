@@ -28,12 +28,12 @@ export default class TileGeometry extends THREE.BufferGeometry {
 
     const tmpGeometry = new THREE.Geometry()
     this.mergeGeometry(tmpGeometry, topGeometry, tile)
-    this.mergeGeometry(tmpGeometry, xzGeometry, tile, {x: -1, y: 0, z: 1})
-    this.mergeGeometry(tmpGeometry, yzGeometry, tile, {x: 0, y: -1, z: 1})
-    this.mergeGeometry(tmpGeometry, yxGeometry, tile, {x: 1, y: -1, z: 0})
-    this.mergeGeometry(tmpGeometry, zxGeometry, tile, {x: 0, y: 1, z: -1})
-    this.mergeGeometry(tmpGeometry, zyGeometry, tile, {x: 1, y: 0, z: -1})
-    this.mergeGeometry(tmpGeometry, xyGeometry, tile, {x: -1, y: 1, z: 0})
+    this.mergeGeometry(tmpGeometry, xzGeometry, tile, 'xz')
+    this.mergeGeometry(tmpGeometry, yzGeometry, tile, 'yz')
+    this.mergeGeometry(tmpGeometry, yxGeometry, tile, 'yx')
+    this.mergeGeometry(tmpGeometry, zxGeometry, tile, 'zx')
+    this.mergeGeometry(tmpGeometry, zyGeometry, tile, 'zy')
+    this.mergeGeometry(tmpGeometry, xyGeometry, tile, 'xy')
 
     this.fromGeometry(tmpGeometry)
     this.computeBoundingSphere()
@@ -41,20 +41,12 @@ export default class TileGeometry extends THREE.BufferGeometry {
   }
 
   mergeGeometry(tmpGeometry, bufferGeometry, tile, side) {
-    const height = side ? tile.height - this.getHeight(tile.x + side.x, tile.y + side.y, tile.z + side.z) : 1
+    const height = tile.heightMap[side] || 1
 
     if (height >= 1) {
       const geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry)
       geometry.scale(1, height / 2, 1)
       tmpGeometry.merge(geometry)
-    }
-  }
-
-  getHeight(x, y, z) {
-    try {
-      return window.store.tileStore.find(x, y, z).height
-    } catch (_err) {
-      return 0
     }
   }
 }

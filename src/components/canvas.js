@@ -3,9 +3,7 @@ import {autorunAsync} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import * as THREE from 'three'
 import autobind from 'autobind-decorator'
-import {groupBy, each} from 'lodash'
-import ForestGeometry from './geometries/forest_geometry'
-import GridGeometry from './geometries/grid_geometry'
+import {groupBy, each, filter} from 'lodash'
 
 let OrbitControls = require('three-orbit-controls')(THREE)
 
@@ -14,6 +12,8 @@ class Canvas extends Component {
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
   renderer = new THREE.WebGLRenderer()
   grid = new THREE.Group()
+  gridWorker = new Worker('/grid-worker.js')
+  forestWorker = new Worker('/forest-worker.js')
   terrains = {dirt: 0x007B0C, stone: 0x666666, sand: 0xC2B280, water: 0x40A4DF, forest: 0x004B0C}
 
   componentWillMount() {
@@ -71,29 +71,36 @@ class Canvas extends Component {
   addGrid() {
     this.scene.add(this.grid)
     autorunAsync(this.drawGrid)
+
+    this.gridWorker.onmessage = this.parseMesh
+    this.forestWorker.onmessage = this.parseMesh
+  }
+
+  @autobind
+  parseMesh(e) {
+    const loader = new THREE.ObjectLoader()
+    console.time(`mesh-${e.data.object.uuid}`)
+    const mesh = loader.parse(e.data)
+    console.timeEnd(`mesh-${e.data.object.uuid}`)
+
+    this.grid.add(mesh)
+
+    window.requestAnimationFrame(this.animate)
   }
 
   @autobind
   drawGrid() {
     const tiles = this.props.store.tileStore.tiles
-    this.grid.remove(...this.grid.children)
+
+    if (!tiles.length) return
 
     each(groupBy(tiles, (tile) => tile.terrain.type), (tiles, terrainType) => {
-      const mesh = new THREE.Mesh(
-          new GridGeometry(tiles),
-          new THREE.MeshLambertMaterial({color: this.terrains[terrainType], flatShading: true})
-      )
-      this.grid.add(mesh)
+      const color = this.terrains[terrainType]
+      this.gridWorker.postMessage({tiles, color})
     })
 
-    // draw forest
-    const mesh = new THREE.Mesh(
-        new ForestGeometry().build(tiles),
-        new THREE.MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
-    )
-    this.grid.add(mesh)
-
-    window.requestAnimationFrame(this.animate)
+    const forestTiles = filter(tiles, (tile) => tile.terrain.type === 'forest')
+    this.forestWorker.postMessage({tiles: forestTiles})
   }
 
   componentWillUnmount() {

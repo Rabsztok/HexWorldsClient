@@ -3,6 +3,28 @@ import {times, filter} from 'lodash'
 import {randomInt} from 'utils/random'
 
 class ForestGeometry extends THREE.BufferGeometry {
+  constructor(tiles) {
+    super()
+
+    const tmpGeometry = new THREE.Geometry()
+    const forestTiles = filter(tiles, (tile) => tile.terrain.type === 'forest')
+
+    forestTiles.map((tile) => {
+      const rotation = Math.random() // TODO: from UUID
+      const density = tile.terrain.density
+
+      times(density, (i) =>
+          this.mergeGeometry(tmpGeometry, this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation), tile)
+      )
+
+      return tile
+    })
+
+    this.fromGeometry(tmpGeometry)
+    this.computeBoundingSphere()
+    return this
+  }
+
   treeGeometry(position, segments, rotation) {
     const tmpGeometry = new THREE.Geometry()
 
@@ -20,28 +42,7 @@ class ForestGeometry extends THREE.BufferGeometry {
     return tmpGeometry
   }
 
-  build(tiles) {
-    const tmpGeometry = new THREE.Geometry()
-    const forestTiles = filter(tiles, (tile) => tile.terrain.type === 'forest')
-
-
-    forestTiles.map((tile) => {
-      const rotation = Math.random() // TODO: from UUID
-      const density = tile.terrain.density
-
-      times(density, (i) =>
-        this.mergeGeometry(tmpGeometry, this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation), tile)
-      )
-
-      return tile
-    })
-
-    this.fromGeometry(tmpGeometry)
-    this.computeBoundingSphere()
-    return this
-  }
-
-  mergeGeometry(tmpGeometry, geometry, tile, side) {
+  mergeGeometry(tmpGeometry, geometry, tile) {
     const matrix = new THREE.Matrix4()
 
     matrix.makeTranslation(
@@ -50,22 +51,7 @@ class ForestGeometry extends THREE.BufferGeometry {
         tile.z * 3 / 2
     )
 
-    let height = 1
-    if (side)
-      height = tile.height - this.getHeight(tile.x + side.x, tile.y + side.y, tile.z + side.z)
-
-    if (height >= 1) {
-      geometry.scale(1, height, 1)
-      tmpGeometry.merge(geometry, matrix)
-    }
-  }
-
-  getHeight(x, y, z) {
-    try {
-      return window.store.tileStore.find(x, y, z).height
-    } catch (_err) {
-      return 0
-    }
+    tmpGeometry.merge(geometry, matrix)
   }
 }
 

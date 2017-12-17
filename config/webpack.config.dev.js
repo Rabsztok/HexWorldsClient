@@ -254,7 +254,12 @@ module.exports = {
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
     new ServiceWorkerWebpackPlugin({
-      entry: path.resolve('src/sw.js'),
+      entry: path.resolve('src/workers/grid_worker.js'),
+      filename: 'grid-worker.js',
+    }),
+    new ServiceWorkerWebpackPlugin({
+      entry: path.resolve('src/workers/forest_worker.js'),
+      filename: 'forest-worker.js',
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
