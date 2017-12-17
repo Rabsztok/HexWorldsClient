@@ -72,25 +72,28 @@ class Canvas extends Component {
 
   @autobind
   drawGrid() {
+    const tiles = this.props.store.tileStore.tiles
+    console.log(tiles.length)
+    // this.tileDrawer.postMessage({ tiles: tiles.toJS() })
     // this.grid.remove(...this.grid.children)
 
     var t0 = performance.now();
     each(this.terrains, (color, terrain) => {
       const mesh = new THREE.Mesh(
-          new GridGeometry().fromTerrain(window.store.tileStore.tiles, terrain),
+          new GridGeometry().fromTerrain(tiles, terrain),
           new THREE.MeshLambertMaterial({color: color, flatShading: true})
       )
       this.grid.add(mesh)
     })
-    var t1 = performance.now();
-    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
 
     // draw forest
     const mesh = new THREE.Mesh(
-        new ForestGeometry().build(window.store.tileStore.tiles),
+        new ForestGeometry().build(tiles),
         new THREE.MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
     )
     this.grid.add(mesh)
+    var t1 = performance.now();
+    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
   }
 
   componentWillUnmount() {

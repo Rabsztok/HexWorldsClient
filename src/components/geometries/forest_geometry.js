@@ -1,9 +1,8 @@
 import * as THREE from 'three'
 import {times, filter} from 'lodash'
-import tileStore from 'stores/tile_store'
 import {randomInt} from 'utils/random'
 
-export default class ForestGeometry extends THREE.BufferGeometry {
+class ForestGeometry extends THREE.BufferGeometry {
   treeGeometry(position, segments, rotation) {
     const tmpGeometry = new THREE.Geometry()
 
@@ -62,11 +61,13 @@ export default class ForestGeometry extends THREE.BufferGeometry {
   }
 
   getHeight(x, y, z) {
-    try {
-      return tileStore.find(x, y, z).height
-    } catch (_err) {
+    // try {
+    //   return tileStore.find(x, y, z).height
+    // } catch (_err) {
       return 0
-    }
+    // }
   }
 }
+
+export default ForestGeometry
 

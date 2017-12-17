@@ -1,69 +1,73 @@
 import * as THREE from 'three'
-import tileStore from 'stores/tile_store'
+import autobind from 'autobind-decorator'
+// import tileStore from 'stores/tile_store'
 
 export default class GridGeometry extends THREE.BufferGeometry {
   fromTerrain(tiles, terrain) {
-    let tmpGeometry = new THREE.Geometry()
+    const tmpGeometry = new THREE.Geometry()
 
-    let topGeometry = new THREE.CircleBufferGeometry(1, 6)
-    topGeometry.attributes.uv.array[5] = 0.5
-    topGeometry.attributes.uv.array[7] = 0.5
-    topGeometry.rotateX(-Math.PI / 2)
-    topGeometry.rotateY(Math.PI / 2)
+    this.topGeometry = new THREE.CircleBufferGeometry(1, 6)
+    this.topGeometry.attributes.uv.array[5] = 0.5
+    this.topGeometry.attributes.uv.array[7] = 0.5
+    this.topGeometry.rotateX(-Math.PI / 2)
+    this.topGeometry.rotateY(Math.PI / 2)
 
-    let zxGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    zxGeometry.attributes.uv.array[1] = 0.5
-    zxGeometry.attributes.uv.array[3] = 0.5
-    zxGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    zxGeometry.rotateY(-Math.PI * 5 / 6)
+    this.zxGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.zxGeometry.attributes.uv.array[1] = 0.5
+    this.zxGeometry.attributes.uv.array[3] = 0.5
+    this.zxGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.zxGeometry.rotateY(-Math.PI * 5 / 6)
 
-    let zyGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    zyGeometry.attributes.uv.array[1] = 0.5
-    zyGeometry.attributes.uv.array[3] = 0.5
-    zyGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    zyGeometry.rotateY(Math.PI * 5 / 6)
+    this.zyGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.zyGeometry.attributes.uv.array[1] = 0.5
+    this.zyGeometry.attributes.uv.array[3] = 0.5
+    this.zyGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.zyGeometry.rotateY(Math.PI * 5 / 6)
 
-    let yxGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    yxGeometry.attributes.uv.array[1] = 0.5
-    yxGeometry.attributes.uv.array[3] = 0.5
-    yxGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    yxGeometry.rotateY(Math.PI / 2)
+    this.yxGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.yxGeometry.attributes.uv.array[1] = 0.5
+    this.yxGeometry.attributes.uv.array[3] = 0.5
+    this.yxGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.yxGeometry.rotateY(Math.PI / 2)
 
-    let yzGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    yzGeometry.attributes.uv.array[1] = 0.5
-    yzGeometry.attributes.uv.array[3] = 0.5
-    yzGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    yzGeometry.rotateY(Math.PI / 6)
+    this.yzGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.yzGeometry.attributes.uv.array[1] = 0.5
+    this.yzGeometry.attributes.uv.array[3] = 0.5
+    this.yzGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.yzGeometry.rotateY(Math.PI / 6)
 
-    let xzGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    xzGeometry.attributes.uv.array[1] = 0.5
-    xzGeometry.attributes.uv.array[3] = 0.5
-    xzGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    xzGeometry.rotateY(-Math.PI / 6)
+    this.xzGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.xzGeometry.attributes.uv.array[1] = 0.5
+    this.xzGeometry.attributes.uv.array[3] = 0.5
+    this.xzGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.xzGeometry.rotateY(-Math.PI / 6)
 
-    let xyGeometry = new THREE.PlaneBufferGeometry(1, 1)
-    xyGeometry.attributes.uv.array[1] = 0.5
-    xyGeometry.attributes.uv.array[3] = 0.5
-    xyGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
-    xyGeometry.rotateY(-Math.PI / 2)
+    this.xyGeometry = new THREE.PlaneBufferGeometry(1, 1)
+    this.xyGeometry.attributes.uv.array[1] = 0.5
+    this.xyGeometry.attributes.uv.array[3] = 0.5
+    this.xyGeometry.translate(0, -0.5, Math.sqrt(3) / 2)
+    this.xyGeometry.rotateY(-Math.PI / 2)
 
-    tiles.map((tile) => {
-      if (tile.terrain.type === terrain) {
-        this.mergeGeometry(tmpGeometry, topGeometry, tile)
-        this.mergeGeometry(tmpGeometry, xzGeometry, tile, {x: -1, y: 0, z: 1})
-        this.mergeGeometry(tmpGeometry, yzGeometry, tile, {x: 0, y: -1, z: 1})
-        this.mergeGeometry(tmpGeometry, yxGeometry, tile, {x: 1, y: -1, z: 0})
-        this.mergeGeometry(tmpGeometry, zxGeometry, tile, {x: 0, y: 1, z: -1})
-        this.mergeGeometry(tmpGeometry, zyGeometry, tile, {x: 1, y: 0, z: -1})
-        this.mergeGeometry(tmpGeometry, xyGeometry, tile, {x: -1, y: 1, z: 0})
-      }
-
-      return tile
-    })
+    tiles.map((tile) => this.generateTile(tmpGeometry, tile, terrain))
 
     this.fromGeometry(tmpGeometry)
     this.computeBoundingSphere()
     return this
+  }
+
+  @autobind
+  generateTile(tmpGeometry, tile, terrain) {
+    if (tile.terrain.type === terrain) {
+      this.mergeGeometry(tmpGeometry, this.topGeometry, tile)
+      this.mergeGeometry(tmpGeometry, this.xzGeometry, tile, {x: -1, y: 0, z: 1})
+      this.mergeGeometry(tmpGeometry, this.yzGeometry, tile, {x: 0, y: -1, z: 1})
+      this.mergeGeometry(tmpGeometry, this.yxGeometry, tile, {x: 1, y: -1, z: 0})
+      this.mergeGeometry(tmpGeometry, this.zxGeometry, tile, {x: 0, y: 1, z: -1})
+      this.mergeGeometry(tmpGeometry, this.zyGeometry, tile, {x: 1, y: 0, z: -1})
+      this.mergeGeometry(tmpGeometry, this.xyGeometry, tile, {x: -1, y: 1, z: 0})
+    }
+
+    return tile
   }
 
   mergeGeometry(tmpGeometry, bufferGeometry, tile, side) {
@@ -87,11 +91,11 @@ export default class GridGeometry extends THREE.BufferGeometry {
   }
 
   getHeight(x, y, z) {
-    try {
-      return tileStore.find(x, y, z).height
-    } catch (_err) {
+    // try {
+    //   return tileStore.find(x, y, z).height
+    // } catch (_err) {
       return 0
-    }
+    // }
   }
 }
 
