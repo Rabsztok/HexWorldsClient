@@ -4,26 +4,28 @@ import TileChannel from 'channels/tile_channel'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'
+import autobind from 'autobind-decorator'
 
 class TileStore {
   @observable loading = false
   @observable tiles = []
-  @observable range = 5
+  @observable range = 20
   tileMatrix = {}
 
   constructor() {
-    observe(this, 'tiles', this.computeTileMatrix.bind(this))
+    observe(this, 'tiles', this.computeTileMatrix)
   }
 
   connect(world) {
     this.startLoading()
     this.channel = new TileChannel('tiles:lobby')
 
-    this.channel.connect(world, this.onTilesLoaded.bind(this))
-    this.channel.socket.on('move', this.onTilesLoaded.bind(this))
+    this.channel.connect(world, this.onTilesLoaded)
+    this.channel.socket.on('move', this.onTilesLoaded)
   }
 
-  @action computeTileMatrix() {
+  @autobind @action
+  computeTileMatrix() {
     let tileMatrix = {}
 
     this.tiles.map((tile) => {
@@ -37,6 +39,7 @@ class TileStore {
     this.tileMatrix = tileMatrix
   }
 
+  @autobind
   onTilesLoaded(response) {
     this.pushTiles(response.tiles)
     this.calculateHeightMap()
@@ -65,7 +68,7 @@ class TileStore {
   getHeightDifference(tile, x, y, z) {
     const neighbor = this.find(tile.x + x, tile.y + y, tile.z + z)
 
-    return neighbor ? tile.height - neighbor.height : 1
+    return neighbor ? tile.height - neighbor.height : tile.height
   }
 
   nearest(vector) {
@@ -108,9 +111,9 @@ class TileStore {
     )
   }
 
-  move(coordinates) {
+  move(worldId, coordinates) {
     this.startLoading()
-    this.channel.socket.push('move', {coordinates: coordinates, range: this.range})
+    this.channel.socket.push('move', {world_id: worldId, coordinates: coordinates, range: this.range})
   }
 }
 

@@ -3,7 +3,8 @@ import {autorunAsync} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import * as THREE from 'three'
 import autobind from 'autobind-decorator'
-import {groupBy, each, filter} from 'lodash'
+import {groupBy, each, filter, chunk} from 'lodash'
+import Controls from 'utils/controls'
 
 let OrbitControls = require('three-orbit-controls')(THREE)
 
@@ -55,7 +56,9 @@ class Canvas extends Component {
     this.controls.maxPolarAngle = 2 * Math.PI / 5
     this.controls.minPolarAngle = Math.PI / 8
     this.controls.target.set(0, 0, 0)
-    this.controls.addEventListener( 'change', this.animate );
+    this.controls.addEventListener( 'change', this.animate )
+
+    new Controls(this.props.store, this.camera, this.grid, this.root)
   }
 
   addLight() {
@@ -90,17 +93,22 @@ class Canvas extends Component {
 
   @autobind
   drawGrid() {
-    const tiles = this.props.store.tileStore.tiles
-
+    const tiles = filter(this.props.store.tileStore.tiles, (tile) => !tile.rendered)
     if (!tiles.length) return
 
-    each(groupBy(tiles, (tile) => tile.terrain.type), (tiles, terrainType) => {
-      const color = this.terrains[terrainType]
-      this.gridWorker.postMessage({tiles, color})
+    chunk(tiles, 100).map((segment) => {
+      each(groupBy(segment, (tile) => tile.terrain.type), (tiles, terrainType) => {
+        const color = this.terrains[terrainType]
+        this.gridWorker.postMessage({tiles, color})
+      })
+
+      const forestTiles = filter(chunk, (tile) => tile.terrain.type === 'forest')
+      this.forestWorker.postMessage({tiles: forestTiles})
+
+      return segment
     })
 
-    const forestTiles = filter(tiles, (tile) => tile.terrain.type === 'forest')
-    this.forestWorker.postMessage({tiles: forestTiles})
+    tiles.map((tile) => tile.rendered = true)
   }
 
   componentWillUnmount() {
