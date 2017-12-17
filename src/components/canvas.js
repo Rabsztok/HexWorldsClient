@@ -82,9 +82,7 @@ class Canvas extends Component {
   @autobind
   parseMesh(e) {
     const loader = new THREE.ObjectLoader()
-    console.time(`mesh-${e.data.object.uuid}`)
     const mesh = loader.parse(e.data)
-    console.timeEnd(`mesh-${e.data.object.uuid}`)
 
     this.grid.add(mesh)
 
