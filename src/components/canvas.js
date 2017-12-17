@@ -46,6 +46,8 @@ class Canvas extends Component {
     this.renderer.setSize(canvasStore.width, canvasStore.height)
     this.camera.aspect = canvasStore.width / canvasStore.height
     this.camera.updateProjectionMatrix();
+
+    window.requestAnimationFrame(this.animate)
   }
 
   addControls() {
@@ -53,6 +55,7 @@ class Canvas extends Component {
     this.controls.maxPolarAngle = 2 * Math.PI / 5
     this.controls.minPolarAngle = Math.PI / 8
     this.controls.target.set(0, 0, 0)
+    this.controls.addEventListener( 'change', this.animate );
   }
 
   addLight() {
@@ -73,11 +76,8 @@ class Canvas extends Component {
   @autobind
   drawGrid() {
     const tiles = this.props.store.tileStore.tiles
-    console.log(tiles.length)
-    // this.tileDrawer.postMessage({ tiles: tiles.toJS() })
-    // this.grid.remove(...this.grid.children)
+    this.grid.remove(...this.grid.children)
 
-    var t0 = performance.now();
     each(this.terrains, (color, terrain) => {
       const mesh = new THREE.Mesh(
           new GridGeometry().fromTerrain(tiles, terrain),
@@ -92,8 +92,8 @@ class Canvas extends Component {
         new THREE.MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
     )
     this.grid.add(mesh)
-    var t1 = performance.now();
-    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+    window.requestAnimationFrame(this.animate)
   }
 
   componentWillUnmount() {
@@ -102,12 +102,15 @@ class Canvas extends Component {
 
   @autobind
   animate() {
-    window.requestAnimationFrame(this.animate)
+    window.requestAnimationFrame(this.reRender)
+  }
+
+  @autobind
+  reRender() {
     this.renderer.render(this.scene, this.camera)
   }
 
   render() {
-    console.log('rerender')
     return (
         <div ref={(e) => this.root = e}/>
     )

@@ -91,11 +91,11 @@ export default class GridGeometry extends THREE.BufferGeometry {
   }
 
   getHeight(x, y, z) {
-    // try {
-    //   return tileStore.find(x, y, z).height
-    // } catch (_err) {
+    try {
+      return window.store.tileStore.find(x, y, z).height
+    } catch (_err) {
       return 0
-    // }
+    }
   }
 }
 
