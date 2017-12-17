@@ -94,8 +94,4 @@ class TileStore {
   }
 }
 
-const tileStore = new TileStore()
-
-window.TileStore = tileStore
-
-export default tileStore
+export default TileStore

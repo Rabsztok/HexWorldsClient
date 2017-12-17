@@ -1,32 +1,34 @@
 import React, {Component} from 'react'
-import {observer} from 'mobx-react'
-import tileStore from 'stores/tile_store'
-import worldStore from 'stores/world_store'
+import {observer, inject} from 'mobx-react'
 import Canvas from 'components/canvas'
 import Menu from 'components/canvas_menu/canvas_menu'
 import styles from './world.scss'
 
-@observer
-export default class WorldPage extends Component {
+class WorldPage extends Component {
   componentWillMount() {
+    const {worldStore, tileStore} = this.props.store
     const world = worldStore.find(this.props.match.params.id)
     worldStore.selectWorld(world)
+    tileStore.connect(world)
   }
 
   render() {
-    if (worldStore.currentWorld) {
-      return (
-          <div>
-            <Menu/>
+    const {worldStore, tileStore} = this.props.store
 
-            {tileStore.loading && <div className={styles.loading}><i className='fa fa-circle-o-notch fa-spin'/></div>}
+    if (!worldStore.currentWorld) return null
 
-            <div className={styles.container}>
-              <Canvas/>
-            </div>
+    return (
+        <div>
+          <Menu/>
+
+          {tileStore.loading && <div className={styles.loading}><i className='fa fa-circle-o-notch fa-spin'/></div>}
+
+          <div className={styles.container}>
+            <Canvas/>
           </div>
-      )
-    }
-    else return null
+        </div>
+    )
   }
 }
+
+export default inject('store')(observer(WorldPage))

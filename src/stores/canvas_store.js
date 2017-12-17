@@ -31,8 +31,4 @@ class CanvasStore {
   }
 }
 
-const canvasStore = new CanvasStore()
-
-window.CanvasStore = canvasStore
-
-export default canvasStore
+export default CanvasStore

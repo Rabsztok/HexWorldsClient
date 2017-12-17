@@ -1,20 +1,24 @@
 import React, {Component} from 'react'
-import {observer} from 'mobx-react'
+import {autorunAsync} from 'mobx'
+import {observer, inject} from 'mobx-react'
 import * as THREE from 'three'
-import canvasStore from 'stores/canvas_store'
-import gridStore from 'stores/grid_store'
 import autobind from 'autobind-decorator'
+import {each} from 'lodash'
+import ForestGeometry from './geometries/forest_geometry'
+import GridGeometry from './geometries/grid_geometry'
 
 let OrbitControls = require('three-orbit-controls')(THREE)
 
-@observer
-export default class Canvas extends Component {
+class Canvas extends Component {
   scene = new THREE.Scene()
-
   camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
   renderer = new THREE.WebGLRenderer()
+  grid = new THREE.Group()
+  terrains = {dirt: 0x007B0C, stone: 0x666666, sand: 0xC2B280, water: 0x40A4DF, forest: 0x004B0C}
 
   componentWillMount() {
+    const canvasStore = this.props.store.canvasStore
+
     canvasStore.setCanvasSize()
     window.onresize = canvasStore.setCanvasSize
   }
@@ -25,14 +29,23 @@ export default class Canvas extends Component {
     this.addControls()
     this.addLight()
     this.addGrid()
+    autorunAsync(this.resizeCanvas)
 
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.setClearColor(0xaaeeff)
+    this.resizeCanvas()
 
     this.root.appendChild(this.renderer.domElement)
 
     this.animate()
+  }
+
+  @autobind
+  resizeCanvas() {
+    const canvasStore = this.props.store.canvasStore
+    this.renderer.setSize(canvasStore.width, canvasStore.height)
+    this.camera.aspect = canvasStore.width / canvasStore.height
+    this.camera.updateProjectionMatrix();
   }
 
   addControls() {
@@ -51,9 +64,33 @@ export default class Canvas extends Component {
     this.scene.add(pointLight)
   }
 
+  @autobind
   addGrid() {
-    const grid = gridStore.setGrid()
-    this.scene.add(grid)
+    this.scene.add(this.grid)
+    autorunAsync(this.drawGrid)
+  }
+
+  @autobind
+  drawGrid() {
+    // this.grid.remove(...this.grid.children)
+
+    var t0 = performance.now();
+    each(this.terrains, (color, terrain) => {
+      const mesh = new THREE.Mesh(
+          new GridGeometry().fromTerrain(window.store.tileStore.tiles, terrain),
+          new THREE.MeshLambertMaterial({color: color, flatShading: true})
+      )
+      this.grid.add(mesh)
+    })
+    var t1 = performance.now();
+    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+
+    // draw forest
+    const mesh = new THREE.Mesh(
+        new ForestGeometry().build(window.store.tileStore.tiles),
+        new THREE.MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
+    )
+    this.grid.add(mesh)
   }
 
   componentWillUnmount() {
@@ -67,8 +104,11 @@ export default class Canvas extends Component {
   }
 
   render() {
+    console.log('rerender')
     return (
         <div ref={(e) => this.root = e}/>
     )
   }
 }
+
+export default inject('store')(observer(Canvas))

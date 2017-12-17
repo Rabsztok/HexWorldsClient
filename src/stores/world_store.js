@@ -1,7 +1,6 @@
 import { action, observable } from 'mobx'
 import _find from 'lodash/find'
 import WorldChannel from 'channels/world_channel'
-import tileStore from 'stores/tile_store'
 import autobind from 'autobind-decorator'
 
 class WorldStore {
@@ -25,7 +24,6 @@ class WorldStore {
 
   @action selectWorld(world) {
     this.currentWorld = world
-    tileStore.connect(world)
   }
 
   find(id) {
@@ -33,8 +31,4 @@ class WorldStore {
   }
 }
 
-const worldStore = new WorldStore()
-
-window.WorldStore = worldStore
-
-export default worldStore
+export default WorldStore
