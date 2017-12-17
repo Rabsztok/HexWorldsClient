@@ -3,7 +3,7 @@ import {autorunAsync} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import * as THREE from 'three'
 import autobind from 'autobind-decorator'
-import {each} from 'lodash'
+import {groupBy, each} from 'lodash'
 import ForestGeometry from './geometries/forest_geometry'
 import GridGeometry from './geometries/grid_geometry'
 
@@ -78,10 +78,10 @@ class Canvas extends Component {
     const tiles = this.props.store.tileStore.tiles
     this.grid.remove(...this.grid.children)
 
-    each(this.terrains, (color, terrain) => {
+    each(groupBy(tiles, (tile) => tile.terrain.type), (tiles, terrainType) => {
       const mesh = new THREE.Mesh(
-          new GridGeometry().fromTerrain(tiles, terrain),
-          new THREE.MeshLambertMaterial({color: color, flatShading: true})
+          new GridGeometry(tiles),
+          new THREE.MeshLambertMaterial({color: this.terrains[terrainType], flatShading: true})
       )
       this.grid.add(mesh)
     })
