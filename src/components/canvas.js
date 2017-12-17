@@ -25,7 +25,7 @@ class Canvas extends Component {
   }
 
   componentDidMount() {
-    this.camera.position.set(-30, 30, 0)
+    this.camera.position.set(-100, 100, 0)
 
     this.addControls()
     this.addLight()
@@ -94,13 +94,13 @@ class Canvas extends Component {
     const tiles = filter(this.props.store.tileStore.tiles, (tile) => !tile.rendered)
     if (!tiles.length) return
 
-    chunk(tiles, 100).map((segment) => {
+    chunk(tiles, tiles.length/8).map((segment) => {
       each(groupBy(segment, (tile) => tile.terrain.type), (tiles, terrainType) => {
         const color = this.terrains[terrainType]
         this.gridWorker.postMessage({tiles, color})
       })
 
-      const forestTiles = filter(chunk, (tile) => tile.terrain.type === 'forest')
+      const forestTiles = filter(segment, (tile) => tile.terrain.type === 'forest')
       this.forestWorker.postMessage({tiles: forestTiles})
 
       return segment
