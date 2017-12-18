@@ -41,7 +41,8 @@ export default class TileGeometry extends THREE.BufferGeometry {
   }
 
   mergeGeometry(tmpGeometry, bufferGeometry, tile, side) {
-    const height = tile.heightMap[side] || 1
+    let height = tile.heightMap[side]
+    if (!side) height = 1
 
     if (height >= 1) {
       const geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry)
