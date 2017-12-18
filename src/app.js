@@ -19,6 +19,7 @@ class App extends React.Component {
   componentWillMount() {
     this.store = {
       worldStore: new Stores.WorldStore(),
+      gridStore: new Stores.GridStore(),
       canvasStore: new Stores.CanvasStore(),
       tileStore: new Stores.TileStore()
     }

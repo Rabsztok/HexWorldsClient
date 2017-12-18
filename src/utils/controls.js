@@ -4,10 +4,9 @@ import {worldToCube} from './coordinates'
 import {pick} from 'lodash'
 
 export default class Controls {
-  constructor(store, camera, grid, container) {
+  constructor(store, camera, container) {
     this.store = store
     this.camera = camera
-    this.grid = grid
     this.container = container
 
     this.container.addEventListener('mousedown', this.mouseDown)
@@ -58,7 +57,7 @@ export default class Controls {
 
     const raycaster = new THREE.Raycaster()
     raycaster.setFromCamera( mouse, this.camera )
-    const intersect = raycaster.intersectObjects(this.grid.children)[0]
+    const intersect = raycaster.intersectObjects(this.store.gridStore.grid.children.slice())[0]
 
     if (intersect) {
       return tileStore.nearest(worldToCube(intersect.point))

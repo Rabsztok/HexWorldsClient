@@ -1,33 +1,55 @@
-import {observable, action} from 'mobx'
 import autobind from 'autobind-decorator'
 import * as THREE from 'three'
 
 class CanvasStore {
-  @observable width = null
-  @observable height = null
-  @observable cameraPosition = new THREE.Vector3(-30, 30, 0)
-  @observable cameraTarget = new THREE.Vector3(0, 0, 0)
-  @observable lightPosition = new THREE.Vector3(0, 20, 20)
-  @observable camera
+  scene = new THREE.Scene()
+  renderer = new THREE.WebGLRenderer()
+  width = window.innerWidth
+  height = window.innerHeight
+  cameraPosition = new THREE.Vector3(-100, 100, 0)
+  lightPosition = new THREE.Vector3(100, 100, 100)
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
 
-  @autobind @action
-  setCanvasSize() {
-    this.width = window.innerWidth
-    this.height = window.innerHeight
+  constructor() {
+    window.onresize = this.resizeCanvas
+
+    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.setClearColor(0xaaeeff)
+    this.camera.position.copy(this.cameraPosition)
+
+    this.addLight()
+    this.resizeCanvas()
   }
 
-  @action
-  moveCamera(x, z) {
-    this.cameraPosition = new THREE.Vector3(
-        this.cameraPosition.x + x,
-        this.cameraPosition.y,
-        this.cameraPosition.z + z
-    )
-    this.cameraTarget = new THREE.Vector3(
-        this.cameraTarget.x + x,
-        this.cameraTarget.y,
-        this.cameraTarget.z + z
-    )
+  addLight() {
+    const ambientLight = new THREE.AmbientLight(0xddddcc, 0.7)
+    const pointLight = new THREE.PointLight(0xffffff, 1)
+    pointLight.position.copy(this.lightPosition)
+
+    this.scene.add(ambientLight)
+    this.scene.add(pointLight)
+  }
+
+  @autobind
+  resizeCanvas() {
+    this.width = window.innerWidth
+    this.height = window.innerHeight
+
+    this.renderer.setSize(this.width, this.height)
+    this.camera.aspect = this.width / this.height
+    this.camera.updateProjectionMatrix();
+
+    this.animate()
+  }
+
+  @autobind
+  animate() {
+    window.requestAnimationFrame(this.reRender)
+  }
+
+  @autobind
+  reRender() {
+    this.renderer.render(this.scene, this.camera)
   }
 }
 
