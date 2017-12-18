@@ -115,6 +115,11 @@ class TileStore {
     this.startLoading()
     this.channel.socket.push('move', {world_id: worldId, coordinates: coordinates, range: this.range})
   }
+
+  showAll(worldId) {
+    this.startLoading()
+    this.channel.socket.push('move', {world_id: worldId, coordinates: {x: 0, y: 0, z: 0}, range: 10000})
+  }
 }
 
 export default TileStore
