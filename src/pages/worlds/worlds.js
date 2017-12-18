@@ -7,8 +7,14 @@ import Typography from 'material-ui/Typography'
 import styles from './worlds.scss'
 
 class WorldList extends Component {
+  componentWillMount() {
+    this.props.store.worldStore.fetchAll()
+  }
+
   render() {
     const worlds = this.props.store.worldStore.worlds
+    if (!worlds.length) return null
+    
     return (
         <div className={styles.list}>
           <Grid container justify="center">

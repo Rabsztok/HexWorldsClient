@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { computed } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 
 import * as Stores from 'stores'
@@ -25,30 +24,22 @@ class App extends React.Component {
     }
 
     window.store = this.store
-
-    this.store.worldStore.connect()
-  }
-
-  @computed get ready() {
-    return this.store.worldStore.ready
   }
 
   render() {
-    if (this.ready)
-      return (
-          <Provider store={this.store}>
-            <Router>
-              <div>
-                <Switch>
-                  <Route exact path={routes.worlds()} component={Pages.Worlds}/>
-                  <Route path={routes.world(":id")} component={Pages.World}/>
-                  <Route component={NotFound}/>
-                </Switch>
-              </div>
-            </Router>
-          </Provider>
-      )
-    else return null
+    return (
+        <Provider store={this.store}>
+          <Router>
+            <div>
+              <Switch>
+                <Route exact path={routes.worlds()} component={Pages.Worlds}/>
+                <Route path={routes.world(":id")} component={Pages.World}/>
+                <Route component={NotFound}/>
+              </Switch>
+            </div>
+          </Router>
+        </Provider>
+    )
   }
 }
 

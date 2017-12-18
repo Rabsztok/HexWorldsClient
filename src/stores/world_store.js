@@ -1,33 +1,30 @@
 import { action, observable } from 'mobx'
-import _find from 'lodash/find'
-import WorldChannel from 'channels/world_channel'
+import {find} from 'lodash'
 import autobind from 'autobind-decorator'
+import {apiClient} from 'utils/api'
 
 class WorldStore {
-  @observable ready = false
   @observable worlds = []
   @observable currentWorld
 
   @autobind
-  @action setWorlds(response) {
-    this.worlds = response.worlds
-    this.ready = true
+  async fetchAll() {
+    const {worlds} = await apiClient.get('worlds')
+    this.worlds = worlds
   }
 
-  connect() {
-    if (this.channel) return
-
-    this.channel = new WorldChannel('worlds:lobby')
-    this.channel.connect(this.setWorlds)
+  @autobind
+  async fetch(id) {
+    return this.find(id) || (await apiClient.get(`worlds/${id}`)).world
   }
 
-
-  @action selectWorld(world) {
+  @action
+  selectWorld(world) {
     this.currentWorld = world
   }
 
   find(id) {
-    return _find(this.worlds, { id: id })
+    return find(this.worlds, { id: id })
   }
 }
 

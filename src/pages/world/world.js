@@ -6,8 +6,13 @@ import styles from './world.scss'
 
 class WorldPage extends Component {
   componentWillMount() {
+    this.load()
+  }
+
+  async load() {
     const {worldStore, tileStore} = this.props.store
-    const world = worldStore.find(this.props.match.params.id)
+    const world = await worldStore.fetch(this.props.match.params.id)
+    console.log(world)
     worldStore.selectWorld(world)
     tileStore.connect(world)
   }
