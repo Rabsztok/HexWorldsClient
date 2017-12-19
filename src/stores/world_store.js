@@ -1,21 +1,28 @@
 import { action, observable } from 'mobx'
-import {find} from 'lodash'
 import autobind from 'autobind-decorator'
 import {apiClient} from 'utils/api'
 
 class WorldStore {
-  @observable worlds = []
+  worlds = observable.map()
   @observable currentWorld
 
   @autobind
+  @action
   async fetchAll() {
     const {worlds} = await apiClient.get('worlds')
-    this.worlds = worlds
+    worlds.map((world) => this.worlds.set(world.id, world))
   }
 
   @autobind
   async fetch(id) {
-    return this.find(id) || (await apiClient.get(`worlds/${id}`)).world
+    if (this.worlds.has(id)) {
+      return this.worlds.get(id)
+    }
+    else {
+      const {world} = await apiClient.get(`worlds/${id}`)
+      this.worlds.set(world.id, world)
+      return world
+    }
   }
 
   @action
@@ -23,8 +30,16 @@ class WorldStore {
     this.currentWorld = world
   }
 
-  find(id) {
-    return find(this.worlds, { id: id })
+  @autobind
+  async create(name, size) {
+    const {world} = await apiClient.post('worlds', { world: {name}, size: size })
+    this.worlds.set(world.id, world)
+  }
+
+  @autobind
+  async delete(id) {
+    await apiClient.delete(`worlds/${id}`)
+    this.worlds.delete(id)
   }
 }
 
