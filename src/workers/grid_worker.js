@@ -4,7 +4,7 @@ import * as THREE from 'three'
 self.addEventListener('message', function(e) {
   const mesh = new THREE.Mesh(
       new GridGeometry(e.data.tiles),
-      new THREE.MeshLambertMaterial({color: e.data.color, flatShading: true})
+      new THREE.MeshLambertMaterial({color: e.data.color})
   )
 
   self.postMessage(mesh.toJSON());

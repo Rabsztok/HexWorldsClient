@@ -4,3 +4,7 @@
   right: 10px;
   z-index: 1;
 }
+
+.menu :global(button), .menu :global(a) {
+  margin-left: 15px;
+}

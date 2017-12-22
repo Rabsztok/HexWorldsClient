@@ -1,15 +1,26 @@
 import React from 'react'
-import {observer} from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import Button from 'material-ui/Button'
-import AddIcon from 'material-ui-icons/ArrowBack'
+import BackIcon from 'material-ui-icons/ArrowBack'
+import ShowIcon from 'material-ui-icons/Language'
 import styles from './canvas_menu.scss'
 import routes from 'utils/routes'
 
-const CanvasMenu = () =>
-    <div className={styles.menu}>
-      <Button fab color="primary" aria-label="add" href={routes.worlds()}>
-        <AddIcon/>
-      </Button>
-    </div>
+const CanvasMenu = ({store: {tileStore, worldStore}}) => {
+  const showAll = () => tileStore.showAll(worldStore.currentWorld.id)
 
-export default observer(CanvasMenu)
+  return (
+      <div className={styles.menu}>
+        <Button fab aria-label="show-all" onClick={showAll}>
+          <ShowIcon/>
+        </Button>
+
+        <Button fab color="primary" aria-label="add" href={routes.worlds()}>
+          <BackIcon/>
+        </Button>
+      </div>
+  )
+}
+
+
+export default inject('store')(observer(CanvasMenu))
