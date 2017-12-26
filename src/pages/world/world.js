@@ -12,7 +12,7 @@ class WorldPage extends Component {
   async load() {
     const {worldStore, tileStore} = this.props.store
     const world = await worldStore.fetch(this.props.match.params.id)
-    console.log(world)
+
     worldStore.selectWorld(world)
     tileStore.connect(world)
   }

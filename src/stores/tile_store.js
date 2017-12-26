@@ -9,7 +9,7 @@ import autobind from 'autobind-decorator'
 class TileStore {
   @observable loading = false
   @observable tiles = []
-  @observable range = 20
+  @observable range = 50
   tileMatrix = {}
 
   constructor() {
@@ -68,7 +68,8 @@ class TileStore {
   getHeightDifference(tile, x, y, z) {
     const neighbor = this.find(tile.x + x, tile.y + y, tile.z + z)
 
-    return neighbor ? tile.height - neighbor.height : tile.height
+    // if (neighbor) debugger
+    return neighbor ? tile.renderHeight - neighbor.renderHeight : tile.renderHeight
   }
 
   nearest(vector) {

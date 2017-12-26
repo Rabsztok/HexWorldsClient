@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import autobind from 'autobind-decorator'
+import Tile from 'records/tile'
 import TileGeometry from './tile_geometry'
 
 export default class GridGeometry extends THREE.BufferGeometry {
@@ -7,7 +8,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
     super()
 
     const tmpGeometry = new THREE.Geometry()
-    tiles.map((tile) => this.mergeTile(tmpGeometry, tile))
+    tiles.map((tile) => this.mergeTile(tmpGeometry, new Tile(tile)))
     this.fromGeometry(tmpGeometry)
     this.computeBoundingSphere()
 
@@ -20,7 +21,7 @@ export default class GridGeometry extends THREE.BufferGeometry {
 
     matrix.makeTranslation(
         ( 2 * tile.x + tile.z) * Math.sqrt(3) / 2,
-        tile.height / 2 || 1,
+        tile.renderHeight / 2 || 1,
         tile.z * 3 / 2
     )
 

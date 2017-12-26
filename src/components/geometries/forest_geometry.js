@@ -47,7 +47,7 @@ class ForestGeometry extends THREE.BufferGeometry {
 
     matrix.makeTranslation(
         ( 2 * tile.x + tile.z) * Math.sqrt(3) / 2,
-        tile.height/2 || 1,
+        tile.height / 2 || 1,
         tile.z * 3 / 2
     )
 

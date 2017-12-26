@@ -7,7 +7,6 @@ export default class TileChannel {
 
   connect (world, onConnectionSuccess) {
     this.socket = socket.channel(this.channelName, { world_id: world.id })
-    console.log('TileChannel connect')
 
     this.socket.join()
                .receive('ok', onConnectionSuccess)
