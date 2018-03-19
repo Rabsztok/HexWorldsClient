@@ -35,12 +35,14 @@ class GridStore {
     const groupedTiles = groupBy(tiles, (tile) => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
-      chunk(terrainTiles, 250).map((segment) =>
-        this.queue.push({
-          worker: this.gridWorker,
-          tiles: segment,
-          color: this.terrains[terrainType]
-        })
+      chunk(terrainTiles, 150).map((segment) => {
+            console.log(segment.length)
+            this.queue.push({
+              worker: this.gridWorker,
+              tiles: segment,
+              color: this.terrains[terrainType]
+            })
+          }
       )
     })
 
