@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import autobind from 'autobind-decorator'
 import {chunk, each, groupBy} from 'lodash'
 import Grid from 'objects/grid'
-import {observable, autorun} from 'mobx'
+import {observable, autorun, computed} from 'mobx'
 
 class GridStore {
   terrains = {dirt: 0x007B0C, stone: 0x666666, sand: 0xC2B280, water: 0x40A4DF, forest: 0x004B0C}
@@ -22,6 +22,10 @@ class GridStore {
     return this
   }
 
+  @computed get loading() {
+    return this.queue.length || this.currentJobs > 0
+  }
+
   @autobind
   runQueue() {
     if (this.queue.length && this.currentJobs < this.maxJobs) {
@@ -36,7 +40,7 @@ class GridStore {
     const groupedTiles = groupBy(tiles, (tile) => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
-      chunk(terrainTiles, 200).map((segment) =>
+      chunk(terrainTiles, 300).map((segment) =>
           this.queue.push({
             worker: this.gridWorker,
             tiles: segment,

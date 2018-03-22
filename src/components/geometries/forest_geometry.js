@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {times, filter} from 'lodash'
+import {times} from 'lodash'
 import {randomInt} from 'utils/random'
 
 class ForestGeometry extends THREE.BufferGeometry {
@@ -7,9 +7,8 @@ class ForestGeometry extends THREE.BufferGeometry {
     super()
 
     const tmpGeometry = new THREE.Geometry()
-    const forestTiles = filter(tiles, (tile) => tile.terrain.type === 'forest')
 
-    forestTiles.map((tile) => {
+    tiles.map((tile) => {
       const rotation = Math.random() // TODO: from UUID
       const density = tile.terrain.density
 

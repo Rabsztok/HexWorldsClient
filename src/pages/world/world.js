@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {observer, inject} from 'mobx-react'
 import Canvas from 'components/canvas'
 import Menu from 'components/canvas_menu/canvas_menu'
+import {CircularProgress} from 'material-ui/Progress'
 import styles from './world.scss'
 
 class WorldPage extends Component {
@@ -18,11 +19,11 @@ class WorldPage extends Component {
     const world = await worldStore.fetch(this.props.match.params.id)
 
     worldStore.selectWorld(world)
-    tileStore.fetch(world, { coordinates: { x: 0, y: 0, z: 0 }, range: 100 })
+    tileStore.connect(world)
   }
 
   render() {
-    const {worldStore, tileStore} = this.props.store
+    const {worldStore, gridStore} = this.props.store
 
     if (!worldStore.currentWorld) return null
 
@@ -30,7 +31,11 @@ class WorldPage extends Component {
         <div>
           <Menu/>
 
-          {tileStore.loading && <div className={styles.loading}><i className='fa fa-circle-o-notch fa-spin'/></div>}
+          {gridStore.loading &&
+            <div className={styles.loading}>
+              <CircularProgress size={50} thickness={5}/>
+            </div>
+          }
 
           <div className={styles.container}>
             <Canvas/>

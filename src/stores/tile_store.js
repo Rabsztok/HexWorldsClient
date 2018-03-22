@@ -1,76 +1,53 @@
-import {observable, observe, action} from 'mobx'
+import {observable, action} from 'mobx'
 import {differenceBy} from 'lodash'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'
 import autobind from 'autobind-decorator'
-import apiClient from 'utils/api_client'
+import TileChannel from '../channels/tile_channel'
 
 class TileStore {
-  @observable loading = false
   @observable tiles = []
   tileMatrix = {}
 
-  constructor() {
-    observe(this, 'tiles', this.computeTileMatrix)
+  connect(world) {
+    this.channel = new TileChannel('tiles:lobby')
+
+    this.channel.connect(world, this.onTilesLoaded)
+    this.channel.socket.on('move', this.onTilesLoaded)
+  }
+
+  @autobind
+  onTilesLoaded(response) {
+    this.pushTiles(response.tiles)
   }
 
   @action
   clear() {
-    this.loading = false
     this.tiles = []
     this.tileMatrix = {}
-  }
-
-  // params could be { coordinates: { x: 0, y: 0, z: 0 }, range: 100 }
-  async fetch(world, params = {}) {
-    this.startLoading()
-
-    const response = await apiClient.get("tiles", { world_id: world.id, ...params })
-    this.pushTiles(response.tiles)
-    this.calculateHeightMap()
-
-    this.stopLoading()
-  }
-
-  @autobind @action
-  computeTileMatrix() {
-    let tileMatrix = {}
-
-    this.tiles.map((tile) => {
-      if (!tileMatrix[tile.x]) tileMatrix[tile.x] = {}
-      if (!tileMatrix[tile.x][tile.y]) tileMatrix[tile.x][tile.y] = {}
-      tileMatrix[tile.x][tile.y][tile.z] = tile
-
-      return tile
-    })
-
-    this.tileMatrix = tileMatrix
-  }
-
-  @action startLoading() {
-    this.loading = true
-  }
-
-  @action stopLoading() {
-    this.loading = false
   }
 
   @action pushTiles(tiles) {
     const newTiles  = differenceBy(tiles, this.tiles.peek(), 'id').map((tile) => new Tile(tile))
 
-    if (newTiles.length)
+    if (newTiles.length) {
       this.tiles = this.tiles.concat(newTiles)
+      newTiles.map((tile) => {
+        const {x,y,z} = tile
+        this.tileMatrix[[x,y,z]] = tile
+      })
+      this.calculateHeightMap(newTiles)
+    }
   }
 
   find(x,y,z) {
-    return this.tileMatrix && this.tileMatrix[x] && this.tileMatrix[x][y] && this.tileMatrix[x][y][z]
+    return this.tileMatrix[[x,y,z]]
   }
 
   getHeightDifference(tile, x, y, z) {
     const neighbor = this.find(tile.x + x, tile.y + y, tile.z + z)
 
-    // if (neighbor) debugger
     return neighbor ? tile.renderHeight - neighbor.renderHeight : tile.renderHeight
   }
 
@@ -101,8 +78,8 @@ class TileStore {
     return nearest.tile
   }
 
-  calculateHeightMap() {
-    this.tiles.map((tile) =>
+  calculateHeightMap(tiles) {
+    tiles.map((tile) =>
       tile.heightMap = tile.heightMap || {
         xz: this.getHeightDifference(tile, -1, 0, 1),
         yz: this.getHeightDifference(tile, 0, -1, 1),
@@ -115,11 +92,11 @@ class TileStore {
   }
 
   move(world, coordinates) {
-    this.fetch(world, { coordinates, range: 50 })
+    this.channel.socket.push('move', {world_id: world.id, coordinates: coordinates, range: 50})
   }
 
   showAll(world) {
-    this.fetch(world)
+    this.channel.socket.push('move', {world_id: world.id, coordinates: {x: 0, y: 0, z: 0}, range: 10000})
   }
 }
 
