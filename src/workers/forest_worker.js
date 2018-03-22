@@ -1,11 +1,8 @@
 import ForestGeometry from 'components/geometries/forest_geometry'
-import {Mesh, MeshLambertMaterial} from 'three'
 
 self.addEventListener('message', function(e) {
-  const mesh = new Mesh(
-      new ForestGeometry(e.data.tiles),
-      new MeshLambertMaterial( { color: 0x002B0C, flatShading: true } )
-  )
+  const geometry = new ForestGeometry(e.data.tiles)
+  const terrain = e.data.terrain
 
-  self.postMessage(mesh.toJSON());
+  self.postMessage({ terrain, ...geometry.attributes });
 }, false);

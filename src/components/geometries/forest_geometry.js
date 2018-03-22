@@ -21,7 +21,6 @@ class ForestGeometry extends THREE.BufferGeometry {
     })
 
     this.fromGeometry(tmpGeometry)
-    this.computeBoundingSphere()
     return this
   }
 

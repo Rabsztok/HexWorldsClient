@@ -10,7 +10,6 @@ export default class GridGeometry extends THREE.BufferGeometry {
     const tmpGeometry = new THREE.Geometry()
     tiles.map((tile) => this.mergeTile(tmpGeometry, new Tile(tile)))
     this.fromGeometry(tmpGeometry)
-    this.computeBoundingSphere()
 
     return this
   }

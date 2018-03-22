@@ -9,12 +9,16 @@ class WorldPage extends Component {
     this.load()
   }
 
+  componentWillUnmount() {
+    this.props.store.tileStore.clear()
+  }
+
   async load() {
     const {worldStore, tileStore} = this.props.store
     const world = await worldStore.fetch(this.props.match.params.id)
 
     worldStore.selectWorld(world)
-    tileStore.connect(world)
+    tileStore.fetch(world, { coordinates: { x: 0, y: 0, z: 0 }, range: 100 })
   }
 
   render() {

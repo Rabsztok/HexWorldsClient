@@ -1,11 +1,8 @@
 import GridGeometry from 'components/geometries/grid_geometry'
-import * as THREE from 'three'
 
 self.addEventListener('message', function(e) {
-  const mesh = new THREE.Mesh(
-      new GridGeometry(e.data.tiles),
-      new THREE.MeshLambertMaterial({color: e.data.color})
-  )
+  const terrain = e.data.terrain
+  const geometry = new GridGeometry(e.data.tiles)
 
-  self.postMessage(mesh.toJSON());
+  self.postMessage({ terrain, ...geometry.attributes });
 }, false);

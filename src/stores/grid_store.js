@@ -14,8 +14,8 @@ class GridStore {
   maxJobs = 16
 
   constructor() {
-    this.gridWorker.onmessage = this.parseMesh
-    this.forestWorker.onmessage = this.parseMesh
+    this.gridWorker.onmessage = this.buildMesh
+    this.forestWorker.onmessage = this.buildMesh
 
     autorun(this.runQueue)
 
@@ -25,36 +25,50 @@ class GridStore {
   @autobind
   runQueue() {
     if (this.queue.length && this.currentJobs < this.maxJobs) {
-      const {worker, tiles, color} = this.queue.shift()
-      worker.postMessage({tiles: tiles.slice(), color})
+      const {worker, tiles, terrain} = this.queue.shift()
+      worker.postMessage({tiles: tiles.slice(), terrain})
       this.currentJobs += 1
     }
   }
 
+  // Set up WebWorkers and add them to query.
   draw(tiles) {
     const groupedTiles = groupBy(tiles, (tile) => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
-      chunk(terrainTiles, 150).map((segment) => {
-            console.log(segment.length)
-            this.queue.push({
-              worker: this.gridWorker,
-              tiles: segment,
-              color: this.terrains[terrainType]
-            })
-          }
+      chunk(terrainTiles, 200).map((segment) =>
+          this.queue.push({
+            worker: this.gridWorker,
+            tiles: segment,
+            terrain: this.terrains[terrainType]
+          })
       )
     })
 
     chunk(groupedTiles.forest, 50).map((segment) =>
-      this.queue.push({ worker: this.forestWorker, tiles: segment })
+      this.queue.push({
+        worker: this.forestWorker,
+        tiles: segment,
+        terrain: this.terrains.forest
+      })
     )
   }
 
+  // Build Mesh using geometry attributes and terrain color from worker response.
+  // We can't simply import objects as they are, because they are not Transferable type.
+  // Encoding/Parsing them using THREE.ObjectLoader as JSON works, but is very slow for this use case.
+  // So for optimal speed, we just copy geometry buffer attributes into new, fresh THREE.BufferGeometry.
   @autobind
-  parseMesh(e) {
-    const loader = new THREE.ObjectLoader()
-    const mesh = loader.parse(e.data)
+  buildMesh(e) {
+    const { terrain, ...geometryAttributes } = e.data
+
+    let geometry = new THREE.BufferGeometry()
+    each(geometryAttributes, (attr, key) =>
+        geometry.attributes[key] = new THREE.BufferAttribute(attr.array, attr.itemSize, attr.normalized)
+    )
+
+    const material = new THREE.MeshLambertMaterial({ color: terrain, flatShading: true })
+    const mesh = new THREE.Mesh(geometry, material)
 
     this.grid.add(mesh)
     this.currentJobs -= 1

@@ -1,27 +1,36 @@
 import {observable, observe, action} from 'mobx'
 import {differenceBy} from 'lodash'
-import TileChannel from 'channels/tile_channel'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'
 import autobind from 'autobind-decorator'
+import apiClient from 'utils/api_client'
 
 class TileStore {
   @observable loading = false
   @observable tiles = []
-  @observable range = 50
   tileMatrix = {}
 
   constructor() {
     observe(this, 'tiles', this.computeTileMatrix)
   }
 
-  connect(world) {
-    this.startLoading()
-    this.channel = new TileChannel('tiles:lobby')
+  @action
+  clear() {
+    this.loading = false
+    this.tiles = []
+    this.tileMatrix = {}
+  }
 
-    this.channel.connect(world, this.onTilesLoaded)
-    this.channel.socket.on('move', this.onTilesLoaded)
+  // params could be { coordinates: { x: 0, y: 0, z: 0 }, range: 100 }
+  async fetch(world, params = {}) {
+    this.startLoading()
+
+    const response = await apiClient.get("tiles", { world_id: world.id, ...params })
+    this.pushTiles(response.tiles)
+    this.calculateHeightMap()
+
+    this.stopLoading()
   }
 
   @autobind @action
@@ -37,13 +46,6 @@ class TileStore {
     })
 
     this.tileMatrix = tileMatrix
-  }
-
-  @autobind
-  onTilesLoaded(response) {
-    this.pushTiles(response.tiles)
-    this.calculateHeightMap()
-    this.stopLoading()
   }
 
   @action startLoading() {
@@ -112,14 +114,12 @@ class TileStore {
     )
   }
 
-  move(worldId, coordinates) {
-    this.startLoading()
-    this.channel.socket.push('move', {world_id: worldId, coordinates: coordinates, range: this.range})
+  move(world, coordinates) {
+    this.fetch(world, { coordinates, range: 50 })
   }
 
-  showAll(worldId) {
-    this.startLoading()
-    this.channel.socket.push('move', {world_id: worldId, coordinates: {x: 0, y: 0, z: 0}, range: 10000})
+  showAll(world) {
+    this.fetch(world)
   }
 }
 

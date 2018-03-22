@@ -36,7 +36,6 @@ export default class TileGeometry extends THREE.BufferGeometry {
     this.mergeGeometry(tmpGeometry, xyGeometry, tile, 'xy')
 
     this.fromGeometry(tmpGeometry)
-    this.computeBoundingSphere()
     return this
   }
 

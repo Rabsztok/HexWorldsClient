@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 import autobind from 'autobind-decorator'
-import {apiClient} from 'utils/api'
+import apiClient from 'utils/api_client'
 
 class WorldStore {
   worlds = observable.map()

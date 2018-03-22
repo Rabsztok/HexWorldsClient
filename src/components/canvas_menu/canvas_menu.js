@@ -7,7 +7,7 @@ import styles from './canvas_menu.scss'
 import routes from 'utils/routes'
 
 const CanvasMenu = ({store: {tileStore, worldStore}}) => {
-  const showAll = () => tileStore.showAll(worldStore.currentWorld.id)
+  const showAll = () => tileStore.showAll(worldStore.currentWorld)
 
   return (
       <div className={styles.menu}>
