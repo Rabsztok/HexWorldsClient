@@ -7,25 +7,20 @@ import styles from './world.scss'
 
 class WorldPage extends Component {
   componentWillMount() {
-    this.load()
+    const {worldStore} = this.props.store
+
+    const id = this.props.match.params.id
+    const world = worldStore.worlds.get(id)
+
+    worldStore.selectWorld(world)
   }
 
   componentWillUnmount() {
-    this.props.store.tileStore.clear()
-  }
-
-  async load() {
-    const {worldStore, tileStore} = this.props.store
-    const world = await worldStore.fetch(this.props.match.params.id)
-
-    worldStore.selectWorld(world)
-    tileStore.connect(world)
+    this.props.store.worldStore.discardWorld()
   }
 
   render() {
-    const {worldStore, gridStore} = this.props.store
-
-    if (!worldStore.currentWorld) return null
+    const {gridStore} = this.props.store.worldStore
 
     return (
         <div>

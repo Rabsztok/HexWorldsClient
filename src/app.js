@@ -17,16 +17,17 @@ const NotFound = () => (
 class App extends React.Component {
   componentWillMount() {
     this.store = {
-      worldStore: new Stores.WorldStore(),
-      gridStore: new Stores.GridStore(),
-      canvasStore: new Stores.CanvasStore(),
-      tileStore: new Stores.TileStore()
+      worldStore: new Stores.WorldStore()
     }
 
     window.store = this.store
+    this.store.worldStore.connect()
   }
 
   render() {
+    // ToDo: move to protected route
+    if (!this.store.worldStore.ready) return null
+
     return (
         <Provider store={this.store}>
           <Router>

@@ -11,10 +11,6 @@ import BottomNavigation from 'components/bottom_navigation/bottom_navigation'
 import WorldDialog from 'components/world_dialog/world_dialog'
 
 class Worlds extends Component {
-  componentWillMount() {
-    this.props.store.worldStore.fetchAll()
-  }
-
   render() {
     const worldStore = this.props.store.worldStore
     const worlds = worldStore.worlds.values()

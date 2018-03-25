@@ -10,7 +10,8 @@ class TileStore {
   @observable tiles = []
   tileMatrix = {}
 
-  connect(world) {
+  constructor(world) {
+    this.world = world
     this.channel = new TileChannel('tiles:lobby')
 
     this.channel.connect(world, this.onTilesLoaded)
@@ -33,7 +34,7 @@ class TileStore {
 
     if (newTiles.length) {
       this.tiles = this.tiles.concat(newTiles)
-      newTiles.map((tile) => {
+      newTiles.forEach((tile) => {
         const {x,y,z} = tile
         this.tileMatrix[[x,y,z]] = tile
       })
@@ -91,12 +92,12 @@ class TileStore {
     )
   }
 
-  move(world, coordinates) {
-    this.channel.socket.push('move', {world_id: world.id, coordinates: coordinates, range: 50})
+  move(coordinates) {
+    this.channel.socket.push('move', {world_id: this.world.id, coordinates: coordinates, range: 50})
   }
 
-  showAll(world) {
-    this.channel.socket.push('move', {world_id: world.id, coordinates: {x: 0, y: 0, z: 0}, range: 10000})
+  showAll() {
+    this.channel.socket.push('move', {world_id: this.world.id, coordinates: {x: 0, y: 0, z: 0}, range: 10000})
   }
 }
 

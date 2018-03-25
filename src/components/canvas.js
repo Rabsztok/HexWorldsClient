@@ -10,7 +10,7 @@ let OrbitControls = require('three-orbit-controls')(THREE)
 
 class Canvas extends Component {
   componentDidMount() {
-    const {gridStore, canvasStore} = this.props.store
+    const {gridStore, canvasStore} = this.props.store.worldStore
 
     canvasStore.scene.add(gridStore.grid)
 
@@ -28,7 +28,7 @@ class Canvas extends Component {
 
   @autobind
   drawObjects() {
-    const { tileStore, gridStore } = this.props.store
+    const {tileStore, gridStore} = this.props.store.worldStore
 
     let tiles = filter(tileStore.tiles, (tile) => !tile.rendered)
 
@@ -43,7 +43,7 @@ class Canvas extends Component {
   // ToDo: move to separate ControlsStore
 
   addControls() {
-    const canvasStore = this.props.store.canvasStore
+    const {canvasStore} = this.props.store.worldStore
 
     this.controls = new OrbitControls(canvasStore.camera, this.root)
     this.controls.maxPolarAngle = 2 * Math.PI / 5

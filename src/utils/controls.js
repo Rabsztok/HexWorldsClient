@@ -35,7 +35,7 @@ export default class Controls {
 
     if (tile)
       if (e.button === 0)
-        this.store.tileStore.move(this.store.worldStore.currentWorld, pick(tile, 'x', 'y', 'z'))
+        this.store.worldStore.tileStore.move(pick(tile, 'x', 'y', 'z'))
       else if (e.button === 2)
         console.log('mouse2')
   }

@@ -3,11 +3,12 @@ import {observer, inject} from 'mobx-react'
 import Button from 'material-ui/Button'
 import BackIcon from 'material-ui-icons/ArrowBack'
 import ShowIcon from 'material-ui-icons/Language'
+import { Link } from 'react-router-dom'
 import styles from './canvas_menu.scss'
 import routes from 'utils/routes'
 
-const CanvasMenu = ({store: {tileStore, worldStore}}) => {
-  const showAll = () => tileStore.showAll(worldStore.currentWorld)
+const CanvasMenu = ({store: {worldStore: {tileStore}}}) => {
+  const showAll = () => tileStore.showAll()
 
   return (
       <div className={styles.menu}>
@@ -15,7 +16,7 @@ const CanvasMenu = ({store: {tileStore, worldStore}}) => {
           <ShowIcon/>
         </Button>
 
-        <Button fab color="primary" aria-label="add" href={routes.worlds()}>
+        <Button fab color="primary" aria-label="back" component={Link} to={routes.worlds()}>
           <BackIcon/>
         </Button>
       </div>

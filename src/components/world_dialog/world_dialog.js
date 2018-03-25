@@ -10,6 +10,7 @@ import Dialog, {
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import AddIcon from 'material-ui-icons/Add'
+import {map} from 'lodash'
 
 class WorldDialog extends Component {
   @observable open = false
@@ -17,11 +18,23 @@ class WorldDialog extends Component {
   @observable size
 
   @autobind
-  async submit(e) {
+  submit(e) {
     e.preventDefault()
 
-    await this.props.store.worldStore.create(this.name, this.size)
+    const pushEvent = this.props.store.worldStore.create(this.name, this.size)
+    pushEvent.receive("error", this.onError)
+    pushEvent.receive("success", this.onSuccess)
+  }
 
+  @autobind
+  onError(errors) {
+    map(errors, (message, attribute) => {
+      alert(`${attribute} ${message}`)
+    })
+  }
+
+  @autobind
+  onSuccess() {
     this.name = null
     this.size = null
     this.closeDialog()
