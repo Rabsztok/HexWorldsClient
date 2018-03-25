@@ -52,6 +52,7 @@ class TileStore {
     return neighbor ? tile.renderHeight - neighbor.renderHeight : tile.renderHeight
   }
 
+  @autobind
   nearest(vector) {
     let nearest = null
 

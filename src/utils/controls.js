@@ -49,7 +49,7 @@ export default class Controls {
   }
 
   clickedTile(event) {
-    const { tileStore } = this.store
+    const { worldStore: {tileStore: {nearest}, gridStore: {grid}} } = this.store
 
     const mouse = new THREE.Vector2()
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -57,10 +57,10 @@ export default class Controls {
 
     const raycaster = new THREE.Raycaster()
     raycaster.setFromCamera( mouse, this.camera )
-    const intersect = raycaster.intersectObjects(this.store.gridStore.grid.children.slice())[0]
+    const intersect = raycaster.intersectObjects(grid.children.slice())[0]
 
     if (intersect) {
-      return tileStore.nearest(worldToCube(intersect.point))
+      return nearest(worldToCube(intersect.point))
     }
     else return null
   }
