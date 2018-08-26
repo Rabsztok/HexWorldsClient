@@ -4,6 +4,7 @@ import WorldChannel from 'channels/world_channel'
 import TileStore from './tile_store'
 import GridStore from './grid_store'
 import CanvasStore from './canvas_store'
+import World from 'records/world'
 
 class WorldStore {
   @observable worlds = observable.map()
@@ -19,13 +20,14 @@ class WorldStore {
     this.channel = new WorldChannel({ onSuccess: this.setWorlds })
     this.channel.socket.on('add', this.onAdd)
     this.channel.socket.on('remove', this.onRemove)
+    this.channel.socket.on('update', this.onUpdate)
   }
 
   @autobind
   @action
   setWorlds(response) {
     response.worlds.forEach((world) => {
-      this.worlds.set(world.id, world)
+      this.worlds.set(world.id, new World(world))
     })
     this.ready = true
   }
@@ -48,22 +50,34 @@ class WorldStore {
   @action
   async onAdd(response) {
     const world = response.world
-    this.worlds.set(world.id, world)
+    this.worlds.set(world.id, new World(world))
   }
 
   @autobind
   @action
-  async onRemove(response) {
+  onRemove(response) {
     this.worlds.delete(response.world.id)
   }
 
   @autobind
-  create(name, size) {
-    return this.channel.socket.push('create', { world: {name}, size: size })
+  @action
+  onUpdate({world: {id, ...attributes}}) {
+    console.log("onUpdate")
+    this.worlds.get(id).update(attributes)
   }
 
   @autobind
-  async delete(id) {
+  create(name) {
+    return this.channel.socket.push('create', { world: {name} })
+  }
+
+  @autobind
+  expand(id) {
+    return this.channel.socket.push('expand', { id: id })
+  }
+
+  @autobind
+  delete(id) {
     this.channel.socket.push('delete', { id: id })
   }
 }

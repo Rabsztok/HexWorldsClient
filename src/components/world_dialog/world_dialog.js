@@ -15,13 +15,12 @@ import {map} from 'lodash'
 class WorldDialog extends Component {
   @observable open = false
   @observable name
-  @observable size
 
   @autobind
   submit(e) {
     e.preventDefault()
 
-    const pushEvent = this.props.store.worldStore.create(this.name, this.size)
+    const pushEvent = this.props.store.worldStore.create(this.name)
     pushEvent.receive("error", this.onError)
     pushEvent.receive("success", this.onSuccess)
   }
@@ -36,7 +35,6 @@ class WorldDialog extends Component {
   @autobind
   onSuccess() {
     this.name = null
-    this.size = null
     this.closeDialog()
   }
 
@@ -53,11 +51,6 @@ class WorldDialog extends Component {
   @autobind
   setName(e) {
     this.name = e.target.value
-  }
-
-  @autobind
-  setSize(e) {
-    this.size = e.target.value
   }
 
   render() {
@@ -77,13 +70,6 @@ class WorldDialog extends Component {
                       label="World name"
                       defaultValue={this.name}
                       onChange={this.setName}
-                  />
-                  <TextField
-                      id="size"
-                      label="Initial radius"
-                      type="number"
-                      defaultValue={this.size}
-                      onChange={this.setSize}
                   />
                 </DialogContent>
                 <DialogActions>
