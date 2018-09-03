@@ -62,8 +62,8 @@ class WorldStore {
   @autobind
   @action
   onUpdate({world: {id, ...attributes}}) {
-    console.log("onUpdate")
-    this.worlds.get(id).update(attributes)
+    const world = this.worlds.get(id)
+    if (world) world.update(attributes)
   }
 
   @autobind
