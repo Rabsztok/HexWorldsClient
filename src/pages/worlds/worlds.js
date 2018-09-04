@@ -1,12 +1,9 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import {observer, inject} from 'mobx-react'
-import Card, {CardContent} from 'material-ui/Card'
-import Grid from 'material-ui/Grid'
-import Typography from 'material-ui/Typography'
-import IconButton from 'material-ui/IconButton'
-import DeleteIcon from 'material-ui-icons/Delete'
-import EnlargeIcon from 'material-ui-icons/ZoomOutMap'
+import {Card, CardContent, Grid, Typography, IconButton} from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EnlargeIcon from '@material-ui/icons/ZoomOutMap'
 import styles from './worlds.scss'
 import BottomNavigation from 'components/bottom_navigation/bottom_navigation'
 import WorldDialog from 'components/world_dialog/world_dialog'
@@ -18,7 +15,7 @@ class Worlds extends Component {
 
     return (
         <div className={styles.list}>
-          <Grid container justify="center">
+          <Grid container justify="center" spacing={16}>
             {worlds.map((world) =>
                 <Grid key={world.id} item xs={12} sm={8}>
                   <Card className={styles.item}>

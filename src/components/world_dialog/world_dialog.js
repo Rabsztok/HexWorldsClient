@@ -2,14 +2,8 @@ import React, {Component} from 'react'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import autobind from 'autobind-decorator'
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from 'material-ui/Dialog'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
-import AddIcon from 'material-ui-icons/Add'
+import {Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
 import {map} from 'lodash'
 
 class WorldDialog extends Component {
@@ -56,32 +50,34 @@ class WorldDialog extends Component {
   render() {
     return (
         <div>
-          <Button fab color="primary" onClick={this.openDialog}>
+          <Button variant="fab" color="primary" onClick={this.openDialog}>
             <AddIcon/>
           </Button>
 
-            <Dialog open={this.open} onClose={this.closeDialog}>
+          <Dialog open={this.open} onClose={this.closeDialog} fullWidth maxWidth="xs">
+            <form onSubmit={this.submit}>
               <DialogTitle id="form-dialog-title">Create World</DialogTitle>
-              <form onSubmit={this.submit}>
-                <DialogContent>
-                  <TextField
-                      autoFocus
-                      id="name"
-                      label="World name"
-                      defaultValue={this.name}
-                      onChange={this.setName}
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={this.closeDialog} color="primary">
-                    Cancel
-                  </Button>
-                  <Button raised color="primary" type="submit">
-                    Create
-                  </Button>
-                </DialogActions>
-              </form>
-            </Dialog>
+              <DialogContent>
+                <TextField
+                    id="name"
+                    label="World name"
+                    fullWidth
+                    autoFocus
+                    margin="dense"
+                    defaultValue={this.name}
+                    onChange={this.setName}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.closeDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button variant="raised" color="primary" type="submit">
+                  Create
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
         </div>
     )
   }

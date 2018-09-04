@@ -1,8 +1,8 @@
 import React from 'react'
 import {observer, inject} from 'mobx-react'
-import Button from 'material-ui/Button'
-import BackIcon from 'material-ui-icons/ArrowBack'
-import ShowIcon from 'material-ui-icons/Language'
+import {Button} from '@material-ui/core'
+import BackIcon from '@material-ui/icons/ArrowBack'
+import ShowIcon from '@material-ui/icons/Language'
 import { Link } from 'react-router-dom'
 import styles from './canvas_menu.scss'
 import routes from 'utils/routes'
@@ -12,11 +12,11 @@ const CanvasMenu = ({store: {worldStore: {tileStore}}}) => {
 
   return (
       <div className={styles.menu}>
-        <Button fab aria-label="show-all" onClick={showAll}>
+        <Button variant="fab" aria-label="show-all" onClick={showAll}>
           <ShowIcon/>
         </Button>
 
-        <Button fab color="primary" aria-label="back" component={Link} to={routes.worlds()}>
+        <Button variant="fab" color="primary" aria-label="back" component={Link} to={routes.worlds()}>
           <BackIcon/>
         </Button>
       </div>
