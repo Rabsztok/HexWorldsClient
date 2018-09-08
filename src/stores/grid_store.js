@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import autobind from 'autobind-decorator'
 import {chunk, each, groupBy} from 'lodash'
 import Grid from 'objects/grid'
 import {observable, autorun, computed} from 'mobx'
@@ -26,8 +25,7 @@ class GridStore {
     return this.queue.length || this.currentJobs > 0
   }
 
-  @autobind
-  runQueue() {
+  runQueue = () => {
     if (this.queue.length && this.currentJobs < this.maxJobs) {
       const {worker, tiles, terrain} = this.queue.shift()
       worker.postMessage({tiles: tiles.slice(), terrain})
@@ -62,8 +60,7 @@ class GridStore {
   // We can't simply import objects as they are, because they are not Transferable type.
   // Encoding/Parsing them using THREE.ObjectLoader as JSON works, but is very slow for this use case.
   // So for optimal speed, we just copy geometry buffer attributes into new, fresh THREE.BufferGeometry.
-  @autobind
-  buildMesh(e) {
+  buildMesh = (e) => {
     const { terrain, ...geometryAttributes } = e.data
 
     let geometry = new THREE.BufferGeometry()

@@ -1,4 +1,7 @@
 class Tile {
+  terrain = {}
+  height = null
+
   constructor(tile) {
     Object.assign(this, tile)
   }

@@ -3,7 +3,6 @@ import {differenceBy} from 'lodash'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'
-import autobind from 'autobind-decorator'
 import TileChannel from '../channels/tile_channel'
 
 class TileStore {
@@ -18,8 +17,7 @@ class TileStore {
     this.channel.socket.on('move', this.onTilesLoaded)
   }
 
-  @autobind
-  onTilesLoaded(response) {
+  onTilesLoaded = (response) => {
     this.pushTiles(response.tiles)
   }
 
@@ -52,7 +50,6 @@ class TileStore {
     return neighbor ? tile.renderHeight - neighbor.renderHeight : tile.renderHeight
   }
 
-  @autobind
   nearest(vector) {
     let nearest = null
 

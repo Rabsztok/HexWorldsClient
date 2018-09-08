@@ -6,7 +6,7 @@ import {CircularProgress} from '@material-ui/core'
 import styles from './world.scss'
 
 class WorldPage extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {worldStore} = this.props.store
 
     const id = this.props.match.params.id

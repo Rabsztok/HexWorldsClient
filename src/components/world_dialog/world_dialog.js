@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {observable} from 'mobx'
 import {observer, inject} from 'mobx-react'
-import autobind from 'autobind-decorator'
 import {Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import {map} from 'lodash'
@@ -10,8 +9,7 @@ class WorldDialog extends Component {
   @observable open = false
   @observable name
 
-  @autobind
-  submit(e) {
+  submit = (e) => {
     e.preventDefault()
 
     const pushEvent = this.props.store.worldStore.create(this.name)
@@ -19,31 +17,26 @@ class WorldDialog extends Component {
     pushEvent.receive("success", this.onSuccess)
   }
 
-  @autobind
-  onError(errors) {
+  onError = (errors) => {
     map(errors, (message, attribute) => {
       alert(`${attribute} ${message}`)
     })
   }
 
-  @autobind
-  onSuccess() {
+  onSuccess = () => {
     this.name = null
     this.closeDialog()
   }
 
-  @autobind
-  openDialog() {
+  openDialog = () => {
     this.open = true
   }
 
-  @autobind
-  closeDialog() {
+  closeDialog = () => {
     this.open = false
   }
 
-  @autobind
-  setName(e) {
+  setName = (e) => {
     this.name = e.target.value
   }
 

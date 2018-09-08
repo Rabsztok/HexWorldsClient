@@ -1,4 +1,3 @@
-import autobind from 'autobind-decorator'
 import * as THREE from 'three'
 
 class CanvasStore {
@@ -30,8 +29,7 @@ class CanvasStore {
     this.scene.add(pointLight)
   }
 
-  @autobind
-  resizeCanvas() {
+  resizeCanvas = () => {
     this.width = window.innerWidth
     this.height = window.innerHeight
 
@@ -42,13 +40,11 @@ class CanvasStore {
     this.animate()
   }
 
-  @autobind
-  animate() {
+  animate = () => {
     window.requestAnimationFrame(this.reRender)
   }
 
-  @autobind
-  reRender() {
+  reRender = () => {
     this.renderer.render(this.scene, this.camera)
   }
 }

@@ -15,7 +15,7 @@ const NotFound = () => (
 
 @observer
 class App extends React.Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.store = {
       worldStore: new Stores.WorldStore()
     }

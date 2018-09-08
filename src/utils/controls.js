@@ -1,4 +1,3 @@
-import autobind from 'autobind-decorator'
 import * as THREE from 'three'
 import {worldToCube} from './coordinates'
 import {pick} from 'lodash'
@@ -9,18 +8,16 @@ export default class Controls {
     this.camera = camera
     this.container = container
 
-    this.container.addEventListener('mousedown', this.mouseDown)
-    this.container.addEventListener('mouseup', this.mouseUp)
+    this.container.addEventListener('mousedown', this.onMouseDown)
+    this.container.addEventListener('mouseup', this.onMouseUp)
   }
 
-  @autobind
-  mouseDown(e) {
+  onMouseDown = (e) => {
     this.mouseStartEvent = e
   }
 
-  @autobind
-  mouseUp(e) {
-    if (this.dragDistance(this.mouseStartEvent, e) > 3)
+  onMouseUp = (e) => {
+    if (Controls.dragDistance(this.mouseStartEvent, e) > 3)
       this.drag(e)
     else
       this.tap(e)
@@ -42,7 +39,7 @@ export default class Controls {
 
   // helpers
 
-  dragDistance(source, destination) {
+  static dragDistance(source, destination) {
     return Math.sqrt(
         Math.pow(source.clientX - destination.clientX, 2) + Math.pow(source.clientY - destination.clientY, 2)
     )

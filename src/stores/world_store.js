@@ -1,5 +1,4 @@
 import { action, observable } from 'mobx'
-import autobind from 'autobind-decorator'
 import WorldChannel from 'channels/world_channel'
 import TileStore from './tile_store'
 import GridStore from './grid_store'
@@ -23,9 +22,8 @@ class WorldStore {
     this.channel.socket.on('update', this.onUpdate)
   }
 
-  @autobind
   @action
-  setWorlds(response) {
+  setWorlds = (response) => {
     response.worlds.forEach((world) => {
       this.worlds.set(world.id, new World(world))
     })
@@ -46,38 +44,32 @@ class WorldStore {
     this.tileStore = null
   }
 
-  @autobind
   @action
-  async onAdd(response) {
+  onAdd = async (response) => {
     const world = response.world
     this.worlds.set(world.id, new World(world))
   }
 
-  @autobind
   @action
-  onRemove(response) {
+  onRemove = async (response) => {
     this.worlds.delete(response.world.id)
   }
 
-  @autobind
   @action
-  onUpdate({world: {id, ...attributes}}) {
+  onUpdate = async ({world: {id, ...attributes}}) => {
     const world = this.worlds.get(id)
     if (world) world.update(attributes)
   }
 
-  @autobind
-  create(name) {
+  create = (name) => {
     return this.channel.socket.push('create', { world: {name} })
   }
 
-  @autobind
-  expand(id) {
+  expand = (id) => {
     return this.channel.socket.push('expand', { id: id })
   }
 
-  @autobind
-  delete(id) {
+  delete = (id) => {
     this.channel.socket.push('delete', { id: id })
   }
 }

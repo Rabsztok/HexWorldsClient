@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import autobind from 'autobind-decorator'
 import Tile from 'records/tile'
 import TileGeometry from './tile_geometry'
 
@@ -14,7 +13,6 @@ export default class GridGeometry extends THREE.BufferGeometry {
     return this
   }
 
-  @autobind
   mergeTile(tmpGeometry, tile) {
     const matrix = new THREE.Matrix4()
 
