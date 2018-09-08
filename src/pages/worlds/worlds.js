@@ -10,13 +10,12 @@ import WorldDialog from 'components/world_dialog/world_dialog'
 
 class Worlds extends Component {
   render() {
-    const worldStore = this.props.store.worldStore
-    const worlds = worldStore.worlds.values()
+    const {worldsList, expand, remove} = this.props.store.worldStore
 
     return (
         <div className={styles.list}>
           <Grid container justify="center" spacing={16}>
-            {worlds.map((world) =>
+            {worldsList.map((world) =>
                 <Grid key={world.id} item xs={12} sm={8}>
                   <Card className={styles.item}>
                     <CardContent>
@@ -33,10 +32,10 @@ class Worlds extends Component {
                       </Typography>
 
                       <div className={styles.actions}>
-                        <IconButton onClick={() => worldStore.expand(world.id)} disabled={!world.ready}>
+                        <IconButton onClick={() => expand(world.id)} disabled={!world.ready}>
                           <EnlargeIcon/>
                         </IconButton>
-                        <IconButton onClick={() => worldStore.delete(world.id)}>
+                        <IconButton onClick={() => remove(world.id)}>
                           <DeleteIcon/>
                         </IconButton>
                       </div>

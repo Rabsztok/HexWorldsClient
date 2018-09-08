@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {autorunAsync} from 'mobx'
+import {autorun} from 'mobx'
 import {observer, inject} from 'mobx-react'
 import * as THREE from 'three'
 import Controls from 'utils/controls'
@@ -13,7 +13,7 @@ class Canvas extends Component {
     canvasStore.scene.add(gridStore.grid)
 
     // drawObjects when new tiles are loaded
-    autorunAsync(this.drawObjects)
+    autorun(this.drawObjects)
 
     // rerender canvas when new grid elements are added
     gridStore.grid.children.observe(canvasStore.animate)

@@ -28,7 +28,7 @@ class TileStore {
   }
 
   @action pushTiles(tiles) {
-    const newTiles  = differenceBy(tiles, this.tiles.peek(), 'id').map((tile) => new Tile(tile))
+    const newTiles  = differenceBy(tiles, this.tiles.slice(), 'id').map((tile) => new Tile(tile))
 
     if (newTiles.length) {
       this.tiles = this.tiles.concat(newTiles)

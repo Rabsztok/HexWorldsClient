@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, observable, computed } from 'mobx'
 import WorldChannel from 'channels/world_channel'
 import TileStore from './tile_store'
 import GridStore from './grid_store'
@@ -20,6 +20,11 @@ class WorldStore {
     this.channel.socket.on('add', this.onAdd)
     this.channel.socket.on('remove', this.onRemove)
     this.channel.socket.on('update', this.onUpdate)
+  }
+
+  @computed
+  get worldsList() {
+    return Array.from(this.worlds.values())
   }
 
   @action
@@ -69,7 +74,7 @@ class WorldStore {
     return this.channel.socket.push('expand', { id: id })
   }
 
-  delete = (id) => {
+  remove = (id) => {
     this.channel.socket.push('delete', { id: id })
   }
 }
