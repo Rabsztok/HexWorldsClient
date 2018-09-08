@@ -1,14 +1,17 @@
 import { action, observable, computed } from 'mobx'
 import WorldChannel from 'channels/world_channel'
-import TileStore from './tile_store'
-import GridStore from './grid_store'
-import CanvasStore from './canvas_store'
+import TileStore from 'stores/tile_store/tile_store'
+import GridStore from 'stores/grid_store'
+import CanvasStore from 'stores/canvas_store'
 import World from 'records/world'
 
+// Manages worlds list,
+// also holds reference to tile, grid and canvas stores
+// I'm considering moving tile/grid/canvas store associations to individual world models,
+// but I hesitate about memory usage in such case. I will stress test that later on.
 class WorldStore {
   @observable worlds = observable.map()
   @observable ready = false
-  @observable currentWorld
   tileStore = null
   gridStore = null
   canvasStore = null
@@ -16,7 +19,7 @@ class WorldStore {
   connect() {
     if (this.channel) return
 
-    this.channel = new WorldChannel({ onSuccess: this.setWorlds })
+    this.channel = new WorldChannel({ onSuccess: this.onJoin })
     this.channel.socket.on('add', this.onAdd)
     this.channel.socket.on('remove', this.onRemove)
     this.channel.socket.on('update', this.onUpdate)
@@ -28,25 +31,27 @@ class WorldStore {
   }
 
   @action
-  setWorlds = (response) => {
-    response.worlds.forEach((world) => {
-      this.worlds.set(world.id, new World(world))
-    })
-    this.ready = true
-  }
-
-  @action
   selectWorld(world) {
-    this.currentWorld = world
     this.tileStore = new TileStore(world)
     this.gridStore = new GridStore()
     this.canvasStore = new CanvasStore()
+
+    this.tileStore.connect()
   }
 
   @action
   discardWorld() {
-    this.currentWorld = null
     this.tileStore = null
+    this.gridStore = null
+    this.canvasStore = null
+  }
+
+  @action
+  onJoin = (response) => {
+    response.worlds.forEach((world) => {
+      this.worlds.set(world.id, new World(world))
+    })
+    this.ready = true
   }
 
   @action
@@ -67,11 +72,11 @@ class WorldStore {
   }
 
   create = (name) => {
-    return this.channel.socket.push('create', { world: {name} })
+    this.channel.socket.push('create', { world: {name} })
   }
 
   expand = (id) => {
-    return this.channel.socket.push('expand', { id: id })
+    this.channel.socket.push('expand', { id: id })
   }
 
   remove = (id) => {

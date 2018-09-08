@@ -3,7 +3,7 @@ import {differenceBy} from 'lodash'
 import {distance} from 'utils/coordinates'
 import {ceilAndFloor} from 'utils/math'
 import Tile from 'records/tile'
-import TileChannel from '../channels/tile_channel'
+import TileChannel from 'channels/tile_channel'
 
 class TileStore {
   @observable tiles = []
@@ -11,23 +11,21 @@ class TileStore {
 
   constructor(world) {
     this.world = world
-    this.channel = new TileChannel('tiles:lobby')
+  }
 
-    this.channel.connect(world, this.onTilesLoaded)
+  connect() {
+    if (this.channel) return
+
+    this.channel = new TileChannel('tiles:lobby')
+    this.channel.connect(this.world, this.onTilesLoaded)
     this.channel.socket.on('move', this.onTilesLoaded)
   }
 
   onTilesLoaded = (response) => {
-    this.pushTiles(response.tiles)
+    this.addTiles(response.tiles)
   }
 
-  @action
-  clear() {
-    this.tiles = []
-    this.tileMatrix = {}
-  }
-
-  @action pushTiles(tiles) {
+  @action addTiles(tiles) {
     const newTiles  = differenceBy(tiles, this.tiles.slice(), 'id').map((tile) => new Tile(tile))
 
     if (newTiles.length) {

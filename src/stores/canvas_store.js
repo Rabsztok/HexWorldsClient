@@ -1,17 +1,16 @@
 import * as THREE from 'three'
 
 class CanvasStore {
-  scene = new THREE.Scene()
-  renderer = new THREE.WebGLRenderer()
-  width = window.innerWidth
-  height = window.innerHeight
-  cameraPosition = new THREE.Vector3(-100, 100, 0)
-  lightPosition = new THREE.Vector3(100, 100, 100)
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
-
   constructor() {
     window.onresize = this.resizeCanvas
 
+    this.scene = new THREE.Scene()
+    this.renderer = new THREE.WebGLRenderer()
+    this.width = window.innerWidth
+    this.height = window.innerHeight
+    this.cameraPosition = new THREE.Vector3(-100, 100, 0)
+    this.lightPosition = new THREE.Vector3(100, 100, 100)
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setClearColor(0xaaeeff)
     this.camera.position.copy(this.cameraPosition)
