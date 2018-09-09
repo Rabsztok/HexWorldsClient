@@ -48,7 +48,7 @@ class TileStore {
     return neighbor ? tile.renderHeight - neighbor.renderHeight : tile.renderHeight
   }
 
-  nearest(vector) {
+  nearest = vector => {
     let nearest = null
 
     // TODO: optimize

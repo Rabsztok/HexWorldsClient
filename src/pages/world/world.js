@@ -6,13 +6,12 @@ import {CircularProgress} from '@material-ui/core'
 import styles from './world.scss'
 
 class WorldPage extends Component {
-  UNSAFE_componentWillMount() {
-    const {worldStore} = this.props.store
+  constructor(props) {
+    super(props)
+    const {worldStore} = props.store
+    const id = props.match.params.id
 
-    const id = this.props.match.params.id
-    const world = worldStore.worlds.get(id)
-
-    worldStore.selectWorld(world)
+    worldStore.selectWorld(id)
   }
 
   componentWillUnmount() {
@@ -40,4 +39,5 @@ class WorldPage extends Component {
   }
 }
 
+export { WorldPage }
 export default inject('store')(observer(WorldPage))

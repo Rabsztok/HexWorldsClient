@@ -31,7 +31,9 @@ class WorldStore {
   }
 
   @action
-  selectWorld(world) {
+  selectWorld(id) {
+    const world = this.worlds.get(id)
+
     this.tileStore = new TileStore(world)
     this.gridStore = new GridStore()
     this.canvasStore = new CanvasStore()

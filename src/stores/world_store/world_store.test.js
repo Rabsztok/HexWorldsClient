@@ -17,7 +17,8 @@ describe("BuildingsStore", () => {
   })
 
   it("Selects and discards world as current one", () => {
-    store.selectWorld(world)
+    store.worlds.set("1", world)
+    store.selectWorld(world.id)
     expect(store.tileStore.world.id).toBe("1")
     store.discardWorld()
     expect(store.tileStore).toBe(null)
