@@ -1,17 +1,24 @@
 import React from "react"
 import { shallow } from "enzyme"
-import { WorldPage } from "./world"
+import { WorldPage } from "./world_page"
 import { spy } from "sinon"
 import Canvas from "components/canvas"
 import { CircularProgress } from "@material-ui/core"
 
-const noop = () => {}
-
-describe("World", () => {
-  it("renders without errors", () => {
-    const store = {
-      worldStore: { selectWorld: spy(), gridStore: { loading: false } }
+describe("WorldPage", () => {
+  let store
+  beforeEach(() => {
+    store = {
+      worldStore: {
+        selectWorld: window.noop,
+        discardWorld: window.noop,
+        gridStore: { loading: false }
+      }
     }
+  })
+
+  it("renders without errors", () => {
+    store.worldStore.selectWorld = spy()
     const component = shallow(
       <WorldPage store={store} match={{ params: { id: "1" } }} />
     )
@@ -21,9 +28,7 @@ describe("World", () => {
   })
 
   it("renders loading indicator when grid is being loaded", () => {
-    const store = {
-      worldStore: { selectWorld: noop, gridStore: { loading: true } }
-    }
+    store.worldStore.gridStore.loading = true
     const component = shallow(
       <WorldPage store={store} match={{ params: { id: "1" } }} />
     )
@@ -32,13 +37,7 @@ describe("World", () => {
   })
 
   it("discards current world on page exit", () => {
-    const store = {
-      worldStore: {
-        selectWorld: noop,
-        discardWorld: spy(),
-        gridStore: { loading: true }
-      }
-    }
+    store.worldStore.discardWorld = spy()
     const component = shallow(
       <WorldPage store={store} match={{ params: { id: "1" } }} />
     )

@@ -6,13 +6,6 @@ import * as Stores from 'stores'
 import * as Pages from "pages/index"
 import routes from 'utils/routes'
 
-const NotFound = () => (
-    <div>
-      <h2>Uh oh!</h2>
-      <p>We could not find what you were looking for!</p>
-    </div>
-)
-
 @observer
 class App extends React.Component {
   UNSAFE_componentWillMount() {
@@ -33,9 +26,9 @@ class App extends React.Component {
           <Router>
             <div>
               <Switch>
-                <Route exact path={routes.worlds()} component={Pages.Worlds}/>
-                <Route path={routes.world(":id")} component={Pages.World}/>
-                <Route component={NotFound}/>
+                <Route exact path={routes.worlds()} component={Pages.WorldsPage}/>
+                <Route path={routes.world(":id")} component={Pages.WorldPage}/>
+                <Route component={Pages.NotFoundPage}/>
               </Switch>
             </div>
           </Router>
