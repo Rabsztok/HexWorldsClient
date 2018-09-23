@@ -74,15 +74,15 @@ class WorldStore {
   }
 
   create = (name) => {
-    this.channel.socket.push('create', { world: {name} })
+    return this.channel.socket.push('create', { world: {name} })
   }
 
   expand = (id) => {
-    this.channel.socket.push('expand', { id: id })
+    return this.channel.socket.push('expand', { id: id })
   }
 
   remove = (id) => {
-    this.channel.socket.push('delete', { id: id })
+    return this.channel.socket.push('delete', { id: id })
   }
 }
 
