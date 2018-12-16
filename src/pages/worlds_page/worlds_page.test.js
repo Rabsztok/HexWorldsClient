@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { WorldsPage } from './worlds_page'
-import world from 'mocks/world_mock.js'
+import world from '__mocks__/world.mock.js'
 
 describe('WorldsPage', () => {
   let store

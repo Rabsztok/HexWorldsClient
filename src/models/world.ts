@@ -1,9 +1,9 @@
 import { computed, action, observable } from 'mobx'
 import { countBy } from 'lodash'
-import Region from 'records/region'
+import Region from 'models/region'
 
 class World {
-  id: number
+  id: string
   size: number
   name: string
   @observable regions: Region[]

@@ -2,40 +2,40 @@ import { observable, action } from 'mobx'
 import { differenceBy } from 'lodash'
 import { distance } from 'utils/coordinates'
 import { ceilAndFloor } from 'utils/math'
-import Tile from 'records/tile'
-import TileChannel from 'channels/tile_channel'
-import World from 'records/world'
+import Tile from 'models/tile'
+import Channel from 'channel'
+import World from 'models/world'
 import { Vector3 } from 'three'
 
 class TileStore {
   @observable tiles: Tile[]
   world: World
-  channel: TileChannel
+  channel: Channel
   tileMatrix: Map<string, Tile>
 
   constructor(world: World) {
     this.world = world
     this.tiles = []
     this.tileMatrix = new Map()
-    this.channel = new TileChannel('tiles:lobby')
+    this.channel = new Channel('tiles:lobby')
   }
 
-  connect() {
+  connect(): void {
     if (this.channel.connected) return
 
     this.channel.connect(
-      this.world,
-      this.onTilesLoaded
+      { world_id: this.world.id },
+      { onSuccess: this.onTilesLoaded }
     )
     this.channel.socket.on('move', this.onTilesLoaded)
   }
 
-  onTilesLoaded = (response: { tiles: Tile[] }) => {
+  onTilesLoaded = (response: { tiles: Tile[] }): void => {
     this.addTiles(response.tiles)
   }
 
   @action
-  addTiles(tiles: Tile[]) {
+  addTiles(tiles: Tile[]): void {
     const newTiles = differenceBy(tiles, this.tiles.slice(), 'id').map(
       tile => new Tile(tile)
     )
@@ -96,7 +96,7 @@ class TileStore {
   }
 
   @action
-  calculateHeightMap(tiles: Tile[]) {
+  calculateHeightMap(tiles: Tile[]): void {
     tiles.forEach(tile => {
       tile.heightMap = tile.heightMap || {
         xz: this.getHeightDifference(tile, -1, 0, 1),
@@ -109,7 +109,7 @@ class TileStore {
     })
   }
 
-  move(coordinates: Vector3) {
+  move(coordinates: Vector3): void {
     this.channel.socket.push('move', {
       world_id: this.world.id,
       coordinates: coordinates,
@@ -117,7 +117,7 @@ class TileStore {
     })
   }
 
-  showAll() {
+  showAll(): void {
     this.channel.socket.push('move', {
       world_id: this.world.id,
       coordinates: { x: 0, y: 0, z: 0 },

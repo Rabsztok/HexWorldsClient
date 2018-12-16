@@ -1,4 +1,4 @@
-import ForestGeometry from 'components/geometries/forest_geometry'
+import ForestGeometry from 'three/geometries/forest_geometry'
 
 self.addEventListener(
   'message',

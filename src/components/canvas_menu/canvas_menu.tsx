@@ -3,28 +3,32 @@ import { observer, inject } from 'mobx-react'
 import { Fab } from '@material-ui/core'
 import BackIcon from '@material-ui/icons/ArrowBack'
 import ShowIcon from '@material-ui/icons/Language'
-import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import styles from './canvas_menu.module.scss'
 import routes from 'utils/routes'
+import { StoreProps } from 'types'
 
-const CanvasMenu = ({
-  store: {
-    worldStore: { tileStore }
-  }
-}) => {
-  const showAll = () => tileStore.showAll()
+interface Props {
+  store?: StoreProps
+  history?: { push: Function }
+}
+
+const CanvasMenu = ({ store, history }: Props) => {
+  const { worldStore } = store!
+  const { push } = history!
+
+  if (!worldStore.tileStore) return null
 
   return (
     <div className={styles.menu}>
-      <Fab aria-label="show-all" onClick={showAll}>
+      <Fab aria-label="show-all" onClick={worldStore.tileStore.showAll}>
         <ShowIcon />
       </Fab>
 
       <Fab
         color="primary"
         aria-label="back"
-        component={Link}
-        to={routes.worlds()}
+        onClick={() => push(routes.worlds())}
       >
         <BackIcon />
       </Fab>
@@ -32,4 +36,4 @@ const CanvasMenu = ({
   )
 }
 
-export default inject('store')(observer(CanvasMenu))
+export default inject('store')(withRouter(observer(CanvasMenu)))

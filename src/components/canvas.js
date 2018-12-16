@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { autorun } from 'mobx'
 import { observer, inject } from 'mobx-react'
-import * as THREE from 'three'
 import Controls from 'utils/controls'
-
-const OrbitControls = require('three-orbit-controls')(THREE)
+import OrbitControls from 'three-orbitcontrols'
 
 class Canvas extends Component {
   componentDidMount() {

@@ -1,15 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { observer, inject } from 'mobx-react'
 import Canvas from 'components/canvas'
 import Menu from 'components/canvas_menu/canvas_menu'
 import { CircularProgress } from '@material-ui/core'
 import styles from './world_page.module.scss'
+import { StoreProps } from 'types'
 
-class WorldPage extends Component {
-  constructor(props) {
-    super(props)
-    const { worldStore } = props.store
-    const id = props.match.params.id
+interface Props {
+  store: StoreProps
+  match: { params: { id: string } }
+}
+
+class WorldPage extends React.Component<Props, {}> {
+  componentDidMount() {
+    const { worldStore } = this.props.store
+    const id = this.props.match.params.id
 
     worldStore.selectWorld(id)
   }
@@ -19,10 +24,12 @@ class WorldPage extends Component {
   }
 
   render() {
-    const { gridStore } = this.props.store.worldStore
+    const { gridStore, currentWorld } = this.props.store.worldStore
+
+    if (!gridStore || !currentWorld) return null
 
     return (
-      <div>
+      <React.Fragment>
         <Menu />
 
         {gridStore.loading && (
@@ -34,7 +41,7 @@ class WorldPage extends Component {
         <div className={styles.container}>
           <Canvas />
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

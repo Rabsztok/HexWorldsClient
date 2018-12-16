@@ -1,5 +1,5 @@
 import { BufferGeometry, Geometry, Matrix4 } from 'three'
-import Tile from 'records/tile'
+import Tile from 'models/tile'
 import TileGeometry from './tile_geometry'
 
 export default class GridGeometry extends BufferGeometry {

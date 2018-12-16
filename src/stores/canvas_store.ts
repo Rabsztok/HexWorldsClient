@@ -1,16 +1,31 @@
-import * as THREE from 'three'
+import {
+  Scene,
+  WebGLRenderer,
+  Vector3,
+  PerspectiveCamera,
+  AmbientLight,
+  PointLight
+} from 'three'
 
 class CanvasStore {
+  scene: Scene
+  renderer: WebGLRenderer
+  width: number
+  height: number
+  cameraPosition: Vector3
+  lightPosition: Vector3
+  camera: PerspectiveCamera
+
   constructor() {
     window.onresize = this.resizeCanvas
 
-    this.scene = new THREE.Scene()
-    this.renderer = new THREE.WebGLRenderer()
+    this.scene = new Scene()
+    this.renderer = new WebGLRenderer()
     this.width = window.innerWidth
     this.height = window.innerHeight
-    this.cameraPosition = new THREE.Vector3(-100, 100, 0)
-    this.lightPosition = new THREE.Vector3(100, 100, 100)
-    this.camera = new THREE.PerspectiveCamera(
+    this.cameraPosition = new Vector3(-100, 100, 0)
+    this.lightPosition = new Vector3(100, 100, 100)
+    this.camera = new PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
@@ -24,16 +39,16 @@ class CanvasStore {
     this.resizeCanvas()
   }
 
-  addLight() {
-    const ambientLight = new THREE.AmbientLight(0xddddcc, 0.7)
-    const pointLight = new THREE.PointLight(0xffffff, 1)
+  addLight(): void {
+    const ambientLight = new AmbientLight(0xddddcc, 0.7)
+    const pointLight = new PointLight(0xffffff, 1)
     pointLight.position.copy(this.lightPosition)
 
     this.scene.add(ambientLight)
     this.scene.add(pointLight)
   }
 
-  resizeCanvas = () => {
+  resizeCanvas = (): void => {
     this.width = window.innerWidth
     this.height = window.innerHeight
 
@@ -44,11 +59,11 @@ class CanvasStore {
     this.animate()
   }
 
-  animate = () => {
+  animate = (): void => {
     window.requestAnimationFrame(this.reRender)
   }
 
-  reRender = () => {
+  reRender = (): void => {
     this.renderer.render(this.scene, this.camera)
   }
 }

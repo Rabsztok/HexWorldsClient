@@ -1,4 +1,4 @@
-import GridGeometry from 'components/geometries/grid_geometry'
+import GridGeometry from 'three/geometries/grid_geometry'
 
 self.addEventListener(
   'message',

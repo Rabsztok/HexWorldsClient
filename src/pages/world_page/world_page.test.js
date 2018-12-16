@@ -4,6 +4,7 @@ import { WorldPage } from './world_page'
 import { spy } from 'sinon'
 import Canvas from 'components/canvas'
 import { CircularProgress } from '@material-ui/core'
+import world from '__mocks__/world.mock.js'
 
 describe('WorldPage', () => {
   let store
@@ -12,6 +13,7 @@ describe('WorldPage', () => {
       worldStore: {
         selectWorld: window.noop,
         discardWorld: window.noop,
+        currentWorld: world,
         gridStore: { loading: false }
       }
     }

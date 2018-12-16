@@ -1,9 +1,9 @@
 /* eslint-env jest */
-import TileStore from './tile_store'
-import Tile from 'records/tile'
+import TileStore from 'stores/tile_store'
+import Tile from 'models/tile'
 import sinon from 'sinon'
 
-describe('TileTileStore', () => {
+describe('TileStore', () => {
   let store, tile, neighbor
 
   beforeEach(() => {

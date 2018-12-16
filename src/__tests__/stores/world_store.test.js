@@ -1,5 +1,5 @@
-import Store from './world_store'
-import World from 'records/world'
+import Store from 'stores/world_store'
+import World from 'models/world'
 import sinon from 'sinon'
 
 describe('BuildingsStore', () => {
@@ -21,7 +21,7 @@ describe('BuildingsStore', () => {
     store.selectWorld(world.id)
     expect(store.tileStore.world.id).toBe('1')
     store.discardWorld()
-    expect(store.tileStore).toBe(null)
+    expect(store.tileStore).toBe(undefined)
   })
 
   it('Adds new worlds to worlds Map on channel join', () => {

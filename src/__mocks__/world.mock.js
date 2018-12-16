@@ -1,4 +1,4 @@
-import World from 'records/world'
+import World from 'models/world'
 
 const mock = new World({
   size: 4,
