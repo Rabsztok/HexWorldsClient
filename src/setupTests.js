@@ -1,8 +1,8 @@
 /* eslint-disable */
-import "raf/polyfill"
-import { configure } from "enzyme"
-import Adapter from "enzyme-adapter-react-16"
-import * as THREE from "three"
+import 'raf/polyfill'
+import { configure } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
+import * as THREE from 'three'
 
 configure({ adapter: new Adapter() })
 

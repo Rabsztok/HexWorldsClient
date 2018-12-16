@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import {times} from 'lodash'
-import {randomInt} from 'utils/random'
+import { times } from 'lodash'
+import { randomInt } from 'utils/random'
 
 class ForestGeometry extends THREE.BufferGeometry {
   constructor(tiles) {
@@ -8,12 +8,16 @@ class ForestGeometry extends THREE.BufferGeometry {
 
     const tmpGeometry = new THREE.Geometry()
 
-    tiles.map((tile) => {
+    tiles.map(tile => {
       const rotation = Math.random() // TODO: from UUID
       const density = tile.terrain.density
 
-      times(density, (i) =>
-          this.mergeGeometry(tmpGeometry, this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation), tile)
+      times(density, i =>
+        this.mergeGeometry(
+          tmpGeometry,
+          this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation),
+          tile
+        )
       )
 
       return tile
@@ -26,7 +30,7 @@ class ForestGeometry extends THREE.BufferGeometry {
   treeGeometry(position, segments, rotation) {
     const tmpGeometry = new THREE.Geometry()
 
-    times(segments, (i) => {
+    times(segments, i => {
       const segmentGeometry = new THREE.ConeBufferGeometry(1, 1.5, 4, 1)
       segmentGeometry.scale(0.3 - i * 0.05, 0.3 - i * 0.05, 0.3 - i * 0.05)
       segmentGeometry.rotateY(Math.random() * Math.PI)
@@ -44,9 +48,9 @@ class ForestGeometry extends THREE.BufferGeometry {
     const matrix = new THREE.Matrix4()
 
     matrix.makeTranslation(
-        ( 2 * tile.x + tile.z) * Math.sqrt(3) / 2,
-        tile.height / 2 || 1,
-        tile.z * 3 / 2
+      ((2 * tile.x + tile.z) * Math.sqrt(3)) / 2,
+      tile.height / 2 || 1,
+      (tile.z * 3) / 2
     )
 
     tmpGeometry.merge(geometry, matrix)
@@ -54,4 +58,3 @@ class ForestGeometry extends THREE.BufferGeometry {
 }
 
 export default ForestGeometry
-

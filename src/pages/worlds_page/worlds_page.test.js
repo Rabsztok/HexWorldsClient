@@ -1,9 +1,9 @@
-import React from "react"
-import { shallow } from "enzyme"
-import { WorldsPage } from "./worlds_page"
-import world from "mocks/world.js"
+import React from 'react'
+import { shallow } from 'enzyme'
+import { WorldsPage } from './worlds_page'
+import world from 'mocks/world_mock.js'
 
-describe("WorldsPage", () => {
+describe('WorldsPage', () => {
   let store
   beforeEach(() => {
     store = {
@@ -15,7 +15,7 @@ describe("WorldsPage", () => {
     }
   })
 
-  it("renders without errors", () => {
+  it('renders without errors', () => {
     const component = shallow(<WorldsPage store={store} />)
     expect(component).toMatchSnapshot()
   })

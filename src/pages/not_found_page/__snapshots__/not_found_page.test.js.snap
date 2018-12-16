@@ -20,10 +20,10 @@ ShallowWrapper {
       "children": Array [
         <h2>
           Uh oh!
-</h2>,
+        </h2>,
         <p>
           We could not find what you were looking for!
-</p>,
+        </p>,
       ],
     },
     "ref": null,
@@ -62,10 +62,10 @@ ShallowWrapper {
         "children": Array [
           <h2>
             Uh oh!
-</h2>,
+          </h2>,
           <p>
             We could not find what you were looking for!
-</p>,
+          </p>,
         ],
       },
       "ref": null,
@@ -112,8 +112,6 @@ ShallowWrapper {
         },
       },
     },
-    "attachTo": undefined,
-    "hydrateIn": undefined,
   },
 }
 `;

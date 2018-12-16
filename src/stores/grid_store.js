@@ -1,10 +1,16 @@
 import * as THREE from 'three'
-import {chunk, each, groupBy} from 'lodash'
+import { chunk, each, groupBy } from 'lodash'
 import Grid from 'objects/grid'
-import {observable, autorun, computed} from 'mobx'
+import { observable, autorun, computed } from 'mobx'
 
 class GridStore {
-  terrains = {dirt: 0x007B0C, stone: 0x666666, sand: 0xC2B280, water: 0x40A4DF, forest: 0x004B0C}
+  terrains = {
+    dirt: 0x007b0c,
+    stone: 0x666666,
+    sand: 0xc2b280,
+    water: 0x40a4df,
+    forest: 0x004b0c
+  }
   grid = new Grid()
   gridWorker = new Worker('/grid-worker.js')
   forestWorker = new Worker('/forest-worker.js')
@@ -27,27 +33,27 @@ class GridStore {
 
   runQueue = () => {
     if (this.queue.length && this.currentJobs < this.maxJobs) {
-      const {worker, tiles, terrain} = this.queue.shift()
-      worker.postMessage({tiles: tiles.slice(), terrain})
+      const { worker, tiles, terrain } = this.queue.shift()
+      worker.postMessage({ tiles: tiles.slice(), terrain })
       this.currentJobs += 1
     }
   }
 
   // Set up WebWorkers and add them to query.
   draw(tiles) {
-    const groupedTiles = groupBy(tiles, (tile) => tile.terrain.type)
+    const groupedTiles = groupBy(tiles, tile => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
-      chunk(terrainTiles, 300).map((segment) =>
-          this.queue.push({
-            worker: this.gridWorker,
-            tiles: segment,
-            terrain: this.terrains[terrainType]
-          })
+      chunk(terrainTiles, 300).map(segment =>
+        this.queue.push({
+          worker: this.gridWorker,
+          tiles: segment,
+          terrain: this.terrains[terrainType]
+        })
       )
     })
 
-    chunk(groupedTiles.forest, 50).map((segment) =>
+    chunk(groupedTiles.forest, 50).map(segment =>
       this.queue.push({
         worker: this.forestWorker,
         tiles: segment,
@@ -60,15 +66,24 @@ class GridStore {
   // We can't simply import objects as they are, because they are not Transferable type.
   // Encoding/Parsing them using THREE.ObjectLoader as JSON works, but is very slow for this use case.
   // So for optimal speed, we just copy geometry buffer attributes into new, fresh THREE.BufferGeometry.
-  buildMesh = (e) => {
+  buildMesh = e => {
     const { terrain, ...geometryAttributes } = e.data
 
     let geometry = new THREE.BufferGeometry()
-    each(geometryAttributes, (attr, key) =>
-        geometry.attributes[key] = new THREE.BufferAttribute(attr.array, attr.itemSize, attr.normalized)
+    each(
+      geometryAttributes,
+      (attr, key) =>
+        (geometry.attributes[key] = new THREE.BufferAttribute(
+          attr.array,
+          attr.itemSize,
+          attr.normalized
+        ))
     )
 
-    const material = new THREE.MeshLambertMaterial({ color: terrain, flatShading: true })
+    const material = new THREE.MeshLambertMaterial({
+      color: terrain,
+      flatShading: true
+    })
     const mesh = new THREE.Mesh(geometry, material)
 
     this.grid.add(mesh)

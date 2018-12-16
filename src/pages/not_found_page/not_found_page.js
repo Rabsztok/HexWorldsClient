@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 const NotFoundPage = () => (
   <div>
@@ -7,5 +7,5 @@ const NotFoundPage = () => (
   </div>
 )
 
-export {NotFoundPage}
+export { NotFoundPage }
 export default NotFoundPage

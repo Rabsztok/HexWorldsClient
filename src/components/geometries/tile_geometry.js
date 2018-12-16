@@ -1,13 +1,18 @@
-import * as THREE from 'three'
+import {
+  CircleBufferGeometry,
+  PlaneBufferGeometry,
+  BufferGeometry,
+  Geometry
+} from 'three'
 
-const topGeometry = new THREE.CircleBufferGeometry(1, 6)
+const topGeometry = new CircleBufferGeometry(1, 6)
 topGeometry.attributes.uv.array[5] = 0.5
 topGeometry.attributes.uv.array[7] = 0.5
 topGeometry.rotateX(-Math.PI / 2)
 topGeometry.rotateY(Math.PI / 2)
 
 function sideGeometry() {
-  const geometry = new THREE.PlaneBufferGeometry(1, 1)
+  const geometry = new PlaneBufferGeometry(1, 1)
   geometry.attributes.uv.array[1] = 0.5
   geometry.attributes.uv.array[3] = 0.5
   geometry.translate(0, -0.5, Math.sqrt(3) / 2)
@@ -15,18 +20,18 @@ function sideGeometry() {
   return geometry
 }
 
-const zxGeometry = sideGeometry().rotateY(-Math.PI * 5 / 6)
-const zyGeometry = sideGeometry().rotateY(Math.PI * 5 / 6)
+const zxGeometry = sideGeometry().rotateY((-Math.PI * 5) / 6)
+const zyGeometry = sideGeometry().rotateY((Math.PI * 5) / 6)
 const yxGeometry = sideGeometry().rotateY(Math.PI / 2)
 const yzGeometry = sideGeometry().rotateY(Math.PI / 6)
 const xzGeometry = sideGeometry().rotateY(-Math.PI / 6)
 const xyGeometry = sideGeometry().rotateY(-Math.PI / 2)
 
-export default class TileGeometry extends THREE.BufferGeometry {
+export default class TileGeometry extends BufferGeometry {
   constructor(tile) {
     super()
 
-    const tmpGeometry = new THREE.Geometry()
+    const tmpGeometry = new Geometry()
     this.mergeGeometry(tmpGeometry, topGeometry, tile)
     this.mergeGeometry(tmpGeometry, xzGeometry, tile, 'xz')
     this.mergeGeometry(tmpGeometry, yzGeometry, tile, 'yz')
@@ -40,14 +45,14 @@ export default class TileGeometry extends THREE.BufferGeometry {
   }
 
   mergeGeometry(tmpGeometry, bufferGeometry, tile, side) {
-    let height = tile.heightMap[side]
-    if (!side) height = 1
+    if (!tile.heightMap) return
+
+    const height = side ? tile.heightMap[side] : 1
 
     if (height >= 1) {
-      const geometry = new THREE.Geometry().fromBufferGeometry(bufferGeometry)
+      const geometry = new Geometry().fromBufferGeometry(bufferGeometry)
       geometry.scale(1, height / 2, 1)
       tmpGeometry.merge(geometry)
     }
   }
 }
-

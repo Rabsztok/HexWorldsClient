@@ -49,39 +49,39 @@ class WorldStore {
   }
 
   @action
-  onJoin = (response) => {
-    response.worlds.forEach((world) => {
+  onJoin = response => {
+    response.worlds.forEach(world => {
       this.worlds.set(world.id, new World(world))
     })
     this.ready = true
   }
 
   @action
-  onAdd = async (response) => {
+  onAdd = async response => {
     const world = response.world
     this.worlds.set(world.id, new World(world))
   }
 
   @action
-  onRemove = async (response) => {
+  onRemove = async response => {
     this.worlds.delete(response.world.id)
   }
 
   @action
-  onUpdate = async ({world: {id, ...attributes}}) => {
+  onUpdate = async ({ world: { id, ...attributes } }) => {
     const world = this.worlds.get(id)
     if (world) world.update(attributes)
   }
 
-  create = (name) => {
-    return this.channel.socket.push('create', { world: {name} })
+  create = name => {
+    return this.channel.socket.push('create', { world: { name } })
   }
 
-  expand = (id) => {
+  expand = id => {
     return this.channel.socket.push('expand', { id: id })
   }
 
-  remove = (id) => {
+  remove = id => {
     return this.channel.socket.push('delete', { id: id })
   }
 }
