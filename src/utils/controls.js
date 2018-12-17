@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import { Vector2, Raycaster } from 'three'
 import { worldToCube } from './coordinates'
 import { pick } from 'lodash'
 
@@ -55,11 +55,11 @@ export default class Controls {
       }
     } = this.store
 
-    const mouse = new THREE.Vector2()
+    const mouse = new Vector2()
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
-    const raycaster = new THREE.Raycaster()
+    const raycaster = new Raycaster()
     raycaster.setFromCamera(mouse, this.camera)
     const intersect = raycaster.intersectObjects(grid.children.slice())[0]
 

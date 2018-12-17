@@ -1,18 +1,20 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { WorldPage } from './world_page'
+import { WorldPage } from 'components/pages/world_page'
 import { spy } from 'sinon'
 import Canvas from 'components/canvas'
 import { CircularProgress } from '@material-ui/core'
 import world from '__mocks__/world.mock.js'
 
+const noop = () => {}
+
 describe('WorldPage', () => {
-  let store
+  let store: any
   beforeEach(() => {
     store = {
       worldStore: {
-        selectWorld: window.noop,
-        discardWorld: window.noop,
+        selectWorld: noop,
+        discardWorld: noop,
         currentWorld: world,
         gridStore: { loading: false }
       }

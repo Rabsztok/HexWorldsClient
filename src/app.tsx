@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { observer, Provider } from 'mobx-react'
 
 import WorldStore from 'stores/world_store'
-import * as Pages from 'pages/index'
+import * as Pages from 'components/pages'
 import routes from 'utils/routes'
 
 @observer

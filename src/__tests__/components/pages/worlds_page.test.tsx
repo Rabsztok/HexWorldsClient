@@ -1,16 +1,19 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { WorldsPage } from './worlds_page'
+import { WorldsPage } from 'components/pages/worlds_page'
 import world from '__mocks__/world.mock.js'
 
+const noop = () => {}
+
 describe('WorldsPage', () => {
-  let store
+  let store: any
+
   beforeEach(() => {
     store = {
       worldStore: {
         worldsList: [world],
-        expand: window.noop,
-        remove: window.noop
+        expand: noop,
+        remove: noop
       }
     }
   })

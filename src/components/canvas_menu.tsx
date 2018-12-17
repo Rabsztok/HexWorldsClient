@@ -4,7 +4,7 @@ import { Fab } from '@material-ui/core'
 import BackIcon from '@material-ui/icons/ArrowBack'
 import ShowIcon from '@material-ui/icons/Language'
 import { withRouter } from 'react-router-dom'
-import styles from './canvas_menu.module.scss'
+import styles from 'styles/canvas_menu.module.scss'
 import routes from 'utils/routes'
 import { StoreProps } from 'types'
 
