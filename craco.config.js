@@ -11,5 +11,12 @@ module.exports = {
       })
       return webpackConfig
     }
+  },
+  jest: {
+    configure: {
+      moduleNameMapper: {
+        '.*.worker': '<rootDir>/__mocks__/worker_mock.js'
+      }
+    }
   }
 }
