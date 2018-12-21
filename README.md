@@ -29,6 +29,7 @@ Just run:
 - Add new page to debug and preview different tile types
 - Increase test coverage
 - Add more terrain types and assets placed on tiles (like villages, caves, etc.)
+- Optimize bundle size (use babel plugin to optimize imports, figure out how to import THREE.js from sources)
 
 ## Note
 

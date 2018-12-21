@@ -1,14 +1,12 @@
-import React, {Component} from 'react'
-import {autorun} from 'mobx'
-import {observer, inject} from 'mobx-react'
-import * as THREE from 'three'
+import React, { Component } from 'react'
+import { autorun } from 'mobx'
+import { observer, inject } from 'mobx-react'
 import Controls from 'utils/controls'
-
-let OrbitControls = require('three-orbit-controls')(THREE)
+import OrbitControls from 'three-orbitcontrols'
 
 class Canvas extends Component {
   componentDidMount() {
-    const {gridStore, canvasStore} = this.props.store.worldStore
+    const { gridStore, canvasStore } = this.props.store.worldStore
 
     canvasStore.scene.add(gridStore.grid)
 
@@ -25,28 +23,31 @@ class Canvas extends Component {
   }
 
   drawObjects = () => {
-    const {tileStore, gridStore} = this.props.store.worldStore
+    const { tileStore, gridStore } = this.props.store.worldStore
+    window.tileStore = tileStore
 
-    let tiles = tileStore.tiles.filter(tile => !tile.rendered)
+    const tiles = tileStore.tiles.filter(
+      tile => !tile.rendered && tile.heightMap
+    )
 
     if (!tiles.length) return
 
     gridStore.draw(tiles)
 
-    tiles.map((tile) => tile.rendered = true)
+    tiles.map(tile => (tile.rendered = true))
   }
 
   // Controls
   // ToDo: move to separate ControlsStore
 
   addControls() {
-    const {canvasStore} = this.props.store.worldStore
+    const { canvasStore } = this.props.store.worldStore
 
     this.controls = new OrbitControls(canvasStore.camera, this.root)
-    this.controls.maxPolarAngle = 2 * Math.PI / 5
+    this.controls.maxPolarAngle = (2 * Math.PI) / 5
     this.controls.minPolarAngle = Math.PI / 8
     this.controls.target.set(0, 0, 0)
-    this.controls.addEventListener( 'change', canvasStore.animate )
+    this.controls.addEventListener('change', canvasStore.animate)
 
     new Controls(this.props.store, canvasStore.camera, this.root)
   }
@@ -56,9 +57,7 @@ class Canvas extends Component {
   }
 
   render() {
-    return (
-        <div ref={(e) => this.root = e}/>
-    )
+    return <div ref={e => (this.root = e)} />
   }
 }
 

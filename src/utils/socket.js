@@ -1,4 +1,4 @@
-import {Socket} from 'phoenix-socket'
+import { Socket } from 'phoenix-socket'
 
 const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
 const socket = new Socket(apiUrl)
