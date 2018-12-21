@@ -9,6 +9,9 @@ import Tile from 'models/tile'
 import Grid from 'three/grid'
 import { observable, autorun, computed, action } from 'mobx'
 
+const GridWorker = require('worker-loader!../workers/grid.worker')
+const ForestWorker = require('worker-loader!../workers/forest.worker')
+
 interface Job {
   worker: Worker
   tiles: Tile[]
@@ -16,8 +19,8 @@ interface Job {
 }
 
 class GridStore {
-  private gridWorker = new Worker('/grid-worker.js')
-  private forestWorker = new Worker('/forest-worker.js')
+  private gridWorker = new GridWorker()
+  private forestWorker = new ForestWorker()
   private terrains: any = {
     dirt: 0x007b0c,
     stone: 0x666666,
