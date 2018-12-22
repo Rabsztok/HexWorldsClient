@@ -109,7 +109,7 @@ class TileStore {
     })
   }
 
-  move(coordinates: Vector3): void {
+  move = (coordinates: Vector3): void => {
     this.channel.socket.push('move', {
       world_id: this.world.id,
       coordinates: coordinates,
@@ -117,7 +117,7 @@ class TileStore {
     })
   }
 
-  showAll(): void {
+  showAll = (): void => {
     this.channel.socket.push('move', {
       world_id: this.world.id,
       coordinates: { x: 0, y: 0, z: 0 },

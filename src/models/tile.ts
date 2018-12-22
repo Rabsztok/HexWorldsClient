@@ -13,17 +13,16 @@ class Tile {
   z: number
   height: number
   terrain: any
-  rendered: boolean
+  rendered: boolean = false
   heightMap?: HeightMap
 
-  constructor(tile: Tile) {
-    this.x = tile.x
-    this.y = tile.y
-    this.z = tile.z
-    this.height = tile.height
-    this.terrain = tile.terrain
-    this.heightMap = tile.heightMap || undefined
-    this.rendered = tile.rendered || false
+  constructor(props: any) {
+    this.x = props.x
+    this.y = props.y
+    this.z = props.z
+    this.height = props.height
+    this.terrain = props.terrain
+    if (props.heightMap) this.heightMap = props.heightMap
   }
 
   get renderHeight(): number {

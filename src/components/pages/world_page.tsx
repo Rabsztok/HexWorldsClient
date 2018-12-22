@@ -1,30 +1,30 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import Canvas from 'components/canvas'
+import Canvas from 'components/canvas/world_canvas'
 import Menu from 'components/canvas_menu'
 import { CircularProgress } from '@material-ui/core'
 import styles from 'styles/pages/world_page.module.scss'
 import { StoreProps } from 'types'
 
 interface Props {
-  store: StoreProps
-  match: { params: { id: string } }
+  store?: StoreProps
+  match?: { params: { id: string } }
 }
 
 class WorldPage extends React.Component<Props, {}> {
   componentDidMount() {
-    const { worldStore } = this.props.store
-    const id = this.props.match.params.id
+    const { worldStore } = this.props.store!
+    const id = this.props.match!.params.id
 
     worldStore.selectWorld(id)
   }
 
   componentWillUnmount() {
-    this.props.store.worldStore.discardWorld()
+    this.props.store!.worldStore.discardWorld()
   }
 
   render() {
-    const { gridStore, currentWorld } = this.props.store.worldStore
+    const { gridStore, currentWorld } = this.props.store!.worldStore
 
     if (!gridStore || !currentWorld) return null
 

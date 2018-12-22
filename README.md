@@ -26,7 +26,6 @@ Just run:
 ## Things to do in near future:
 
 - Try to migrate data structure to [mobx-state-tree](https://github.com/mobxjs/mobx-state-tree) and see how it will affect performance on larger maps,
-- Add new page to debug and preview different tile types
 - Increase test coverage
 - Add more terrain types and assets placed on tiles (like villages, caves, etc.)
 - Use InstancedBufferGeometry with some shaders to speed up rendering

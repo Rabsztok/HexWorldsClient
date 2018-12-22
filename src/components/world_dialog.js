@@ -78,7 +78,7 @@ class WorldDialog extends Component {
               <Button onClick={this.closeDialog} color="primary">
                 Cancel
               </Button>
-              <Button variant="raised" color="primary" type="submit">
+              <Button variant="contained" color="primary" type="submit">
                 Create
               </Button>
             </DialogActions>

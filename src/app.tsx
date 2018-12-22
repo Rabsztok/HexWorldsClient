@@ -31,6 +31,7 @@ class App extends React.Component {
                 component={Pages.WorldsPage}
               />
               <Route path={routes.world(':id')} component={Pages.WorldPage} />
+              <Route path={routes.debug()} component={Pages.DebugPage} />
               <Route component={Pages.NotFoundPage} />
             </Switch>
           </div>

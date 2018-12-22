@@ -17,13 +17,13 @@ const CanvasMenu = ({ store, history }: Props) => {
   const { worldStore } = store!
   const { push } = history!
 
-  if (!worldStore.tileStore) return null
-
   return (
     <div className={styles.menu}>
-      <Fab aria-label="show-all" onClick={worldStore.tileStore.showAll}>
-        <ShowIcon />
-      </Fab>
+      {worldStore.tileStore && (
+        <Fab aria-label="show-all" onClick={worldStore.tileStore.showAll}>
+          <ShowIcon />
+        </Fab>
+      )}
 
       <Fab
         color="primary"
