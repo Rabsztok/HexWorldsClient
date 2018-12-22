@@ -9,6 +9,7 @@ import Tile from 'models/tile'
 import Grid from 'three/grid'
 import { observable, autorun, computed, action } from 'mobx'
 
+const { PLYLoader } = require('three/examples/js/loaders/PLYLoader')
 const GridWorker = require('worker-loader!../workers/grid.worker')
 const ForestWorker = require('worker-loader!../workers/forest.worker')
 
@@ -64,7 +65,7 @@ class GridStore {
     const groupedTiles = groupBy<Tile>(tiles, tile => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
-      chunk(terrainTiles, 300).map(segment =>
+      chunk(terrainTiles, 128).map(segment =>
         this.queue.push({
           worker: this.gridWorker,
           tiles: segment,
@@ -73,7 +74,7 @@ class GridStore {
       )
     })
 
-    chunk(groupedTiles.forest, 50).map(segment =>
+    chunk(groupedTiles.forest, 64).map(segment =>
       this.queue.push({
         worker: this.forestWorker,
         tiles: segment,
@@ -87,26 +88,19 @@ class GridStore {
   // Encoding/Parsing them using ObjectLoader as JSON works, but is very slow for this use case.
   // So for optimal speed, we just copy geometry buffer attributes into new, fresh BufferGeometry.
   @action
-  buildMesh = ({ data: { terrain, ...geometryAttributes } }: { data: any }) => {
-    const geometry = new BufferGeometry()
+  buildMesh = ({ data: { terrain, data } }: { data: any }) => {
+    const loader = new PLYLoader()
 
-    each(
-      geometryAttributes,
-      (attr, key) =>
-        (geometry.attributes[key] = new BufferAttribute(
-          attr.array,
-          attr.itemSize,
-          attr.normalized
-        ))
+    this.grid.add(
+      new Mesh(
+        loader.parse(data),
+        new MeshLambertMaterial({
+          color: terrain,
+          flatShading: true
+        })
+      )
     )
 
-    const material = new MeshLambertMaterial({
-      color: terrain,
-      flatShading: true
-    })
-    const mesh = new Mesh(geometry, material)
-
-    this.grid.add(mesh)
     this.currentJobs -= 1
   }
 }

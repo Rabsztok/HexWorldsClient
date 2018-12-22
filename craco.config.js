@@ -1,8 +1,11 @@
+const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
+
 module.exports = {
   babel: {
     plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]]
   },
   webpack: {
+    plugins: [new ThreeWebpackPlugin()],
     configure: (webpackConfig, { env, paths }) => {
       webpackConfig.output.globalObject = 'this'
       webpackConfig.module.rules.push({
