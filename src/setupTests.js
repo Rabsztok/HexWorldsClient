@@ -24,3 +24,5 @@ THREE.WebGLRenderer = class {
   setClearColor() {}
   setSize() {}
 }
+
+window.THREE = THREE

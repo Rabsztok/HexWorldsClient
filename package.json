@@ -24,7 +24,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test --moduleNameMapper="
+    "test": "craco test"
   },
   "eslintConfig": {
     "extends": "react-app"
