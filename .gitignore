@@ -18,6 +18,9 @@
 .env.test.local
 .env.production.local
 
+# three
+/public/mesh/*.dae
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

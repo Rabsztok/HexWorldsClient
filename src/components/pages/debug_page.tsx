@@ -7,8 +7,8 @@ import { StoreProps } from 'types'
 import CanvasStore from 'stores/canvas_store'
 import TileGeometry from 'three/geometries/tile_geometry'
 import Tile from 'models/tile'
-import { Mesh, MeshLambertMaterial, Vector3 } from 'three'
-import Player from 'three/objects/player'
+import { Mesh, MeshLambertMaterial, Vector3, Scene } from 'three'
+const { GLTFLoader } = require('three/examples/js/loaders/GLTFLoader')
 
 interface Props {
   store: StoreProps
@@ -51,8 +51,11 @@ class DebugPage extends React.Component<Props, {}> {
   }
 
   renderObject() {
-    const player = new Player(this.tile)
-    this.canvasStore.scene.add(player.mesh)
+    const loader = new GLTFLoader()
+    loader.load('/mesh/house.gltf', ({ scene }: { scene: Scene }) => {
+      this.canvasStore.scene.add(scene.children[0])
+      this.canvasStore.animate()
+    })
   }
 
   render() {
