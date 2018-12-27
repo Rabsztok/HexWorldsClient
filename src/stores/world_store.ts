@@ -3,6 +3,7 @@ import Channel from 'channel'
 import TileStore from 'stores/tile_store'
 import GridStore from 'stores/grid_store'
 import CanvasStore from 'stores/canvas_store'
+import PlayerStore from 'stores/player_store'
 import World from 'models/world'
 import { PushEvent } from 'types'
 
@@ -18,6 +19,7 @@ class WorldStore {
 
   tileStore?: TileStore
   gridStore?: GridStore
+  playerStore?: PlayerStore
   canvasStore?: CanvasStore
 
   connect(): void {
@@ -42,22 +44,26 @@ class WorldStore {
     this.currentWorld = this.find(id)
 
     this.tileStore = new TileStore(this.currentWorld)
+    this.playerStore = new PlayerStore(this.currentWorld)
     this.gridStore = new GridStore()
     this.canvasStore = new CanvasStore()
 
     this.tileStore.connect()
+    this.playerStore.connect()
   }
 
   @action
   discardWorld(): void {
     this.currentWorld = undefined
     this.tileStore = undefined
+    this.playerStore = undefined
     this.gridStore = undefined
     this.canvasStore = undefined
   }
 
   @action
   onJoin = ({ worlds }: { worlds: World[] }): void => {
+    console.log('join')
     worlds.forEach(world => {
       this.worlds.set(world.id, new World(world))
     })

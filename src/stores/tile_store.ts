@@ -52,6 +52,10 @@ class TileStore {
     this.tileMatrix.set([x, y, z].join(','), tile)
   }
 
+  get(id: string) {
+    return this.tiles.find(tile => tile.id === id)
+  }
+
   find(x: number, y: number, z: number): Tile | undefined {
     return this.tileMatrix.get([x, y, z].join(','))
   }

@@ -1,11 +1,9 @@
 import { Vector2, Raycaster } from 'three'
 import { worldToCube } from './coordinates'
-import { pick } from 'lodash'
 
-export default class WorldControls {
-  constructor(store, camera, container) {
+export default class PlayerControls {
+  constructor(store, container) {
     this.store = store
-    this.camera = camera
     this.container = container
 
     this.container.addEventListener('mousedown', this.onMouseDown)
@@ -19,7 +17,7 @@ export default class WorldControls {
   onMouseUp = e => {
     if (
       this.mouseStartEvent &&
-      WorldControls.dragDistance(this.mouseStartEvent, e) > 3
+      PlayerControls.dragDistance(this.mouseStartEvent, e) > 3
     )
       this.drag(e)
     else this.tap(e)
@@ -30,12 +28,14 @@ export default class WorldControls {
   }
 
   tap(e) {
+    const { move, create, currentPlayer } = this.store.worldStore.playerStore
     const tile = this.clickedTile(e)
 
-    if (tile)
-      if (e.button === 0)
-        this.store.worldStore.tileStore.move(pick(tile, 'x', 'y', 'z'))
-      else if (e.button === 2) console.log('mouse2')
+    console.log(tile)
+    if (tile) {
+      if (!currentPlayer && e.button === 0) create(tile)
+      if (currentPlayer && e.button === 2) move(tile)
+    }
   }
 
   // helpers
@@ -60,7 +60,7 @@ export default class WorldControls {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
     const raycaster = new Raycaster()
-    raycaster.setFromCamera(mouse, this.camera)
+    raycaster.setFromCamera(mouse, this.store.worldStore.canvasStore.camera)
     const intersect = raycaster.intersectObjects(grid.children.slice())[0]
 
     if (intersect) {

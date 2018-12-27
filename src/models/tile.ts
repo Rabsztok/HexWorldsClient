@@ -8,6 +8,7 @@ interface HeightMap {
 }
 
 class Tile {
+  id: string
   x: number
   y: number
   z: number
@@ -17,6 +18,7 @@ class Tile {
   heightMap?: HeightMap
 
   constructor(props: any) {
+    this.id = props.id
     this.x = props.x
     this.y = props.y
     this.z = props.z

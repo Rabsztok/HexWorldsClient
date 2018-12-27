@@ -1,4 +1,9 @@
-import socket from 'utils/socket'
+// import socket from 'utils/socket'
+const { Socket } = require('phoenix-socket')
+
+const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
+const socket = new Socket(apiUrl)
+socket.connect()
 
 interface Callbacks {
   onSuccess?(response: any): void
