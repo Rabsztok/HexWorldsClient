@@ -7,8 +7,9 @@ import { StoreProps } from 'types'
 import CanvasStore from 'stores/canvas_store'
 import TileGeometry from 'three/geometries/tile_geometry'
 import Tile from 'models/tile'
-import { Mesh, MeshLambertMaterial, Vector3, Scene } from 'three'
-const { GLTFLoader } = require('three/examples/js/loaders/GLTFLoader')
+import { Mesh, MeshLambertMaterial, Vector3 } from 'three'
+import HouseBuilder from 'three/builders/house_builder'
+import { times } from 'lodash'
 
 interface Props {
   store: StoreProps
@@ -50,12 +51,28 @@ class DebugPage extends React.Component<Props, {}> {
     this.canvasStore.scene.add(mesh)
   }
 
-  renderObject() {
-    const loader = new GLTFLoader()
-    loader.load('/mesh/house.gltf', ({ scene }: { scene: Scene }) => {
-      this.canvasStore.scene.add(scene.children[0])
-      this.canvasStore.animate()
+  async renderObject() {
+    const generateSection = (index: number) => ({
+      position: new Vector3(
+        (Math.random() - 0.5) / 2,
+        0,
+        (Math.random() - 0.5) / 2
+      ),
+      scale: new Vector3(
+        Math.random() / 2 + 0.75,
+        Math.random() / 2 + 0.75,
+        Math.random() / 2 + 0.75
+      ),
+      rotation: (Math.PI / 2) * index
     })
+
+    new HouseBuilder({
+      tile: this.tile,
+      rotation: 0,
+      sections: times(Math.round(Math.sqrt(Math.random() * 4 + 1)), i =>
+        generateSection(i)
+      )
+    }).call(this.canvasStore)
   }
 
   render() {
