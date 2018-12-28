@@ -1,14 +1,14 @@
 import { CylinderGeometry, MeshLambertMaterial, Mesh } from 'three'
 import Player from 'models/player'
-import Tile from 'models/tile'
+import { ITile } from 'models/tile'
 import CanvasStore from 'stores/canvas_store'
 import { translateToTile } from 'three/utils'
 
 class PlayerBuilder {
   player: Player
-  tile: Tile
+  tile: ITile
 
-  constructor(tile: Tile, player: Player) {
+  constructor(tile: ITile, player: Player) {
     this.tile = tile
     this.player = player
   }

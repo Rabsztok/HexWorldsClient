@@ -50,7 +50,7 @@ describe('BuildingsStore', () => {
   it("sends 'create' message to websocket", () => {
     store.create('New World')
     expect(
-      store.channel.socket.push.calledWith('create', {
+      store.channel.connection.push.calledWith('create', {
         world: { name: 'New World' }
       })
     ).toBe(true)
@@ -58,15 +58,15 @@ describe('BuildingsStore', () => {
 
   it("sends 'expand' message to websocket", () => {
     store.expand('1')
-    expect(store.channel.socket.push.calledWith('expand', { id: '1' })).toBe(
-      true
-    )
+    expect(
+      store.channel.connection.push.calledWith('expand', { id: '1' })
+    ).toBe(true)
   })
 
   it("sends 'delete' message to websocket", () => {
     store.remove('1')
-    expect(store.channel.socket.push.calledWith('delete', { id: '1' })).toBe(
-      true
-    )
+    expect(
+      store.channel.connection.push.calledWith('delete', { id: '1' })
+    ).toBe(true)
   })
 })

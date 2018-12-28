@@ -1,108 +1,95 @@
-import { action, observable, computed } from 'mobx'
+import { Instance, types } from 'mobx-state-tree'
 import Channel from 'channel'
-import TileStore from 'stores/tile_store'
-import GridStore from 'stores/grid_store'
-import CanvasStore from 'stores/canvas_store'
-import PlayerStore from 'stores/player_store'
-import World from 'models/world'
+import World, { IWorld } from 'models/world'
 import { PushEvent } from 'types'
 
-// Manages worlds list,
-// also holds reference to tile, grid and canvas stores
-// I'm considering moving tile/grid/canvas store associations to individual world models,
-// but I hesitate about memory usage in such case. I will stress test that later on.
-class WorldStore {
-  @observable worlds: Map<string, World> = observable.map()
-  @observable ready: boolean = false
-  @observable currentWorld?: World
-  channel: Channel = new Channel('worlds:lobby')
+const WorldStore = types
+  .model('WorldsStore', {
+    worlds: types.map(World),
+    loaded: types.optional(types.boolean, false)
+  })
+  .volatile(self => ({
+    channel: new Channel('worlds:lobby')
+  }))
+  .views(self => ({
+    get worldsList(): IWorld[] {
+      return Array.from(self.worlds.values())
+    },
+    find(id: string): IWorld {
+      const world = self.worlds.get(id)
+      if (world) return world
+      else throw `World with id ${id} does not exist`
+    }
+  }))
+  .actions(self => {
+    return {
+      connect() {
+        if (self.channel.connected) return
 
-  tileStore?: TileStore
-  gridStore?: GridStore
-  playerStore?: PlayerStore
-  canvasStore?: CanvasStore
+        self.channel.connect(
+          {},
+          { onSuccess: this.onJoin }
+        )
+        self.channel.connection.on('add', this.onAdd)
+        self.channel.connection.on('remove', this.onRemove)
+        self.channel.connection.on('update', this.onUpdate)
+      },
+      onJoin({ worlds }: { worlds: IWorld[] }) {
+        worlds.forEach(this.addWorld)
+        self.loaded = true
+      },
+      onAdd({ world }: { world: any }) {
+        this.addWorld(world)
+      },
+      onRemove({ world }: { world: any }) {
+        this.removeWorld(world)
+      },
+      onUpdate({ world: { id, ...attributes } }: any) {
+        self.find(id).update(attributes)
+      },
+      addWorld({ regions, ...attributes }: any) {
+        const world = World.create(attributes)
+        regions.forEach(world.addRegion)
 
-  connect(): void {
-    if (this.channel.connected) return
+        self.worlds.set(world.id, world)
+      },
+      removeWorld({ id }: { id: string }) {
+        self.worlds.delete(id)
+      },
+      create(name: string): PushEvent {
+        return self.channel.connection.push('create', { world: { name } })
+      },
+      expand(id: string): PushEvent {
+        return self.channel.connection.push('expand', { id: id })
+      },
+      remove(id: string): PushEvent {
+        return self.channel.connection.push('delete', { id: id })
+      }
+    }
+  })
 
-    this.channel.connect(
-      {},
-      { onSuccess: this.onJoin }
-    )
-    this.channel.socket.on('add', this.onAdd)
-    this.channel.socket.on('remove', this.onRemove)
-    this.channel.socket.on('update', this.onUpdate)
-  }
-
-  @computed
-  get worldsList(): World[] {
-    return Array.from(this.worlds.values())
-  }
-
-  @action
-  selectWorld(id: string): void {
-    this.currentWorld = this.find(id)
-
-    this.tileStore = new TileStore(this.currentWorld)
-    this.playerStore = new PlayerStore(this.currentWorld)
-    this.gridStore = new GridStore()
-    this.canvasStore = new CanvasStore()
-
-    this.tileStore.connect()
-    this.playerStore.connect()
-  }
-
-  @action
-  discardWorld(): void {
-    this.currentWorld = undefined
-    this.tileStore = undefined
-    this.playerStore = undefined
-    this.gridStore = undefined
-    this.canvasStore = undefined
-  }
-
-  @action
-  onJoin = ({ worlds }: { worlds: World[] }): void => {
-    console.log('join')
-    worlds.forEach(world => {
-      this.worlds.set(world.id, new World(world))
-    })
-    this.ready = true
-  }
-
-  @action
-  onAdd = ({ world }: { world: World }): void => {
-    this.worlds.set(world.id, new World(world))
-  }
-
-  @action
-  onRemove = ({ world: { id } }: { world: World }): void => {
-    this.worlds.delete(id)
-  }
-
-  @action
-  onUpdate = ({ world: { id, ...attributes } }: { world: World }) => {
-    const world = this.find(id)
-    if (world) world.update(attributes)
-  }
-
-  find = (id: string): World => {
-    const world = this.worlds.get(id)
-    if (world) return world
-    else throw `World with id ${id} does not exist`
-  }
-
-  create = (name: string): PushEvent => {
-    return this.channel.socket.push('create', { world: { name } })
-  }
-
-  expand = (id: string): PushEvent => {
-    return this.channel.socket.push('expand', { id: id })
-  }
-
-  remove = (id: string): PushEvent => {
-    return this.channel.socket.push('delete', { id: id })
-  }
-}
+export interface IWorldStore extends Instance<typeof WorldStore> {}
 
 export default WorldStore
+
+// @action
+// selectWorld(id: string): void {
+//   self.currentWorld = self.find(id)
+
+//   self.tileStore = new TileStore(self.currentWorld)
+//   self.playerStore = new PlayerStore(self.currentWorld)
+//   self.gridStore = new GridStore()
+//   self.canvasStore = new CanvasStore()
+
+//   self.tileStore.connect()
+//   self.playerStore.connect()
+// }
+
+// @action
+// discardWorld(): void {
+//   self.currentWorld = undefined
+//   self.tileStore = undefined
+//   self.playerStore = undefined
+//   self.gridStore = undefined
+//   self.canvasStore = undefined
+// }

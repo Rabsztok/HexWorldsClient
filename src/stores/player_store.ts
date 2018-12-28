@@ -1,17 +1,17 @@
-import { observable, action, computed } from 'mobx'
+import { observable, computed } from 'mobx'
 import Player from 'models/player'
-import Tile from 'models/tile'
 import Channel from 'channel'
-import World from 'models/world'
+import { ITile } from 'models/tile'
+import { IWorld } from 'models/world'
 import { randomInt } from 'utils/random'
 
 class PlayerStore {
   readonly players = observable.map<string, Player>()
-  world: World
+  world: IWorld
   channel: Channel
   @observable currentPlayerId?: string
 
-  constructor(world: World) {
+  constructor(world: IWorld) {
     this.world = world
     this.channel = new Channel('players:lobby')
   }
@@ -24,8 +24,8 @@ class PlayerStore {
       { onSuccess: this.onPlayersLoaded }
     )
 
-    this.channel.socket.on('move', this.onPlayerMove)
-    this.channel.socket.on('create', this.onPlayerCreate)
+    this.channel.connection.on('move', this.onPlayerMove)
+    this.channel.connection.on('create', this.onPlayerCreate)
   }
 
   onPlayersLoaded = (response: { players: Player[] }): void => {
@@ -43,16 +43,16 @@ class PlayerStore {
     this.currentPlayerId = player.id
   }
 
-  create = (tile: Tile): void => {
-    this.channel.socket.push('create', {
+  create = (tile: ITile): void => {
+    this.channel.connection.push('create', {
       name: `User no. ${randomInt(1, 1000)}`,
       world_id: this.world.id,
       tile_id: tile.id
     })
   }
 
-  move = (player: Player, tile: Tile): void => {
-    this.channel.socket.push('move', {
+  move = (player: Player, tile: ITile): void => {
+    this.channel.connection.push('move', {
       player_id: player.id,
       tile_id: tile.id
     })

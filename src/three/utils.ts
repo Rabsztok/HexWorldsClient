@@ -1,7 +1,7 @@
 import { Object3D } from 'three'
-import Tile from 'models/tile'
+import { ITile } from 'models/tile'
 
-const translateToTile = (object: Object3D, tile: Tile) => {
+const translateToTile = (object: Object3D, tile: ITile) => {
   object.position.set(
     ((2 * tile.x + tile.z) * Math.sqrt(3)) / 2,
     tile.height / 2 || 1,

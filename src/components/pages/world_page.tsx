@@ -1,4 +1,5 @@
 import React from 'react'
+import { computed } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import Canvas from 'components/canvas/world_canvas'
 import Menu from 'components/canvas_menu'
@@ -12,34 +13,29 @@ interface Props {
 }
 
 class WorldPage extends React.Component<Props, {}> {
-  componentDidMount() {
+  @computed
+  get world() {
     const { worldStore } = this.props.store!
     const id = this.props.match!.params.id
 
-    worldStore.selectWorld(id)
-  }
-
-  componentWillUnmount() {
-    this.props.store!.worldStore.discardWorld()
+    if (id) return worldStore.find(id)
   }
 
   render() {
-    const { gridStore, currentWorld } = this.props.store!.worldStore
-
-    if (!gridStore || !currentWorld) return null
+    if (!this.world) return null
 
     return (
       <React.Fragment>
         <Menu />
 
-        {gridStore.loading && (
+        {/* {gridStore.loading && (
           <div className={styles.loading}>
             <CircularProgress size={50} thickness={5} />
           </div>
-        )}
+        )} */}
 
         <div className={styles.container}>
-          <Canvas />
+          <Canvas world={this.world} />
         </div>
       </React.Fragment>
     )

@@ -1,11 +1,6 @@
-import {
-  BufferGeometry,
-  BufferAttribute,
-  MeshLambertMaterial,
-  Mesh
-} from 'three'
+import { MeshLambertMaterial, Mesh } from 'three'
 import { chunk, each, groupBy } from 'lodash'
-import Tile from 'models/tile'
+import { ITile } from 'models/tile'
 import Grid from 'three/grid'
 import { observable, autorun, computed, action } from 'mobx'
 
@@ -15,7 +10,7 @@ const ForestWorker = require('worker-loader!../workers/forest.worker')
 
 interface Job {
   worker: Worker
-  tiles: Tile[]
+  tiles: ITile[]
   terrain: number // i think it's obsolete ToDo: refactor
 }
 
@@ -61,8 +56,8 @@ class GridStore {
 
   // Set up WebWorkers and add them to query.
   @action
-  draw(tiles: Tile[]): void {
-    const groupedTiles = groupBy<Tile>(tiles, tile => tile.terrain.type)
+  draw(tiles: ITile[]): void {
+    const groupedTiles = groupBy<ITile>(tiles, tile => tile.terrain.type)
 
     each(groupedTiles, (terrainTiles, terrainType) => {
       chunk(terrainTiles, 128).map(segment =>

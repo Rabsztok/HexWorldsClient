@@ -1,13 +1,13 @@
 import { BufferGeometry, Geometry, Matrix4 } from 'three'
-import Tile from 'models/tile'
 import TileGeometry from './tile_geometry'
+import Tile from 'models/tile'
 
 export default class GridGeometry extends BufferGeometry {
   constructor(tiles) {
     super()
 
     const tmpGeometry = new Geometry()
-    tiles.map(tile => this.mergeTile(tmpGeometry, new Tile(tile)))
+    tiles.map(tile => this.mergeTile(tmpGeometry, Tile.create(tile)))
     this.fromGeometry(tmpGeometry)
 
     return this

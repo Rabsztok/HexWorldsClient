@@ -12,6 +12,7 @@
     "lodash": "^4.17.11",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
+    "mobx-state-tree": "^3.9.0",
     "node-sass": "^4.11.0",
     "phoenix-socket": "^1.2.3",
     "react": "^16.6.3",

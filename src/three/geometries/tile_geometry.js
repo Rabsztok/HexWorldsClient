@@ -45,8 +45,6 @@ export default class TileGeometry extends BufferGeometry {
   }
 
   mergeGeometry(tmpGeometry, bufferGeometry, tile, side) {
-    if (!tile.heightMap) return
-
     const height = side ? tile.heightMap[side] : 1
 
     if (height >= 1) {

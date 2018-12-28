@@ -7,30 +7,23 @@ import {
   PointLight
 } from 'three'
 
-class CanvasStore {
-  scene: Scene
-  renderer: WebGLRenderer
-  width: number
-  height: number
-  cameraPosition: Vector3
-  lightPosition: Vector3
-  camera: PerspectiveCamera
+class Canvas {
+  scene = new Scene()
+  renderer = new WebGLRenderer()
+  width = window.innerWidth
+  height = window.innerHeight
+  cameraPosition = new Vector3(-100, 100, 0)
+  lightPosition = new Vector3(100, 100, 100)
+  camera = new PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    2000
+  )
 
   constructor() {
     window.onresize = this.resizeCanvas
 
-    this.scene = new Scene()
-    this.renderer = new WebGLRenderer()
-    this.width = window.innerWidth
-    this.height = window.innerHeight
-    this.cameraPosition = new Vector3(-100, 100, 0)
-    this.lightPosition = new Vector3(100, 100, 100)
-    this.camera = new PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      2000
-    )
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setClearColor(0xaaeeff)
     this.camera.position.copy(this.cameraPosition)
@@ -68,4 +61,4 @@ class CanvasStore {
   }
 }
 
-export default CanvasStore
+export default Canvas

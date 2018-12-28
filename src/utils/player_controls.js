@@ -2,12 +2,14 @@ import { Vector2, Raycaster } from 'three'
 import { worldToCube } from './coordinates'
 
 export default class PlayerControls {
-  constructor(store, container) {
-    this.store = store
-    this.container = container
+  constructor(world, gridStore, canvasStore, canvas) {
+    this.world = world
+    this.gridStore = gridStore
+    this.canvasStore = canvasStore
+    this.canvas = canvas
 
-    this.container.addEventListener('mousedown', this.onMouseDown)
-    this.container.addEventListener('mouseup', this.onMouseUp)
+    this.canvas.addEventListener('mousedown', this.onMouseDown)
+    this.canvas.addEventListener('mouseup', this.onMouseUp)
   }
 
   onMouseDown = e => {
@@ -28,14 +30,14 @@ export default class PlayerControls {
   }
 
   tap(e) {
-    const { move, create, currentPlayer } = this.store.worldStore.playerStore
+    // const { move, create, currentPlayer } = this.store.worldStore.playerStore
     const tile = this.clickedTile(e)
 
     console.log(tile)
-    if (tile) {
-      if (!currentPlayer && e.button === 0) create(tile)
-      if (currentPlayer && e.button === 2) move(tile)
-    }
+    // if (tile) {
+    //   if (!currentPlayer && e.button === 0) create(tile)
+    //   if (currentPlayer && e.button === 2) move(tile)
+    // }
   }
 
   // helpers
@@ -48,23 +50,19 @@ export default class PlayerControls {
   }
 
   clickedTile(event) {
-    const {
-      worldStore: {
-        tileStore: { nearest },
-        gridStore: { grid }
-      }
-    } = this.store
+    const { grid } = this.gridStore
+    const { camera } = this.canvasStore
 
     const mouse = new Vector2()
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
     const raycaster = new Raycaster()
-    raycaster.setFromCamera(mouse, this.store.worldStore.canvasStore.camera)
+    raycaster.setFromCamera(mouse, camera)
     const intersect = raycaster.intersectObjects(grid.children.slice())[0]
 
     if (intersect) {
-      return nearest(worldToCube(intersect.point))
+      // ToDo: return this.world.findNearest(worldToCube(intersect.point))
     } else return null
   }
 }

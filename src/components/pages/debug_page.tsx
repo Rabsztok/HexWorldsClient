@@ -18,20 +18,13 @@ interface Props {
 
 class DebugPage extends React.Component<Props, {}> {
   canvasStore = new CanvasStore()
-  tile = new Tile({
+  tile = Tile.create({
+    id: 'debug',
     x: 0,
     y: 0,
     z: 0,
     height: 1,
-    terrain: { type: 'dirt' },
-    heightMap: {
-      xz: 1,
-      yz: 1,
-      yx: 1,
-      zx: 1,
-      zy: 1,
-      xy: 1
-    }
+    terrain: { type: 'dirt' }
   })
 
   componentDidMount() {

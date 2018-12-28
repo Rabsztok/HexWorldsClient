@@ -1,5 +1,5 @@
 import { Object3D, Vector3 } from 'three'
-import Tile from 'models/tile'
+import { ITile } from 'models/tile'
 import loadMesh from 'three/loadMesh'
 import CanvasStore from 'stores/canvas_store'
 
@@ -13,7 +13,7 @@ class HouseBuilder {
   static sectionMesh: Object3D
   sections: Section[]
   rotation: number
-  tile: Tile
+  tile: ITile
   mesh = new Object3D()
 
   constructor({
@@ -21,7 +21,7 @@ class HouseBuilder {
     sections,
     rotation
   }: {
-    tile: Tile
+    tile: ITile
     sections: Section[]
     rotation: number
   }) {
