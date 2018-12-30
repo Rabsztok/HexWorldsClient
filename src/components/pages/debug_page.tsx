@@ -1,13 +1,12 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import Canvas from 'components/canvas/canvas'
 import Menu from 'components/canvas_menu'
 import styles from 'styles/pages/world_page.module.scss'
 import { StoreProps } from 'types'
-import CanvasStore from 'stores/canvas_store'
-import TileGeometry from 'three/geometries/tile_geometry'
+import CanvasStore from 'models/canvas'
+import BasicCanvas from 'components/canvas/basic_canvas'
 import Tile from 'models/tile'
-import { Mesh, MeshLambertMaterial, Vector3 } from 'three'
+import { Mesh, MeshLambertMaterial, Vector3, CylinderGeometry } from 'three'
 import HouseBuilder from 'three/builders/house_builder'
 import { times } from 'lodash'
 
@@ -17,7 +16,7 @@ interface Props {
 }
 
 class DebugPage extends React.Component<Props, {}> {
-  canvasStore = new CanvasStore()
+  canvasStore = CanvasStore.create()
   tile = Tile.create({
     id: 'debug',
     x: 0,
@@ -35,7 +34,7 @@ class DebugPage extends React.Component<Props, {}> {
 
   renderTile = () => {
     const mesh = new Mesh(
-      new TileGeometry(this.tile),
+      new CylinderGeometry(1, 1, 1, 6),
       new MeshLambertMaterial({
         color: 0x007b0c,
         flatShading: true
@@ -74,7 +73,7 @@ class DebugPage extends React.Component<Props, {}> {
         <Menu />
 
         <div className={styles.container}>
-          <Canvas canvasStore={this.canvasStore} />
+          <BasicCanvas store={this.canvasStore} />
         </div>
       </React.Fragment>
     )

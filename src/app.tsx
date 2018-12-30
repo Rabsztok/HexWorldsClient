@@ -14,9 +14,6 @@ class App extends React.Component {
 
   UNSAFE_componentWillMount() {
     this.store.worldStore.connect()
-
-    // @ts-ignore
-    window.store = this.store
   }
 
   render() {

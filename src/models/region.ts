@@ -1,27 +1,25 @@
-import { types, Instance, getParentOfType } from 'mobx-state-tree'
-import Tile, { ITile } from 'models/tile'
-import World from 'models/world'
+import { types, Instance } from 'mobx-state-tree'
+import { ITile } from 'models/tile'
 import Channel from 'channel'
 
 const Region = types
   .model('Region', {
     id: types.identifier,
-    x: types.number,
-    y: types.number,
-    z: types.number,
-    tiles: types.map(types.late(() => Tile)),
-    state: types.string
+    x: types.frozen(types.number),
+    y: types.frozen(types.number),
+    z: types.frozen(types.number),
+    tiles: types.frozen<ITile[]>(),
+    state: types.string,
+    rendered: types.optional(types.boolean, false),
+    readyToRender: types.optional(types.boolean, false)
   })
   .views(self => ({
-    get tilesList(): ITile[] {
-      return Array.from(self.tiles.values())
-    },
-    get tilesToRender() {
-      return this.tilesList.filter(tile => !tile.rendered)
-    },
-    get world() {
-      return getParentOfType(self, World)
-    }
+    // get world() {
+    //   return getParentOfType(self, World)
+    // },
+    // get readyToRender() {
+    //   return self.tiles && self.tiles.length === TILE_COUNT
+    // }
   }))
   .volatile(self => ({
     channel: new Channel(`tiles:${self.id}`)
@@ -38,15 +36,20 @@ const Region = types
       self.channel.connection.on('load', this.onLoad)
     },
     addTiles(tiles: ITile[]) {
-      const tileMap = tiles.map(tile => [tile.id, tile])
-      self.tiles.merge(tileMap)
-      tiles.forEach(tile => {
-        self.world.addTile(tile)
-      })
+      self.tiles = tiles
+      self.readyToRender = true
+      // tiles.forEach(tile => {
+      //   self.world.addTile(tile)
+      // })
     },
     onLoad({ tiles }: { tiles: ITile[] }) {
       this.addTiles(tiles)
-      self.tiles.forEach(tile => tile.calculateHeightMap())
+    },
+    markRendered() {
+      self.rendered = true
+    },
+    reset() {
+      self.rendered = false
     }
   }))
 

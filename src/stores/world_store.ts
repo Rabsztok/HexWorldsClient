@@ -1,6 +1,7 @@
 import { Instance, types } from 'mobx-state-tree'
 import Channel from 'channel'
 import World, { IWorld } from 'models/world'
+import Canvas from 'models/canvas'
 import { PushEvent } from 'types'
 
 const WorldStore = types
@@ -48,7 +49,7 @@ const WorldStore = types
         self.find(id).update(attributes)
       },
       addWorld({ regions, ...attributes }: any) {
-        const world = World.create(attributes)
+        const world = World.create({ ...attributes, canvas: Canvas.create() })
         regions.forEach(world.addRegion)
 
         self.worlds.set(world.id, world)

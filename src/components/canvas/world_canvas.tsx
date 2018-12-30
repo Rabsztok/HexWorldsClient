@@ -1,52 +1,53 @@
 import React from 'react'
 import { autorun } from 'mobx'
 import { observer } from 'mobx-react'
-import Canvas from './canvas'
-import CanvasStore from 'stores/canvas_store'
-import GridStore from 'stores/grid_store'
+import BasicCanvas from './basic_canvas'
 import { IWorld } from 'models/world'
 import Controls from 'utils/player_controls'
-// import PlayerBuilder from 'three/builders/player_builder'
+import TileBuilder from 'three/builders/tile_builder'
 
 interface Props {
   world: IWorld
 }
 
 class WorldCanvas extends React.Component<Props, {}> {
-  canvasStore = new CanvasStore()
-  gridStore = new GridStore()
-  canvas = React.createRef<Canvas>()
+  canvas = React.createRef<BasicCanvas>()
 
   componentDidMount() {
-    this.canvasStore.scene.add(this.gridStore.grid)
+    const { world } = this.props
+    const { regions } = world
 
     // drawObjects when new tiles are loaded
-    autorun(this.drawObjects)
-
-    // rerender WorldCanvas when new grid elements are added
-    this.gridStore.grid.children.observe(this.canvasStore.animate)
+    this.drawTiles()
+    autorun(this.drawTiles)
 
     // ToDo: playerStore.players.observe(this.drawPlayers)
 
-    if (this.canvas.current)
-      new Controls(
-        this.props.world,
-        this.gridStore,
-        this.canvasStore,
-        this.canvas.current.root.current
-      )
+    // if (this.canvas.current)
+    // new Controls(
+    //   world,
+    //   null,
+    //   this.canvasStore,
+    //   this.canvas.current.root.current
+    // )
 
-    const centralRegion = this.props.world.regionsList.find(
-      ({ x, y, z }) => x === 0 && y === 0 && z === 0
-    )
-    if (centralRegion) centralRegion.connect()
-    // this.props.world.regions.forEach(region => region.connect())
+    // const centralRegion = this.props.world.regions.find(
+    //   ({ x, y, z }) => x === 0 && y === 0 && z === 0
+    // )
+    // if (centralRegion) centralRegion.connect()
+    regions.forEach(region => region.connect())
   }
 
-  drawObjects = () => {
-    this.props.world.regions.forEach(region => {
-      this.gridStore.draw(region.tilesToRender)
-      region.tilesToRender.forEach(tile => (tile.rendered = true))
+  componentWillUnmount() {
+    this.props.world.reset()
+  }
+
+  drawTiles = () => {
+    const { regions, canvas } = this.props.world
+    regions.forEach(region => {
+      if (!region.rendered && region.readyToRender) {
+        new TileBuilder(region).call(canvas)
+      }
     })
   }
 
@@ -58,7 +59,7 @@ class WorldCanvas extends React.Component<Props, {}> {
   // }
 
   render() {
-    return <Canvas ref={this.canvas} canvasStore={this.canvasStore} />
+    return <BasicCanvas ref={this.canvas} store={this.props.world.canvas} />
   }
 }
 

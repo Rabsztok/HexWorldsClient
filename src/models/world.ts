@@ -2,6 +2,7 @@ import { countBy } from 'lodash'
 import { types, Instance } from 'mobx-state-tree'
 import Tile, { ITile } from 'models/tile'
 import Region, { IRegion } from 'models/region'
+import Canvas from './canvas'
 
 const World = types
   .model('World', {
@@ -9,7 +10,8 @@ const World = types
     size: types.number,
     name: types.string,
     regions: types.map(Region),
-    tileMatrix: types.map(types.reference(types.late(() => Tile)))
+    canvas: Canvas,
+    tileMatrix: types.map(types.reference(Tile))
   })
   .views(self => ({
     get regionsList(): IRegion[] {
@@ -17,7 +19,6 @@ const World = types
     },
     get state(): string {
       const regionsState = countBy(this.regionsList, 'state')
-      console.log(regionsState)
       if (regionsState.in_progress > 0) return 'generating regions'
       if (regionsState.empty > 0) return 'populating map'
       return 'ready'
@@ -38,12 +39,11 @@ const World = types
       self.regions.set(region.id, region)
     },
     update({ regions, ...attributes }: { regions: any }) {
-      console.log('update', regions, attributes)
       Object.assign(self, attributes)
-      if (regions)
-        regions.forEach((region: IRegion) =>
-          self.regions.set(region.id, region)
-        )
+      if (regions) regions.forEach(this.addRegion)
+    },
+    reset() {
+      self.regions.forEach(region => region.reset())
     }
   }))
 

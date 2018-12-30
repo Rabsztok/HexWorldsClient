@@ -1,7 +1,7 @@
 import { CylinderGeometry, MeshLambertMaterial, Mesh } from 'three'
 import Player from 'models/player'
 import { ITile } from 'models/tile'
-import CanvasStore from 'stores/canvas_store'
+import { ICanvas } from 'models/canvas'
 import { translateToTile } from 'three/utils'
 
 class PlayerBuilder {
@@ -13,7 +13,7 @@ class PlayerBuilder {
     this.player = player
   }
 
-  async call(canvasStore: CanvasStore) {
+  async call(canvas: ICanvas) {
     this.player.mesh = new Mesh(
       new CylinderGeometry(0.5, 0.5, 0.5),
       new MeshLambertMaterial({ color: 0x00ff00, flatShading: true })
@@ -21,8 +21,8 @@ class PlayerBuilder {
 
     translateToTile(this.player.mesh, this.tile)
 
-    canvasStore.scene.add(this.player.mesh)
-    canvasStore.animate()
+    canvas.scene.add(this.player.mesh)
+    canvas.animate()
   }
 }
 
