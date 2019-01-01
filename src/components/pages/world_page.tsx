@@ -28,11 +28,11 @@ class WorldPage extends React.Component<Props, {}> {
       <React.Fragment>
         <Menu />
 
-        {/* {gridStore.loading && (
+        {this.world.loading && (
           <div className={styles.loading}>
             <CircularProgress size={50} thickness={5} />
           </div>
-        )} */}
+        )}
 
         <div className={styles.container}>
           <Canvas world={this.world} />

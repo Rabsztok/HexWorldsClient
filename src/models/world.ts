@@ -30,6 +30,9 @@ const World = types
     get ready(): boolean {
       return this.state === 'ready'
     },
+    get loading(): boolean {
+      return this.regionsList.some(region => !region.rendered)
+    },
     findTileById(id: string): Tile | undefined {
       return self.tilesById.get(id)
     },

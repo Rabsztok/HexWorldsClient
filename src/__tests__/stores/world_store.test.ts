@@ -1,27 +1,18 @@
-import Store from 'stores/world_store'
-import World from 'models/world'
-import sinon from 'sinon'
+import WorldStore, { IWorldStore } from 'stores/world_store'
+import { spy } from 'sinon'
 
-describe('BuildingsStore', () => {
-  let store, world
+describe('WorldStore', () => {
+  let store: IWorldStore, world: any
   beforeEach(() => {
-    store = new Store()
-    store.channel = { socket: { push: sinon.stub() } }
-    world = new World({ id: '1', name: 'World' })
+    store = WorldStore.create()
+    store.channel.connection = { push: spy() }
+    world = { id: '1', size: 1, name: 'World', regions: [] }
   })
 
   it('Presents worlds in list as an Array', () => {
-    store.worlds.set('1', world)
+    store.addWorld(world)
     expect(store.worldsList.constructor).toBe(Array)
     expect(store.worldsList.length).toBe(1)
-  })
-
-  it('Selects and discards world as current one', () => {
-    store.worlds.set('1', world)
-    store.selectWorld(world.id)
-    expect(store.tileStore.world.id).toBe('1')
-    store.discardWorld()
-    expect(store.tileStore).toBe(undefined)
   })
 
   it('Adds new worlds to worlds Map on channel join', () => {
@@ -36,15 +27,15 @@ describe('BuildingsStore', () => {
   })
 
   it("Removes a world when 'remove' message is received", () => {
-    store.worlds.set('1', world)
+    store.addWorld(world)
     store.onRemove({ world: world })
     expect(store.worlds.get('1')).toBe(undefined)
   })
 
   it("Updated a world when 'update' message is received", () => {
-    store.worlds.set('1', world)
+    store.addWorld(world)
     store.onUpdate({ world: { ...world, name: 'new-name' } })
-    expect(store.worlds.get('1').name).toBe('new-name')
+    expect(store.worlds.get('1')!.name).toBe('new-name')
   })
 
   it("sends 'create' message to websocket", () => {
