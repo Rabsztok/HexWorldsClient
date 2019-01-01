@@ -1,15 +1,15 @@
 import { Vector2, Raycaster } from 'three'
 import { worldToCube } from './coordinates'
-import { pick } from 'lodash'
 
-export default class WorldControls {
-  constructor(store, camera, container) {
-    this.store = store
-    this.camera = camera
-    this.container = container
+export default class PlayerControls {
+  constructor(world, gridStore, canvasStore, canvas) {
+    this.world = world
+    this.gridStore = gridStore
+    this.canvasStore = canvasStore
+    this.canvas = canvas
 
-    this.container.addEventListener('mousedown', this.onMouseDown)
-    this.container.addEventListener('mouseup', this.onMouseUp)
+    this.canvas.addEventListener('mousedown', this.onMouseDown)
+    this.canvas.addEventListener('mouseup', this.onMouseUp)
   }
 
   onMouseDown = e => {
@@ -19,7 +19,7 @@ export default class WorldControls {
   onMouseUp = e => {
     if (
       this.mouseStartEvent &&
-      WorldControls.dragDistance(this.mouseStartEvent, e) > 3
+      PlayerControls.dragDistance(this.mouseStartEvent, e) > 3
     )
       this.drag(e)
     else this.tap(e)
@@ -30,12 +30,14 @@ export default class WorldControls {
   }
 
   tap(e) {
+    // const { move, create, currentPlayer } = this.store.worldStore.playerStore
     const tile = this.clickedTile(e)
 
-    if (tile)
-      if (e.button === 0)
-        this.store.worldStore.tileStore.move(pick(tile, 'x', 'y', 'z'))
-      else if (e.button === 2) console.log('mouse2')
+    console.log(tile)
+    // if (tile) {
+    //   if (!currentPlayer && e.button === 0) create(tile)
+    //   if (currentPlayer && e.button === 2) move(tile)
+    // }
   }
 
   // helpers
@@ -48,23 +50,19 @@ export default class WorldControls {
   }
 
   clickedTile(event) {
-    const {
-      worldStore: {
-        tileStore: { nearest },
-        gridStore: { grid }
-      }
-    } = this.store
+    const { grid } = this.gridStore
+    const { camera } = this.canvasStore
 
     const mouse = new Vector2()
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
     const raycaster = new Raycaster()
-    raycaster.setFromCamera(mouse, this.camera)
+    raycaster.setFromCamera(mouse, camera)
     const intersect = raycaster.intersectObjects(grid.children.slice())[0]
 
     if (intersect) {
-      return nearest(worldToCube(intersect.point))
+      // ToDo: return this.world.findNearest(worldToCube(intersect.point))
     } else return null
   }
 }

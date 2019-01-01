@@ -1,14 +1,22 @@
-import socket from 'utils/socket'
+const { Socket } = require('phoenix-socket')
+const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
+
+let socket: any
+if (typeof window !== 'undefined') {
+  socket = new Socket(apiUrl)
+  socket.connect()
+}
 
 interface Callbacks {
   onSuccess?(response: any): void
   onError?(response: any): void
 }
 
-export default class TileChannel {
+export default class Channel {
   channelName: string
   connected: boolean
-  socket: any
+  connection: any
+  socket = socket
 
   constructor(channelName: string) {
     this.connected = false
@@ -16,9 +24,9 @@ export default class TileChannel {
   }
 
   connect(payload: any, callbacks: Callbacks) {
-    this.socket = socket.channel(this.channelName, payload)
+    this.connection = this.socket.channel(this.channelName, payload)
 
-    this.socket
+    this.connection
       .join()
       .receive('ok', (response: any) => {
         this.connected = true

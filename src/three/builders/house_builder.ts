@@ -1,7 +1,7 @@
 import { Object3D, Vector3 } from 'three'
 import Tile from 'models/tile'
 import loadMesh from 'three/loadMesh'
-import CanvasStore from 'stores/canvas_store'
+import CanvasStore, { ICanvas } from 'models/canvas'
 
 interface Section {
   position: Vector3
@@ -36,7 +36,7 @@ class HouseBuilder {
     return this.sectionMesh.clone()
   }
 
-  async call(canvasStore: CanvasStore) {
+  async call(canvas: ICanvas) {
     const sectionMeshes = await Promise.all(
       this.sections.map(async section => {
         const sectionMesh = await HouseBuilder.getSectionMesh()
@@ -52,8 +52,8 @@ class HouseBuilder {
 
     this.translateToTile()
 
-    canvasStore.scene.add(this.mesh)
-    canvasStore.animate()
+    canvas.scene.add(this.mesh)
+    canvas.animate()
   }
 
   translateToTile = () => {

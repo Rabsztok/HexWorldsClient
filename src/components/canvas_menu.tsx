@@ -19,11 +19,11 @@ const CanvasMenu = ({ store, history }: Props) => {
 
   return (
     <div className={styles.menu}>
-      {worldStore.tileStore && (
+      {/* {worldStore.tileStore && (
         <Fab aria-label="show-all" onClick={worldStore.tileStore.showAll}>
           <ShowIcon />
         </Fab>
-      )}
+      )} */}
 
       <Fab
         color="primary"

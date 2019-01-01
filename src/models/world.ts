@@ -1,41 +1,60 @@
-import { computed, action, observable } from 'mobx'
 import { countBy } from 'lodash'
-import Region from 'models/region'
+import { types, Instance } from 'mobx-state-tree'
+import Tile from 'models/tile'
+import Region, { IRegion } from 'models/region'
+import Canvas from './canvas'
 
-class World {
-  id: string
-  size: number
-  name: string
-  @observable regions: Region[]
+// Whole world, divided into sectors. Each world is isolated from others.
+const World = types
+  .model('World', {
+    id: types.identifier,
+    size: types.number,
+    name: types.string,
+    regions: types.map(Region),
+    canvas: Canvas
+  })
+  .volatile(self => ({
+    tilesByCoordinates: new Map<string, Tile>(),
+    tilesById: new Map<string, Tile>()
+  }))
+  .views(self => ({
+    get regionsList(): IRegion[] {
+      return Array.from(self.regions.values())
+    },
+    get state(): string {
+      const regionsState = countBy(this.regionsList, 'state')
+      if (regionsState.in_progress > 0) return 'generating regions'
+      if (regionsState.empty > 0) return 'populating map'
+      return 'ready'
+    },
+    get ready(): boolean {
+      return this.state === 'ready'
+    },
+    findTileById(id: string): Tile | undefined {
+      return self.tilesById.get(id)
+    },
+    findTileByCoordinates(x: number, y: number, z: number): Tile | undefined {
+      return self.tilesByCoordinates.get([x, y, z].join(','))
+    }
+  }))
+  .actions(self => ({
+    addTile(tile: Tile) {
+      const { x, y, z, id } = tile
+      self.tilesByCoordinates.set([x, y, z].join(','), tile)
+      self.tilesById.set(id, tile)
+    },
+    addRegion(region: IRegion) {
+      self.regions.set(region.id, region)
+    },
+    update({ regions, ...attributes }: { regions: any }) {
+      Object.assign(self, attributes)
+      if (regions) regions.forEach(this.addRegion)
+    },
+    reset() {
+      self.regions.forEach(region => region.reset())
+    }
+  }))
 
-  constructor(world: World) {
-    this.id = world.id
-    this.size = world.size
-    this.name = world.name
-    this.regions = world.regions
-  }
-
-  @action
-  update(attributes: { size?: number; name?: string; regions?: Region[] }) {
-    Object.assign(this, attributes)
-  }
-
-  @computed
-  get regionState(): any {
-    return countBy(this.regions, 'state')
-  }
-
-  @computed
-  get state(): string {
-    if (this.regionState.in_progress > 0) return 'generating regions'
-    if (this.regionState.empty > 0) return 'populating map'
-    return 'ready'
-  }
-
-  @computed
-  get ready(): boolean {
-    return this.state === 'ready'
-  }
-}
+export interface IWorld extends Instance<typeof World> {}
 
 export default World

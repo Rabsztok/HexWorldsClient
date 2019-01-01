@@ -9,7 +9,7 @@ import routes from 'utils/routes'
 @observer
 class App extends React.Component {
   store = {
-    worldStore: new WorldStore()
+    worldStore: WorldStore.create()
   }
 
   UNSAFE_componentWillMount() {
@@ -18,7 +18,7 @@ class App extends React.Component {
 
   render() {
     // ToDo: move to protected route
-    if (!this.store.worldStore.ready) return null
+    if (!this.store.worldStore.loaded) return null
 
     return (
       <Provider store={this.store}>

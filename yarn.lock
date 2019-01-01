@@ -7153,6 +7153,11 @@ mobx-react@^5.4.3:
     hoist-non-react-statics "^3.0.0"
     react-lifecycles-compat "^3.0.2"
 
+mobx-state-tree@^3.9.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/mobx-state-tree/-/mobx-state-tree-3.9.0.tgz#78fc35fc0b64e6d38335a4dcb2b234f9c7e589e7"
+  integrity sha512-83tU3CdPDfSU6yPLcRGWcdkiQwPza+DXRroAbKfwArjTu9X2EqLmymXRSPjpEOrWG5qOC6r4bAs9YXvodOOD6w==
+
 mobx@^5.8.0:
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.8.0.tgz#cf59eae4baa2fde4387ffb6462b7ccf3b497b03c"
@@ -10471,6 +10476,11 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+three-instanced-mesh@^0.96.2:
+  version "0.96.2"
+  resolved "https://registry.yarnpkg.com/three-instanced-mesh/-/three-instanced-mesh-0.96.2.tgz#a8af5d678cf670ddfe1e63b9e1e8bc7dca6a01d4"
+  integrity sha512-cnpvYpBbwv4LdbuQjgzFtlA70lZy6+p78YI+vaQLJYBEMhd0qNOf3VMC+YVLD0JzHZCPbnPvjvzeF7lvcU5D+Q==
 
 three-orbitcontrols@^2.99.1:
   version "2.99.1"

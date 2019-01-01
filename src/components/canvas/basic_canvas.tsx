@@ -1,38 +1,37 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import CanvasStore from 'stores/canvas_store'
 const OrbitControls = require('three-orbitcontrols')
+import { ICanvas } from 'models/canvas'
 
 interface Props {
-  canvasStore: CanvasStore
+  store: ICanvas
 }
 
 @observer
-class Canvas extends React.Component<Props, {}> {
+class BasicCanvas extends React.Component<Props, {}> {
   public root = React.createRef<HTMLDivElement>()
   private controls?: any
 
   componentDidMount() {
-    const { canvasStore } = this.props
+    const { store } = this.props
 
     this.addControls()
 
     // append <canvas/> element to this component
     this.root.current &&
-      this.root.current.appendChild(canvasStore.renderer.domElement)
+      this.root.current.appendChild(store.renderer.domElement)
   }
 
   // Controls
   // ToDo: move to separate ControlsStore
-
   addControls() {
-    const { canvasStore } = this.props
+    const { store } = this.props
 
-    this.controls = new OrbitControls(canvasStore.camera, this.root.current)
+    this.controls = new OrbitControls(store.camera, this.root.current)
     this.controls.maxPolarAngle = (2 * Math.PI) / 5
     this.controls.minPolarAngle = Math.PI / 8
     this.controls.target.set(0, 0, 0)
-    this.controls.addEventListener('change', canvasStore.animate)
+    this.controls.addEventListener('change', store.animate)
   }
 
   componentWillUnmount() {
@@ -44,5 +43,5 @@ class Canvas extends React.Component<Props, {}> {
   }
 }
 
-export { Canvas }
-export default Canvas
+export { BasicCanvas }
+export default BasicCanvas

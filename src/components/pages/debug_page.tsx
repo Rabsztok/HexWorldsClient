@@ -1,13 +1,12 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
-import Canvas from 'components/canvas/canvas'
 import Menu from 'components/canvas_menu'
 import styles from 'styles/pages/world_page.module.scss'
 import { StoreProps } from 'types'
-import CanvasStore from 'stores/canvas_store'
-import TileGeometry from 'three/geometries/tile_geometry'
+import CanvasStore from 'models/canvas'
+import BasicCanvas from 'components/canvas/basic_canvas'
 import Tile from 'models/tile'
-import { Mesh, MeshLambertMaterial, Vector3 } from 'three'
+import { Mesh, MeshLambertMaterial, Vector3, CylinderGeometry } from 'three'
 import HouseBuilder from 'three/builders/house_builder'
 import { times } from 'lodash'
 
@@ -17,21 +16,14 @@ interface Props {
 }
 
 class DebugPage extends React.Component<Props, {}> {
-  canvasStore = new CanvasStore()
+  canvasStore = CanvasStore.create()
   tile = new Tile({
+    id: 'debug',
     x: 0,
     y: 0,
     z: 0,
     height: 1,
-    terrain: { type: 'dirt' },
-    heightMap: {
-      xz: 1,
-      yz: 1,
-      yx: 1,
-      zx: 1,
-      zy: 1,
-      xy: 1
-    }
+    terrain: { type: 'dirt' }
   })
 
   componentDidMount() {
@@ -42,12 +34,13 @@ class DebugPage extends React.Component<Props, {}> {
 
   renderTile = () => {
     const mesh = new Mesh(
-      new TileGeometry(this.tile),
+      new CylinderGeometry(1, 1, 1, 6),
       new MeshLambertMaterial({
         color: 0x007b0c,
         flatShading: true
       })
     )
+    mesh.translateY(-0.5)
     this.canvasStore.scene.add(mesh)
   }
 
@@ -81,7 +74,7 @@ class DebugPage extends React.Component<Props, {}> {
         <Menu />
 
         <div className={styles.container}>
-          <Canvas canvasStore={this.canvasStore} />
+          <BasicCanvas store={this.canvasStore} />
         </div>
       </React.Fragment>
     )

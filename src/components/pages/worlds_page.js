@@ -37,7 +37,7 @@ const WorldsPage = ({
               <Typography type="body1">
                 <span>state: {world.state}</span>
                 {' / '}
-                <span>regions: {world.regions.length}</span>
+                <span>regions: {world.regions.size}</span>
               </Typography>
 
               <div className={styles.actions}>

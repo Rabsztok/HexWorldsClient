@@ -62,7 +62,7 @@ describe('TileStore', () => {
   it("sends 'move' message to websocket", () => {
     store.move({ x: 0, y: 0, z: 0 })
     expect(
-      store.channel.socket.push.calledWith('move', {
+      store.channel.connection.push.calledWith('move', {
         world_id: '1',
         coordinates: { x: 0, y: 0, z: 0 },
         range: 50
@@ -73,7 +73,7 @@ describe('TileStore', () => {
   it("sends 'showAll' message to websocket", () => {
     store.showAll()
     expect(
-      store.channel.socket.push.calledWith('move', {
+      store.channel.connection.push.calledWith('move', {
         world_id: '1',
         coordinates: { x: 0, y: 0, z: 0 },
         range: 10000
