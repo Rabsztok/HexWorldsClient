@@ -1,20 +1,26 @@
-import { types, Instance } from 'mobx-state-tree'
+// Represents one field on the map. It's not a regular MST model for performance reasons.
+// As these objects are numbered in hundreds of thousands,
+// this class should be as thin as possible.
+class Tile {
+  id: string
+  x: number
+  y: number
+  z: number
+  height: number
+  terrain: any
 
-const Tile = types
-  .model('Tile', {
-    id: types.identifier,
-    x: types.frozen(types.number),
-    y: types.frozen(types.number),
-    z: types.frozen(types.number),
-    height: types.frozen(types.number),
-    terrain: types.frozen()
-  })
-  .views(self => ({
-    get renderHeight(): number {
-      return self.terrain.type === 'water' ? 1 : self.height
-    }
-  }))
+  constructor(props: any) {
+    this.id = props.id
+    this.x = props.x
+    this.y = props.y
+    this.z = props.z
+    this.height = props.height
+    this.terrain = props.terrain
+  }
 
-export interface ITile extends Instance<typeof Tile> {}
+  get renderHeight(): number {
+    return Math.max(this.height / 2, 1)
+  }
+}
 
 export default Tile

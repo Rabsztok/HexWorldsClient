@@ -1,7 +1,7 @@
 import { observable, computed } from 'mobx'
 import Player from 'models/player'
 import Channel from 'channel'
-import { ITile } from 'models/tile'
+import Tile from 'models/tile'
 import { IWorld } from 'models/world'
 import { randomInt } from 'utils/random'
 
@@ -43,7 +43,7 @@ class PlayerStore {
     this.currentPlayerId = player.id
   }
 
-  create = (tile: ITile): void => {
+  create = (tile: Tile): void => {
     this.channel.connection.push('create', {
       name: `User no. ${randomInt(1, 1000)}`,
       world_id: this.world.id,
@@ -51,7 +51,7 @@ class PlayerStore {
     })
   }
 
-  move = (player: Player, tile: ITile): void => {
+  move = (player: Player, tile: Tile): void => {
     this.channel.connection.push('move', {
       player_id: player.id,
       tile_id: tile.id

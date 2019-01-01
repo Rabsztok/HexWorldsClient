@@ -17,7 +17,7 @@ interface Props {
 
 class DebugPage extends React.Component<Props, {}> {
   canvasStore = CanvasStore.create()
-  tile = Tile.create({
+  tile = new Tile({
     id: 'debug',
     x: 0,
     y: 0,
@@ -40,6 +40,7 @@ class DebugPage extends React.Component<Props, {}> {
         flatShading: true
       })
     )
+    mesh.translateY(-0.5)
     this.canvasStore.scene.add(mesh)
   }
 

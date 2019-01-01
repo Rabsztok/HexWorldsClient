@@ -17,6 +17,8 @@ class TileBuilder {
     this.region = region
   }
 
+  // ToDO: Optimize it by re-rendering whole world as one instancedMesh, possibly separated by colors
+  // colors option is giving some overhead here.
   async call(store: ICanvas) {
     const geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 6)
     const material = new THREE.MeshLambertMaterial({
@@ -30,7 +32,7 @@ class TileBuilder {
       this.region.tiles.length, //instance count
       false, //is it dynamic
       true, //does it have color
-      false
+      true
     )
 
     const vector = new THREE.Vector3()

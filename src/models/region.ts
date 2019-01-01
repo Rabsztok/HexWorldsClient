@@ -1,25 +1,26 @@
-import { types, Instance } from 'mobx-state-tree'
-import { ITile } from 'models/tile'
+import { types, Instance, getParentOfType } from 'mobx-state-tree'
+import Tile from 'models/tile'
+import World from 'models/world'
 import Channel from 'channel'
 
+// Group of tiles, 7651 in total. Acts as an abstraction for larger chunks of land.
 const Region = types
   .model('Region', {
     id: types.identifier,
     x: types.frozen(types.number),
     y: types.frozen(types.number),
     z: types.frozen(types.number),
-    tiles: types.frozen<ITile[]>(),
+    tiles: types.frozen<Tile[]>(),
     state: types.string,
-    rendered: types.optional(types.boolean, false),
-    readyToRender: types.optional(types.boolean, false)
+    rendered: types.optional(types.boolean, false)
   })
   .views(self => ({
-    // get world() {
-    //   return getParentOfType(self, World)
-    // },
-    // get readyToRender() {
-    //   return self.tiles && self.tiles.length === TILE_COUNT
-    // }
+    get world() {
+      return getParentOfType(self, World)
+    },
+    get readyToRender() {
+      return !!self.tiles
+    }
   }))
   .volatile(self => ({
     channel: new Channel(`tiles:${self.id}`)
@@ -35,14 +36,14 @@ const Region = types
 
       self.channel.connection.on('load', this.onLoad)
     },
-    addTiles(tiles: ITile[]) {
-      self.tiles = tiles
-      self.readyToRender = true
-      // tiles.forEach(tile => {
-      //   self.world.addTile(tile)
-      // })
+    addTiles(tiles: Tile[]) {
+      self.tiles = tiles.map(tile => {
+        tile = new Tile(tile)
+        self.world.addTile(tile)
+        return tile
+      })
     },
-    onLoad({ tiles }: { tiles: ITile[] }) {
+    onLoad({ tiles }: { tiles: Tile[] }) {
       this.addTiles(tiles)
     },
     markRendered() {

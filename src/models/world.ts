@@ -1,18 +1,22 @@
 import { countBy } from 'lodash'
 import { types, Instance } from 'mobx-state-tree'
-import Tile, { ITile } from 'models/tile'
+import Tile from 'models/tile'
 import Region, { IRegion } from 'models/region'
 import Canvas from './canvas'
 
+// Whole world, divided into sectors. Each world is isolated from others.
 const World = types
   .model('World', {
     id: types.identifier,
     size: types.number,
     name: types.string,
     regions: types.map(Region),
-    canvas: Canvas,
-    tileMatrix: types.map(types.reference(Tile))
+    canvas: Canvas
   })
+  .volatile(self => ({
+    tilesByCoordinates: new Map<string, Tile>(),
+    tilesById: new Map<string, Tile>()
+  }))
   .views(self => ({
     get regionsList(): IRegion[] {
       return Array.from(self.regions.values())
@@ -26,14 +30,18 @@ const World = types
     get ready(): boolean {
       return this.state === 'ready'
     },
-    findTile(x: number, y: number, z: number): ITile | undefined {
-      return self.tileMatrix.get([x, y, z].join(','))
+    findTileById(id: string): Tile | undefined {
+      return self.tilesById.get(id)
+    },
+    findTileByCoordinates(x: number, y: number, z: number): Tile | undefined {
+      return self.tilesByCoordinates.get([x, y, z].join(','))
     }
   }))
   .actions(self => ({
-    addTile(tile: ITile) {
-      const { x, y, z } = tile
-      self.tileMatrix.set([x, y, z].join(','), tile.id)
+    addTile(tile: Tile) {
+      const { x, y, z, id } = tile
+      self.tilesByCoordinates.set([x, y, z].join(','), tile)
+      self.tilesById.set(id, tile)
     },
     addRegion(region: IRegion) {
       self.regions.set(region.id, region)
