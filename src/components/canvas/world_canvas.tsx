@@ -3,8 +3,9 @@ import { autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import BasicCanvas from './basic_canvas'
 import { IWorld } from 'models/world'
-import Controls from 'utils/player_controls'
+// import Controls from 'utils/player_controls'
 import TileBuilder from 'three/builders/tile_builder'
+import ObjectBuilder from 'three/builders/object_builder'
 
 interface Props {
   world: IWorld
@@ -18,8 +19,8 @@ class WorldCanvas extends React.Component<Props, {}> {
     const { regions } = world
 
     // drawObjects when new tiles are loaded
-    this.drawTiles()
-    autorun(this.drawTiles)
+    this.draw()
+    autorun(this.draw)
 
     // ToDo: playerStore.players.observe(this.drawPlayers)
 
@@ -42,11 +43,12 @@ class WorldCanvas extends React.Component<Props, {}> {
     this.props.world.reset()
   }
 
-  drawTiles = () => {
+  draw = () => {
     const { regions, canvas } = this.props.world
     regions.forEach(region => {
       if (!region.rendered && region.readyToRender) {
         new TileBuilder(region).call(canvas)
+        new ObjectBuilder(region).call(canvas)
       }
     })
   }

@@ -8,6 +8,7 @@ class Tile {
   z: number
   height: number
   terrain: any
+  object: any
 
   constructor(props: any) {
     this.id = props.id
@@ -16,6 +17,7 @@ class Tile {
     this.z = props.z
     this.height = props.height
     this.terrain = props.terrain
+    this.object = props.object // todo: replace with actual object
   }
 
   get renderHeight(): number {
