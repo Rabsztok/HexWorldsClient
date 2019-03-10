@@ -1,15 +1,23 @@
-const { GLTFLoader } = require('three/examples/js/loaders/GLTFLoader')
-import { GLTF, Object3D } from 'three'
+import GLTFLoader from 'three-gltf-loader'
+import { Object3D } from 'three'
 
 const loadMesh = (url: string): Promise<Object3D> => {
   const loader = new GLTFLoader()
 
   return new Promise((resolve, reject) => {
-    const onLoad = (gltf: GLTF) => {
-      return resolve(gltf.scene.children[0])
-    }
-
-    loader.load(url, onLoad, undefined, reject)
+    loader.load(
+      url,
+      gltf => {
+        const model = gltf.scene.children[0]
+        if (model) {
+          return resolve(model)
+        } else {
+          throw 'Wrong URL'
+        }
+      },
+      undefined,
+      reject
+    )
   })
 }
 
