@@ -30,7 +30,6 @@ class ObjectBuilder {
       true
     )
 
-    const vector = new THREE.Vector3()
     const tilesWithObjects = this.region.tiles.filter(tile => tile.object)
     const groupedObjects = groupBy(tilesWithObjects, tile => tile.object.type)
     each(groupedObjects, (objects, type) =>

@@ -19,6 +19,7 @@ class WorldPage extends React.Component<Props, {}> {
     const id = this.props.match!.params.id
 
     if (id) return worldStore.find(id)
+    return null
   }
 
   render() {

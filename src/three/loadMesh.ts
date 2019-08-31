@@ -1,6 +1,8 @@
 import GLTFLoader from 'three-gltf-loader'
 import { Object3D } from 'three'
 
+const WrongURLError = 'Wrong URL'
+
 const loadMesh = (url: string): Promise<Object3D> => {
   const loader = new GLTFLoader()
 
@@ -12,7 +14,7 @@ const loadMesh = (url: string): Promise<Object3D> => {
         if (model) {
           return resolve(model)
         } else {
-          throw 'Wrong URL'
+          throw WrongURLError
         }
       },
       undefined,

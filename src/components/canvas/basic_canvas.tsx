@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-const OrbitControls = require('three-orbitcontrols')
 import { ICanvas } from 'models/canvas'
+const OrbitControls = require('three-orbitcontrols')
 
 interface Props {
   store: ICanvas

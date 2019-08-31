@@ -12,16 +12,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noImplicitReturns": true,
     "jsx": "preserve",
     "experimentalDecorators": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ]
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "./src"
   },
-  "include": [
-    "src"
-  ],
-  "extends": "./tsconfig.paths.json"
+  "include": ["src"]
 }

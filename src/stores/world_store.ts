@@ -4,6 +4,8 @@ import World, { IWorld } from 'models/world'
 import Canvas from 'models/canvas'
 import { PushEvent } from 'types'
 
+const WorldNotFoundError = (id: string) => `World with id ${id} does not exist`
+
 const WorldStore = types
   .model('WorldsStore', {
     worlds: types.map(World),
@@ -19,7 +21,7 @@ const WorldStore = types
     find(id: string): IWorld {
       const world = self.worlds.get(id)
       if (world) return world
-      else throw `World with id ${id} does not exist`
+      else throw WorldNotFoundError(id)
     }
   }))
   .actions(self => {
@@ -27,10 +29,7 @@ const WorldStore = types
       connect() {
         if (self.channel.connected) return
 
-        self.channel.connect(
-          {},
-          { onSuccess: this.onJoin }
-        )
+        self.channel.connect({}, { onSuccess: this.onJoin })
         self.channel.connection.on('add', this.onAdd)
         self.channel.connection.on('remove', this.onRemove)
         self.channel.connection.on('update', this.onUpdate)

@@ -1,6 +1,5 @@
-import { types, Instance, getParentOfType } from 'mobx-state-tree'
+import { types, Instance, getParent } from 'mobx-state-tree'
 import Tile from 'models/tile'
-import World from 'models/world'
 import Channel from 'channel'
 
 // Group of tiles, 7651 in total. Acts as an abstraction for larger chunks of land.
@@ -16,7 +15,7 @@ const Region = types
   })
   .views(self => ({
     get world() {
-      return getParentOfType(self, World)
+      return getParent(getParent(self))
     },
     get readyToRender() {
       return !!self.tiles

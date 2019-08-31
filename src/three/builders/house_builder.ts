@@ -1,7 +1,7 @@
 import { Object3D, Vector3 } from 'three'
 import Tile from 'models/tile'
 import loadMesh from 'three/loadMesh'
-import CanvasStore, { ICanvas } from 'models/canvas'
+import { ICanvas } from 'models/canvas'
 
 interface Section {
   position: Vector3
