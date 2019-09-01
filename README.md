@@ -2,7 +2,7 @@
 
 ThreeJS React app with Phoenix backend for generating hexagon-based worlds and seeing them in 3D.
 
-[See it in action](https://hex-worlds.netlify.com)
+[See it in action](https://hex-worlds-client.herokuapp.com/)
 
 ## Installation
 
