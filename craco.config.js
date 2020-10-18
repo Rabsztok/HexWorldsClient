@@ -2,7 +2,10 @@ const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
 
 module.exports = {
   babel: {
-    plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]]
+    plugins: [
+      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      ["@babel/plugin-proposal-class-properties", { "loose": false }]
+    ]
   },
   webpack: {
     plugins: [new ThreeWebpackPlugin()],
