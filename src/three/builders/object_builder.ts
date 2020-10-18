@@ -3,7 +3,6 @@ import { IRegion } from 'models/region'
 import { ICanvas } from 'models/canvas'
 import { groupBy, each } from 'lodash'
 import objectBuilders from './object_builders'
-const InstancedMesh = require('three-instanced-mesh')(THREE)
 
 class ObjectBuilder {
   region: IRegion
@@ -21,13 +20,10 @@ class ObjectBuilder {
     })
 
     //the instance group
-    const mesh = new InstancedMesh(
-      geometry, //this is the same
+    const mesh = new THREE.InstancedMesh(
+      geometry,
       material,
-      this.region.tiles.length, //instance count
-      false, //is it dynamic
-      true, //does it have color
-      true
+      this.region.tiles.length
     )
 
     const tilesWithObjects = this.region.tiles.filter(tile => tile.object)

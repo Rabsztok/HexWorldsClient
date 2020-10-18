@@ -5,7 +5,6 @@ import * as THREE from 'three'
 import { ICanvas } from 'models/canvas'
 import TileObject from 'models/tile_object'
 import Tile from 'models/tile'
-const InstancedMesh = require('three-instanced-mesh')(THREE)
 
 class ForestBuilder {
   private index = 0
@@ -14,16 +13,13 @@ class ForestBuilder {
 
   constructor(objects: TileObject[]) {
     this.objects = objects
-    this.mesh = new InstancedMesh(
+    this.mesh = new THREE.InstancedMesh(
       new ConeBufferGeometry(1, 1.5, 4, 1),
       new THREE.MeshLambertMaterial({
         color: 0x004b0c,
         flatShading: true
       }),
-      this.objects.length, //instance count
-      false, //is it dynamic
-      false, //does it have color
-      true
+      this.objects.length
     )
   }
 

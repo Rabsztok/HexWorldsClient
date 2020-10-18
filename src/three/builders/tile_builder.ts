@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { IRegion } from 'models/region'
 import { ICanvas } from 'models/canvas'
-const InstancedMesh = require('three-instanced-mesh')(THREE)
 
 class TileBuilder {
   region: IRegion
@@ -26,28 +25,27 @@ class TileBuilder {
     })
 
     //the instance group
-    const mesh = new InstancedMesh(
-      geometry, //this is the same
+    const mesh = new THREE.InstancedMesh(
+      geometry,
       material,
-      this.region.tiles.length, //instance count
-      false, //is it dynamic
-      true, //does it have color
-      true
+      this.region.tiles.length
     )
 
-    const vector = new THREE.Vector3()
     let index = 0
     this.region.tiles.forEach(tile => {
       mesh.setColorAt(index, this.terrains[tile.terrain.type])
-      mesh.setPositionAt(
+      mesh.setMatrixAt(
         index,
-        vector.set(
-          ((2 * tile.x + tile.z) * Math.sqrt(3)) / 2,
-          Math.max(tile.height / 2, 1),
-          (tile.z * 3) / 2
+        new THREE.Matrix4().compose(
+          new THREE.Vector3(
+            ((2 * tile.x + tile.z) * Math.sqrt(3)) / 2,
+            Math.max(tile.height / 2, 1),
+            (tile.z * 3) / 2
+          ),
+          new THREE.Quaternion(),
+          new THREE.Vector3(1, Math.max(tile.height, 1), 1)
         )
       )
-      mesh.setScaleAt(index, vector.set(1, Math.max(tile.height, 1), 1))
       index++
     })
 
