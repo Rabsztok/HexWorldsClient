@@ -1,5 +1,3 @@
-const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
-
 module.exports = {
   babel: {
     plugins: [
@@ -8,8 +6,7 @@ module.exports = {
     ]
   },
   webpack: {
-    plugins: [new ThreeWebpackPlugin()],
-    configure: (webpackConfig, { env, paths }) => {
+    configure: (webpackConfig) => {
       webpackConfig.output.globalObject = 'this'
       webpackConfig.module.rules.push({
         test: /\.worker\.js$/,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { observer, Provider } from 'mobx-react'
 
@@ -6,39 +6,35 @@ import WorldStore from 'stores/world_store'
 import * as Pages from 'components/pages'
 import routes from 'utils/routes'
 
-@observer
-class App extends React.Component {
-  store = {
+const App : React.FunctionComponent = () => {
+  const store = useRef({
     worldStore: WorldStore.create()
-  }
+  })
 
-  UNSAFE_componentWillMount() {
-    this.store.worldStore.connect()
-  }
+  useEffect(() => {
+    store.current.worldStore.connect() 
+  }, [])
 
-  render() {
-    // ToDo: move to protected route
-    if (!this.store.worldStore.loaded) return null
+  if (!store.current.worldStore.loaded) return null
 
-    return (
-      <Provider store={this.store}>
-        <Router>
-          <div>
-            <Switch>
-              <Route
-                exact
-                path={routes.worlds()}
-                component={Pages.WorldsPage}
-              />
-              <Route path={routes.world(':id')} component={Pages.WorldPage} />
-              <Route path={routes.debug()} component={Pages.DebugPage} />
-              <Route component={Pages.NotFoundPage} />
-            </Switch>
-          </div>
-        </Router>
-      </Provider>
-    )
-  }
+  return (
+    <Provider store={store.current}>
+      <Router>
+        <div>
+          <Switch>
+            <Route
+              exact
+              path={routes.worlds()}
+              component={Pages.WorldsPage}
+            />
+            <Route path={routes.world(':id')} component={Pages.WorldPage} />
+            <Route path={routes.debug()} component={Pages.DebugPage} />
+            <Route component={Pages.NotFoundPage} />
+          </Switch>
+        </div>
+      </Router>
+    </Provider>
+  )
 }
 
-export default App
+export default observer(App)

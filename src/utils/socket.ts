@@ -1,4 +1,4 @@
-const { Socket } = require('phoenix-socket')
+import { Socket } from 'phoenix-socket'
 
 const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
 let socket

@@ -1,7 +1,9 @@
 import * as THREE from 'three'
+import { groupBy, each } from 'lodash'
+
 import { IRegion } from 'models/region'
 import { ICanvas } from 'models/canvas'
-import { groupBy, each } from 'lodash'
+
 import objectBuilders from './object_builders'
 
 class ObjectBuilder {
@@ -26,8 +28,8 @@ class ObjectBuilder {
       this.region.tiles.length
     )
 
-    const tilesWithObjects = this.region.tiles.filter(tile => tile.object)
-    const groupedObjects = groupBy(tilesWithObjects, tile => tile.object.type)
+    const tilesWithObjects = this.region.tiles.filter((tile) => tile.object)
+    const groupedObjects = groupBy(tilesWithObjects, (tile) => tile.object.type)
     each(groupedObjects, (objects, type) =>
       new objectBuilders[type](objects).call(store)
     )

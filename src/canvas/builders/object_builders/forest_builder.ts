@@ -1,7 +1,7 @@
-import { Geometry, ConeBufferGeometry, Vector3 } from 'three'
+import { Geometry, ConeBufferGeometry, Vector3, InstancedMesh, MeshLambertMaterial } from 'three'
 import { times } from 'lodash'
+
 import { randomInt } from 'utils/random'
-import * as THREE from 'three'
 import { ICanvas } from 'models/canvas'
 import TileObject from 'models/tile_object'
 import Tile from 'models/tile'
@@ -13,9 +13,9 @@ class ForestBuilder {
 
   constructor(objects: TileObject[]) {
     this.objects = objects
-    this.mesh = new THREE.InstancedMesh(
+    this.mesh = new InstancedMesh(
       new ConeBufferGeometry(1, 1.5, 4, 1),
-      new THREE.MeshLambertMaterial({
+      new MeshLambertMaterial({
         color: 0x004b0c,
         flatShading: true
       }),
@@ -26,7 +26,7 @@ class ForestBuilder {
   addTree(tile: Tile, segments: number) {
     const tmpGeometry = new Geometry()
 
-    times(segments, i => {
+    times(segments, (i) => {
       this.mesh.setScaleAt(
         this.index,
         0.3 - i * 0.05,
@@ -43,7 +43,7 @@ class ForestBuilder {
   translateTo(tile: Tile, offset: Vector3) {
     this.mesh.setPositionAt(
       this.index,
-      new THREE.Vector3(
+      new Vector3(
         ((2 * tile.x + tile.z) * Math.sqrt(3)) / 2,
         Math.max(tile.height / 2, 1),
         (tile.z * 3) / 2
@@ -52,7 +52,7 @@ class ForestBuilder {
   }
 
   async call(store: ICanvas) {
-    this.objects.forEach(forest => {
+    this.objects.forEach((forest) => {
       const { density } = forest.properties
 
       times(density, () => {

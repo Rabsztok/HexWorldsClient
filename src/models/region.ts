@@ -1,7 +1,9 @@
-import { types, Instance, getParent } from 'mobx-state-tree'
+import { types, Instance, getParentOfType } from 'mobx-state-tree'
+
 import Tile from 'models/tile'
 import Channel from 'channel'
-import { IWorld } from './world'
+
+import World from './world'
 
 // Group of tiles, 7651 in total. Acts as an abstraction for larger chunks of land.
 const Region = types
@@ -15,9 +17,6 @@ const Region = types
     rendered: types.optional(types.boolean, false),
   })
   .views((self) => ({
-    get world(): IWorld {
-      return getParent(getParent(self))
-    },
     get readyToRender() {
       return !!self.tiles
     },
@@ -39,7 +38,7 @@ const Region = types
     addTiles(tiles: Tile[]) {
       self.tiles = tiles.map((tile) => {
         tile = new Tile(tile)
-        self.world.addTile(tile)
+        getParentOfType(self, World).addTile(tile)
         return tile
       })
     },
@@ -51,9 +50,10 @@ const Region = types
     },
     reset() {
       self.rendered = false
+      self.tiles = []
     },
   }))
 
-export interface IRegion extends Instance<typeof Region> {}
+export type IRegion = Instance<typeof Region> 
 
 export default Region

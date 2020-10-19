@@ -1,5 +1,6 @@
-import WorldStore, { IWorldStore } from 'stores/world_store'
 import { spy } from 'sinon'
+
+import WorldStore, { IWorldStore } from 'stores/world_store'
 
 describe('WorldStore', () => {
   let store: IWorldStore, world: any

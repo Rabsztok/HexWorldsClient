@@ -1,5 +1,6 @@
 import { Vector2, Raycaster } from 'three'
-import { worldToCube } from './coordinates'
+
+// import { worldToCube } from './coordinates'
 
 export default class PlayerControls {
   constructor(world, gridStore, canvasStore, canvas) {
@@ -12,11 +13,11 @@ export default class PlayerControls {
     this.canvas.addEventListener('mouseup', this.onMouseUp)
   }
 
-  onMouseDown = e => {
+  onMouseDown = (e) => {
     this.mouseStartEvent = e
   }
 
-  onMouseUp = e => {
+  onMouseUp = (e) => {
     if (
       this.mouseStartEvent &&
       PlayerControls.dragDistance(this.mouseStartEvent, e) > 3

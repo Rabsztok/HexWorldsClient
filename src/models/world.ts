@@ -1,7 +1,9 @@
 import { countBy } from 'lodash'
 import { types, Instance } from 'mobx-state-tree'
+
 import Tile from 'models/tile'
 import Region, { IRegion } from 'models/region'
+
 import Canvas from './canvas'
 
 // Whole world, divided into sectors. Each world is isolated from others.
@@ -13,11 +15,11 @@ const World = types
     regions: types.map(Region),
     canvas: Canvas
   })
-  .volatile(self => ({
+  .volatile(() => ({
     tilesByCoordinates: new Map<string, Tile>(),
     tilesById: new Map<string, Tile>()
   }))
-  .views(self => ({
+  .views((self) => ({
     get regionsList(): IRegion[] {
       return Array.from(self.regions.values())
     },
@@ -31,7 +33,7 @@ const World = types
       return this.state === 'ready'
     },
     get loading(): boolean {
-      return this.regionsList.some(region => !region.rendered)
+      return this.regionsList.some((region) => !region.rendered)
     },
     findTileById(id: string): Tile | undefined {
       return self.tilesById.get(id)
@@ -40,7 +42,7 @@ const World = types
       return self.tilesByCoordinates.get([x, y, z].join(','))
     }
   }))
-  .actions(self => ({
+  .actions((self) => ({
     addTile(tile: Tile) {
       const { x, y, z, id } = tile
       self.tilesByCoordinates.set([x, y, z].join(','), tile)
@@ -54,10 +56,10 @@ const World = types
       if (regions) regions.forEach(this.addRegion)
     },
     reset() {
-      self.regions.forEach(region => region.reset())
+      self.regions.forEach((region) => region.reset()) 
     }
   }))
 
-export interface IWorld extends Instance<typeof World> {}
+export type IWorld = Instance<typeof World>
 
 export default World

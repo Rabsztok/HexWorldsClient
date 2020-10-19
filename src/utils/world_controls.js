@@ -1,6 +1,7 @@
 import { Vector2, Raycaster } from 'three'
-import { worldToCube } from './coordinates'
 import { pick } from 'lodash'
+
+import { worldToCube } from './coordinates'
 
 export default class WorldControls {
   constructor(store, camera, container) {
@@ -12,11 +13,11 @@ export default class WorldControls {
     this.container.addEventListener('mouseup', this.onMouseUp)
   }
 
-  onMouseDown = e => {
+  onMouseDown = (e) => {
     this.mouseStartEvent = e
   }
 
-  onMouseUp = e => {
+  onMouseUp = (e) => {
     if (
       this.mouseStartEvent &&
       WorldControls.dragDistance(this.mouseStartEvent, e) > 3

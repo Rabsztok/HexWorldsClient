@@ -1,6 +1,7 @@
 import { Object3D, Vector3 } from 'three'
+
 import Tile from 'models/tile'
-import loadMesh from 'three/loadMesh'
+import loadMesh from 'canvas/loadMesh'
 import { ICanvas } from 'models/canvas'
 
 interface Section {
@@ -38,7 +39,7 @@ class HouseBuilder {
 
   async call(canvas: ICanvas) {
     const sectionMeshes = await Promise.all(
-      this.sections.map(async section => {
+      this.sections.map(async (section) => {
         const sectionMesh = await HouseBuilder.getSectionMesh()
 
         sectionMesh.position.copy(section.position)

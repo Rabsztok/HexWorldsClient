@@ -10,7 +10,10 @@ class Tile {
   terrain: any
   object: any
 
-  constructor(props: any) {
+  constructor(props: { 
+    id: string, x: number, y: number, z: number, 
+    height: number, terrain: any, object?: any 
+  }) {
     this.id = props.id
     this.x = props.x
     this.y = props.y

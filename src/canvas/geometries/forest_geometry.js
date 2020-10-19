@@ -1,5 +1,6 @@
 import { BufferGeometry, Geometry, ConeBufferGeometry, Matrix4 } from 'three'
 import { times } from 'lodash'
+
 import { randomInt } from 'utils/random'
 
 class ForestGeometry extends BufferGeometry {
@@ -8,11 +9,11 @@ class ForestGeometry extends BufferGeometry {
 
     const tmpGeometry = new Geometry()
 
-    tiles.map(tile => {
+    tiles.map((tile) => {
       const rotation = Math.random() // TODO: from UUID
       const density = tile.terrain.density
 
-      times(density, i =>
+      times(density, (i) =>
         this.mergeGeometry(
           tmpGeometry,
           this.treeGeometry((i + 1) / density, randomInt(1, 5), rotation),
@@ -30,7 +31,7 @@ class ForestGeometry extends BufferGeometry {
   treeGeometry(position, segments, rotation) {
     const tmpGeometry = new Geometry()
 
-    times(segments, i => {
+    times(segments, (i) => {
       const segmentGeometry = new ConeBufferGeometry(1, 1.5, 4, 1)
       segmentGeometry.scale(0.3 - i * 0.05, 0.3 - i * 0.05, 0.3 - i * 0.05)
       segmentGeometry.rotateY(Math.random() * Math.PI)

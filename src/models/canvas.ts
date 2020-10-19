@@ -24,7 +24,7 @@ const Canvas = types
       2000
     )
   }))
-  .actions(self => ({
+  .actions((self) => ({
     afterCreate() {
       window.onresize = this.resizeCanvas
 
@@ -65,6 +65,6 @@ const Canvas = types
     }
   }))
 
-export interface ICanvas extends Instance<typeof Canvas> {}
+export type ICanvas = Instance<typeof Canvas>
 
 export default Canvas

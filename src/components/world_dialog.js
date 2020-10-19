@@ -17,7 +17,7 @@ class WorldDialog extends Component {
   @observable open = false
   @observable name
 
-  submit = e => {
+  submit = (e) => {
     e.preventDefault()
 
     const pushEvent = this.props.store.worldStore.create(this.name)
@@ -25,9 +25,9 @@ class WorldDialog extends Component {
     pushEvent.receive('success', this.onSuccess)
   }
 
-  onError = errors => {
+  onError = (errors) => {
     map(errors, (message, attribute) => {
-      alert(`${attribute} ${message}`)
+      console.log(`${attribute} ${message}`)
     })
   }
 
@@ -44,7 +44,7 @@ class WorldDialog extends Component {
     this.open = false
   }
 
-  setName = e => {
+  setName = (e) => {
     this.name = e.target.value
   }
 

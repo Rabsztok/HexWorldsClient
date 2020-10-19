@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+
 import { IRegion } from 'models/region'
 import { ICanvas } from 'models/canvas'
 
@@ -32,7 +33,7 @@ class TileBuilder {
     )
 
     let index = 0
-    this.region.tiles.forEach(tile => {
+    this.region.tiles.forEach((tile) => {
       mesh.setColorAt(index, this.terrains[tile.terrain.type])
       mesh.setMatrixAt(
         index,

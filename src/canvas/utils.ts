@@ -1,4 +1,5 @@
 import { Object3D } from 'three'
+
 import Tile from 'models/tile'
 
 const translateToTile = (object: Object3D, tile: Tile) => {

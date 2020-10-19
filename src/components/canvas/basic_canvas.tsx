@@ -1,47 +1,34 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react'
-import { ICanvas } from 'models/canvas'
-const OrbitControls = require('three-orbitcontrols')
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-interface Props {
-  store: ICanvas
+import { ICanvas } from 'models/canvas'
+
+interface PropTypes {
+  canvas: ICanvas
 }
 
-@observer
-class BasicCanvas extends React.Component<Props, {}> {
-  public root = React.createRef<HTMLDivElement>()
-  private controls?: any
+const BasicCanvas : React.FunctionComponent<PropTypes> = ({ canvas }) => {
+  const root = useRef<HTMLDivElement>(null)
+  const controls = useRef<OrbitControls | null>(null)
 
-  componentDidMount() {
-    const { store } = this.props
+  useEffect(() => {
+    if (root.current) {
+      root.current.appendChild(canvas.renderer.domElement)
+      controls.current = new OrbitControls(canvas.camera, root.current)
+      controls.current.maxPolarAngle = (2 * Math.PI) / 5
+      controls.current.minPolarAngle = Math.PI / 8
+      controls.current.target.set(0, 0, 0)
+      controls.current.addEventListener('change', canvas.animate)
+    }
 
-    this.addControls()
+    return () => {
+      if (controls.current) controls.current.dispose()
+    }
+  }, [canvas])
 
-    // append <canvas/> element to this component
-    this.root.current &&
-      this.root.current.appendChild(store.renderer.domElement)
-  }
-
-  // Controls
-  // ToDo: move to separate ControlsStore
-  addControls() {
-    const { store } = this.props
-
-    this.controls = new OrbitControls(store.camera, this.root.current)
-    this.controls.maxPolarAngle = (2 * Math.PI) / 5
-    this.controls.minPolarAngle = Math.PI / 8
-    this.controls.target.set(0, 0, 0)
-    this.controls.addEventListener('change', store.animate)
-  }
-
-  componentWillUnmount() {
-    this.controls.dispose()
-  }
-
-  render() {
-    return <div ref={this.root} />
-  }
+  return <div ref={root} />
 }
 
 export { BasicCanvas }
-export default BasicCanvas
+export default observer(BasicCanvas)

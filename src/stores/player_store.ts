@@ -1,4 +1,5 @@
 import { observable, computed } from 'mobx'
+
 import Player from 'models/player'
 import Channel from 'channel'
 import Tile from 'models/tile'
@@ -29,7 +30,7 @@ class PlayerStore {
   }
 
   onPlayersLoaded = (response: { players: Player[] }): void => {
-    response.players.forEach(player => this.players.set(player.id, player))
+    response.players.forEach((player) => this.players.set(player.id, player))
   }
 
   onPlayerMove = ({ player }: { player: Player }): void => {
@@ -71,7 +72,7 @@ class PlayerStore {
 
   @computed
   get playersToRender() {
-    return this.playersList.filter(player => !player.rendered)
+    return this.playersList.filter((player) => !player.rendered)
   }
 }
 

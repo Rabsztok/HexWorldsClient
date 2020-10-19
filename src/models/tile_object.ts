@@ -9,7 +9,7 @@ class TileObject {
   properties: any
   tile: Tile
 
-  constructor(props: any) {
+  constructor(props: { id: string, type: string, properties: any, tile: Tile}) {
     this.id = props.id
     this.type = props.type
     this.properties = props.properties

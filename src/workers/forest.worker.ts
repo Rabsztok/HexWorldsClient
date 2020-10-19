@@ -1,11 +1,13 @@
-import ForestGeometry from 'three/geometries/forest_geometry'
 import { Mesh } from 'three'
-const { PLYExporter } = require('three/examples/js/exporters/PLYExporter')
+import { PLYExporter } from 'three/examples/jsm/exporters/PLYExporter'
+
+import ForestGeometry from 'canvas/geometries/forest_geometry'
+
 const ctx: Worker = self as any
 
 ctx.addEventListener(
   'message',
-  function(e) {
+  function (e) {
     const exporter = new PLYExporter()
     const terrain = e.data.terrain
     const geometry = new ForestGeometry(e.data.tiles)

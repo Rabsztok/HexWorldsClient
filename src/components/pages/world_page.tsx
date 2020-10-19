@@ -1,46 +1,42 @@
-import React from 'react'
-import { computed } from 'mobx'
+import React, { useMemo } from 'react'
 import { observer, inject } from 'mobx-react'
+import { CircularProgress } from '@material-ui/core'
+import {RouteComponentProps } from 'react-router'
+
 import Canvas from 'components/canvas/world_canvas'
 import Menu from 'components/canvas_menu'
-import { CircularProgress } from '@material-ui/core'
 import styles from 'styles/pages/world_page.module.scss'
 import { StoreProps } from 'types'
 
-interface Props {
-  store?: StoreProps
-  match?: { params: { id: string } }
+type PathParamsType = {
+  id: string | undefined,
 }
 
-class WorldPage extends React.Component<Props, {}> {
-  @computed
-  get world() {
-    const { worldStore } = this.props.store!
-    const id = this.props.match!.params.id
+// Your component own properties
+type PropTypes = RouteComponentProps<PathParamsType> & StoreProps
 
-    if (id) return worldStore.find(id)
-    return null
-  }
+const WorldPage : React.FunctionComponent<PropTypes> = ({ store: { worldStore }, match: { params: { id } } }) => {
+  const world = useMemo(
+    () => id ? worldStore.find(id) : null
+  , [worldStore, id])
 
-  render() {
-    if (!this.world) return null
+  if (!world) return null
 
-    return (
-      <React.Fragment>
-        <Menu />
+  return (
+    <React.Fragment>
+      <Menu />
 
-        {this.world.loading && (
-          <div className={styles.loading}>
-            <CircularProgress size={50} thickness={5} />
-          </div>
-        )}
-
-        <div className={styles.container}>
-          <Canvas world={this.world} />
+      {world.loading && (
+        <div className={styles.loading}>
+          <CircularProgress size={50} thickness={5} />
         </div>
-      </React.Fragment>
-    )
-  }
+      )}
+
+      <div className={styles.container}>
+        <Canvas world={world} />
+      </div>
+    </React.Fragment>
+  )
 }
 
 export { WorldPage }

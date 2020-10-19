@@ -1,11 +1,13 @@
 import { IWorldStore } from 'stores/world_store'
 
 export interface PushEvent {
-  receive(message: string, callback: Function): void
+  receive(message: string, callback: any): void
 }
 
 export interface StoreProps {
-  worldStore: IWorldStore
+  store: {
+    worldStore: IWorldStore
+  }
 }
 
 export interface CubeVector {

@@ -1,31 +1,23 @@
 import React from 'react'
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { Fab } from '@material-ui/core'
 import BackIcon from '@material-ui/icons/ArrowBack'
 import { withRouter } from 'react-router-dom'
+import {RouteComponentProps} from "react-router"
+
 import styles from 'styles/canvas_menu.module.scss'
 import routes from 'utils/routes'
-import { StoreProps } from 'types'
 
-interface Props {
-  store?: StoreProps
-  history?: { push: Function }
-}
+const CanvasMenu = ({ history }: RouteComponentProps) => (
+  <div className={styles.menu}>
+    <Fab
+      color="primary"
+      aria-label="back"
+      onClick={() => history.push(routes.worlds())}
+    >
+      <BackIcon />
+    </Fab>
+  </div>
+)
 
-const CanvasMenu = ({ store, history }: Props) => {
-  const { push } = history!
-
-  return (
-    <div className={styles.menu}>
-      <Fab
-        color="primary"
-        aria-label="back"
-        onClick={() => push(routes.worlds())}
-      >
-        <BackIcon />
-      </Fab>
-    </div>
-  )
-}
-
-export default inject('store')(withRouter(observer(CanvasMenu)))
+export default withRouter(observer(CanvasMenu))

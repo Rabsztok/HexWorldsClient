@@ -1,21 +1,25 @@
 import React from 'react'
 import { observer, inject } from 'mobx-react'
+import { Mesh, MeshLambertMaterial, Vector3, CylinderGeometry } from 'three'
+import { times } from 'lodash'
+import { RouteComponentProps } from 'react-router'
+
 import Menu from 'components/canvas_menu'
 import styles from 'styles/pages/world_page.module.scss'
 import { StoreProps } from 'types'
 import CanvasStore from 'models/canvas'
 import BasicCanvas from 'components/canvas/basic_canvas'
 import Tile from 'models/tile'
-import { Mesh, MeshLambertMaterial, Vector3, CylinderGeometry } from 'three'
-import HouseBuilder from 'three/builders/house_builder'
-import { times } from 'lodash'
+import HouseBuilder from 'canvas/builders/house_builder'
 
-interface Props {
-  store: StoreProps
-  match: { params: { id: string } }
+type PathParamsType = {
+  id: string | undefined,
 }
 
-class DebugPage extends React.Component<Props, {}> {
+// Your component own properties
+type PropTypes = RouteComponentProps<PathParamsType> & StoreProps
+
+class DebugPage extends React.Component<PropTypes> {
   canvasStore = CanvasStore.create()
   tile = new Tile({
     id: 'debug',
@@ -62,7 +66,7 @@ class DebugPage extends React.Component<Props, {}> {
     new HouseBuilder({
       tile: this.tile,
       rotation: 0,
-      sections: times(Math.round(Math.sqrt(Math.random() * 4 + 1)), i =>
+      sections: times(Math.round(Math.sqrt(Math.random() * 4 + 1)), (i) =>
         generateSection(i)
       )
     }).call(this.canvasStore)
@@ -74,7 +78,7 @@ class DebugPage extends React.Component<Props, {}> {
         <Menu />
 
         <div className={styles.container}>
-          <BasicCanvas store={this.canvasStore} />
+          <BasicCanvas canvas={this.canvasStore} />
         </div>
       </React.Fragment>
     )

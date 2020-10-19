@@ -1,4 +1,5 @@
 import { Vector3 } from 'three'
+
 import { CubeVector, Vector } from 'types'
 
 export function worldToCube(vector: CubeVector): Vector {

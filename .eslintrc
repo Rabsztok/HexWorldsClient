@@ -1,0 +1,115 @@
+{
+  "env": {
+    "browser": true
+  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks",
+    "import"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "comma-dangle": [
+      "error",
+      "only-multiline"
+    ],
+    "import/extensions": "off",
+    "import/no-named-as-default": "off",
+    "import/no-unresolved": [
+      "error"
+    ],
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "max-len": [
+      "error",
+      140
+    ],
+    "no-duplicate-imports": "error",
+    "no-param-reassign": "off",
+    "no-underscore-dangle": [
+      "error"
+    ],
+    "no-unused-vars": [
+      "error"
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxEOF": 0,
+        "maxBOF": 0
+      }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "consistent": true
+      }
+    ],
+    "prefer-object-spread": "off",
+    "react/destructuring-assignment": "off",
+    "react/jsx-curly-spacing": [
+      "error",
+      {
+        "when": "never",
+        "children": true
+      }
+    ],
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/no-did-update-set-state": "off",
+    "react/no-unescaped-entities": "off",
+    "react/prefer-stateless-function": "off",
+    "react/prop-types": [
+      "error",
+      {
+        "skipUndeclared": true
+      }
+    ],
+    "react/sort-comp": "off",
+    "react/state-in-constructor": "off",
+    "react/static-property-placement": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "semi": [
+      "error",
+      "never"
+    ]
+  }
+}

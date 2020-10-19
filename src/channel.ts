@@ -1,11 +1,9 @@
-const { Socket } = require('phoenix-socket')
-const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
+import { Socket } from 'phoenix-socket'
 
-let socket: any
-if (typeof window !== 'undefined') {
-  socket = new Socket(apiUrl)
-  socket.connect()
-}
+const apiUrl = process.env.REACT_APP_WEBSOCKET_URL
+const socket = new Socket(apiUrl)
+
+socket.connect()
 
 interface Callbacks {
   onSuccess?(response: any): void
@@ -23,7 +21,7 @@ export default class Channel {
     this.channelName = channelName
   }
 
-  connect(payload: any, callbacks: Callbacks) {
+  connect(payload: any, callbacks: Callbacks) : void {
     this.connection = this.socket.channel(this.channelName, payload)
 
     this.connection

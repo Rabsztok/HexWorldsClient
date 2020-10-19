@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EnlargeIcon from '@material-ui/icons/ZoomOutMap'
+
 import styles from 'styles/pages/worlds_page.module.scss'
 import BottomNavigation from 'components/bottom_navigation'
 import WorldDialog from 'components/world_dialog'
@@ -21,7 +22,7 @@ const WorldsPage = ({
 }) => (
   <div className={styles.list}>
     <Grid container justify="center" spacing={16}>
-      {worldsList.map(world => (
+      {worldsList.map((world) => (
         <Grid key={world.id} item xs={12} sm={8}>
           <Card className={styles.item}>
             <CardContent>

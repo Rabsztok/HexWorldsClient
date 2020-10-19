@@ -1,4 +1,5 @@
 import { Instance, types } from 'mobx-state-tree'
+
 import Channel from 'channel'
 import World, { IWorld } from 'models/world'
 import Canvas from 'models/canvas'
@@ -11,10 +12,10 @@ const WorldStore = types
     worlds: types.map(World),
     loaded: types.optional(types.boolean, false)
   })
-  .volatile(self => ({
+  .volatile(() => ({
     channel: new Channel('worlds:lobby')
   }))
-  .views(self => ({
+  .views((self) => ({
     get worldsList(): IWorld[] {
       return Array.from(self.worlds.values())
     },
@@ -24,7 +25,7 @@ const WorldStore = types
       else throw WorldNotFoundError(id)
     }
   }))
-  .actions(self => {
+  .actions((self) => {
     return {
       connect() {
         if (self.channel.connected) return
@@ -68,7 +69,7 @@ const WorldStore = types
     }
   })
 
-export interface IWorldStore extends Instance<typeof WorldStore> {}
+export type IWorldStore = Instance<typeof WorldStore>
 
 export default WorldStore
 
